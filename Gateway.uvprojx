@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>Target 1</TargetName>
+      <TargetName>Gateway</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
@@ -413,11 +413,6 @@
               <FilePath>.\user\main.c</FilePath>
             </File>
             <File>
-              <FileName>usart2.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\USART\usart2.c</FilePath>
-            </File>
-            <File>
               <FileName>stm32f10x_it.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\stm32f10x_it.c</FilePath>
@@ -428,29 +423,34 @@
               <FilePath>.\user\GPIO\led.c</FilePath>
             </File>
             <File>
-              <FileName>Time_test.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\TIM\Time_test.c</FilePath>
-            </File>
-            <File>
-              <FileName>Zigbee.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\Zigbee\Zigbee.c</FilePath>
-            </File>
-            <File>
               <FileName>net.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\NET\net.c</FilePath>
             </File>
             <File>
-              <FileName>Policy.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\Policy\Policy.c</FilePath>
-            </File>
-            <File>
               <FileName>err.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\ERR\err.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\Usart\usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\Timer\timer.c</FilePath>
+            </File>
+            <File>
+              <FileName>zigbee.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\Zigbee\zigbee.c</FilePath>
+            </File>
+            <File>
+              <FileName>policy.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\Policy\policy.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -527,55 +527,55 @@
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="3.30.0" condition="CMSIS Core">
         <package name="CMSIS" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="ARM" version="4.1.1"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="STM32F1xx CMSIS Device">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="CRC" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1 STDPERIPH">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="DMA" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1 STDPERIPH RCC">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="Framework" Cvendor="Keil" Cversion="3.5.1" condition="STM32F1 STDPERIPH">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="GPIO" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1 STDPERIPH RCC">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="RCC" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1 STDPERIPH">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="TIM" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1 STDPERIPH RCC">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="USART" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1 STDPERIPH RCC">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </component>
     </components>
@@ -591,7 +591,7 @@
         <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="STM32F1xx CMSIS Device"/>
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </file>
       <file attr="config" category="source" condition="STM32F1xx MD" name="Device\Source\ARM\startup_stm32f10x_md.s">
@@ -599,7 +599,7 @@
         <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="STM32F1xx CMSIS Device"/>
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </file>
       <file attr="config" category="source" name="Device\StdPeriph_Driver\templates\stm32f10x_conf.h" version="3.5.0">
@@ -607,7 +607,7 @@
         <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="Framework" Cvendor="Keil" Cversion="3.5.1" condition="STM32F1 STDPERIPH"/>
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </file>
       <file attr="config" category="source" name="Device\Source\system_stm32f10x.c">
@@ -615,7 +615,7 @@
         <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.0.0" condition="STM32F1xx CMSIS Device"/>
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
-          <targetInfo name="Target 1"/>
+          <targetInfo name="Gateway"/>
         </targetInfos>
       </file>
       <file attr="config" category="header" name="RTE_Driver\Config\RTE_Device.h">

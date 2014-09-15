@@ -750,6 +750,7 @@ void NET_parseData(struct msgStu *pNmsgR)
                 {
                     Net_send_device(&devTbs[i], DEVTAB_UPDATE, 0xFF);
                 }
+                i++;
             }
 
         }
@@ -1006,6 +1007,7 @@ void  policydecisions()
                             return;
                         }
                         actDev->ActSt = strategytable[i].actuator[j].actuatorTrigger  & 0x1f;//最多设置5个IO
+                        j++;
                     }
                 }
 

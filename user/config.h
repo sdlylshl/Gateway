@@ -1,11 +1,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 #include "stm32f10x.h"
-#include "usart2.h"
+#include ".\Usart\usart.h"
 #include ".\GPIO\led.h"
-#include ".\TIM\Time_test.h"
-#include ".\Zigbee\Zigbee.h"
-#include ".\NET\net.h"
-#include ".\Policy\Policy.h"
+#include ".\Timer\timer.h"
+#include ".\Zigbee\zigbee.h"
+#include ".\Net\net.h"
+#include ".\Policy\policy.h"
 #include ".\ERR\err.h"
 #endif	/* CONFIG_H */
