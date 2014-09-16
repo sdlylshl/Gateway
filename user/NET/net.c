@@ -261,7 +261,7 @@ int8_t Net_send_data(uint8_t len, uint8_t data[])
     CRC_ResetDR();
     for (i = 0; i < len + 3; i++)
     {
-        CRC_CalcCRC((uint32_t)*psndat++);
+        CRC_CalcCRC((uint32_t)(*psndat++));
     }
     crc = CRC_GetCRC();
 #if BIGENDIAN
@@ -647,7 +647,7 @@ void NET_fetchParseInstruction()
                 CRC_ResetDR();
                 for (i = 0; i < len_tmp + 3; i++)
                 {
-                    CRC_CalcCRC((uint32_t)*psndat++);
+                    CRC_CalcCRC((uint32_t)(*psndat++));
                 }
 
                 crc = (pNmsgR->crc[0] << 24) | (pNmsgR->crc[1] << 16) | (pNmsgR->crc[2] << 8) | (pNmsgR->crc[3]);

@@ -204,7 +204,6 @@ void Zigbee_fetchParseInstruction (void)
     while ((Zigbee_write + ZIGBEE_BUFFSIZE - Zigbee_read) % ZIGBEE_BUFFSIZE > 2)
     {
 
-
         //检测到包头0xFE
         if (Zigbee_buf[Zigbee_read] == ZIGBEE_API_FRAME_HEAD)
         {

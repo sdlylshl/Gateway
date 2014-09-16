@@ -68,27 +68,27 @@ int main(void)
 
     while (1)
     {
-				//取命令 并解析
-				Zigbee_fetchParseInstruction();
+        //取命令 并解析
+        Zigbee_fetchParseInstruction();
         NET_fetchParseInstruction();
 
-       //策略解析，修改对应 设备表
+        //策略解析，修改对应 设备表
         policydecisions();
 
         // print_CMDS();
         // print_DEVS();
-				
-			//定时执行 对执行来说 不关心是否执行成功 所以 要定时执行
+
+        //定时执行 对执行来说 不关心是否执行成功 所以 要定时执行
         //zigbee_operate_ALL();
-			  //定时查询状态
-				
+        //定时查询状态
+
         //重发机制
         // sendTimer();
-			
-	zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_0,  0);
-			
-			
-	//zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_1,  0);
+
+        zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_0,  0);
+
+
+        //zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_1,  0);
         //SendCMD(NET_write);
         // strategy_implementation();
         if (i == 200)
@@ -98,17 +98,17 @@ int main(void)
         // zigbee_send_data(1, 3600, buffer);
         // zigbee_send_data(1, 3601, buffer);
         // zigbee_remote_set_net_io(3600, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
-        Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);
-				Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);
+        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
+        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
         LED8( ON );
         // zigbee_remote_set_net_io(3601, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
 
         //Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF); Delay(0x0FFFEF);    Delay(0x0FFFEF);
 
         // zigbee_remote_set_net_io(3600, IO_D2 , IO_MODE_GPIO_OUTPUT_0, 0);
-        Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);
-				Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);
-				Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);Delay(0x0FFF);
+        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
+        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
+        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
         LED8( OFF );
         // zigbee_remote_set_net_io(3601, IO_D2 , IO_MODE_GPIO_OUTPUT_0, 0);
         //Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF); Delay(0x0FFFEF);    Delay(0x0FFFEF);

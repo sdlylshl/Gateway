@@ -29,7 +29,8 @@
 *.hex
 
 # STM32
-
+/doc
+!*.doc
 /output
 *.txt
 *.lst
