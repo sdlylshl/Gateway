@@ -418,11 +418,6 @@
               <FilePath>.\user\stm32f10x_it.c</FilePath>
             </File>
             <File>
-              <FileName>led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\GPIO\led.c</FilePath>
-            </File>
-            <File>
               <FileName>net.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\NET\net.c</FilePath>
@@ -433,16 +428,6 @@
               <FilePath>.\user\ERR\err.c</FilePath>
             </File>
             <File>
-              <FileName>usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\Usart\usart.c</FilePath>
-            </File>
-            <File>
-              <FileName>timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\Timer\timer.c</FilePath>
-            </File>
-            <File>
               <FileName>zigbee.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\Zigbee\zigbee.c</FilePath>
@@ -451,6 +436,21 @@
               <FileName>policy.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\Policy\policy.c</FilePath>
+            </File>
+            <File>
+              <FileName>usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\System\Usart\usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\System\GPIO\led.c</FilePath>
+            </File>
+            <File>
+              <FileName>timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\System\Timer\timer.c</FilePath>
             </File>
           </Files>
         </Group>

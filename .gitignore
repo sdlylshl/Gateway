@@ -40,7 +40,6 @@
 *.dep
 *.rar
 *.zip
-*.uv*
 *.map
 *.tags*
 *~
