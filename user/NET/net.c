@@ -158,7 +158,7 @@ int8_t Net_send(struct msgStu *pNmsgS)
     if (pNmsgS->usable == 2)
     {
         uint8_t i;
-        Net_PutChar(pNmsgS->head);			
+        Net_PutChar(pNmsgS->head);
         Net_PutChar(pNmsgS->len);
         Net_PutChar(pNmsgS->sn[0]);
         Net_PutChar(pNmsgS->sn[1]);
@@ -176,38 +176,38 @@ int8_t Net_send(struct msgStu *pNmsgS)
     pNmsgS->usable = 3;
     return OK;
 }
-void Net_Ans(struct msgStu *ansdat)
+void Net_Ans(struct msgStu *pansmsgS)
 {
-		
     uint16_t sn;
-		uint32_t crc = 0;
+    uint32_t crc = 0;
 #if BIGENDIAN
-    sn = (uint16_t)(((ansdat->sn[0] << 8 | ansdat->sn[1])) + 1);
+    sn = (uint16_t)(((pansmsgS->sn[0] << 8 | pansmsgS->sn[1])) );
 #else
-    sn = (uint16_t)(((ansdat->sn[1] << 8 | ansdat->sn[0])) + 1);
+    sn = (uint16_t)(((pansmsgS->sn[1] << 8 | pansmsgS->sn[0])) );
 #endif
+    //TODO 无效判断
     if (0 == sn)
     {
         sn = 2;
     }
-    Net_PutChar(ansdat->head);
-		Net_PutChar(0);
+    Net_PutChar(pansmsgS->head);
+    Net_PutChar(0);
     Net_PutChar((uint8_t)(sn >> 8) & 0xff);
     Net_PutChar((uint8_t)sn & 0xff);
     //TODO
     //生成CRC校验码
 
     CRC_ResetDR();
-  
+
     CRC_CalcCRC((uint32_t)0);
     CRC_CalcCRC((uint32_t)((sn >> 8) & 0xff));
-		CRC_CalcCRC((uint32_t)(sn & 0xff));
+    CRC_CalcCRC((uint32_t)(sn & 0xff));
     crc = CRC_GetCRC();
-    Net_PutChar((uint8_t)(crc>>24)&0xFF);
-		Net_PutChar((uint8_t)(crc>>16)&0xFF);
-		Net_PutChar((uint8_t)(crc>>8)&0xff);
-		Net_PutChar((uint8_t)(crc&0xff));
-    Net_PutChar(ansdat->endl);
+    Net_PutChar((uint8_t)(crc >> 24) & 0xFF);
+    Net_PutChar((uint8_t)(crc >> 16) & 0xFF);
+    Net_PutChar((uint8_t)(crc >> 8) & 0xff);
+    Net_PutChar((uint8_t)(crc & 0xff));
+    Net_PutChar(pansmsgS->endl);
 
 }
 
@@ -240,10 +240,10 @@ int8_t Net_send_data(uint8_t len, uint8_t data[])
 
     pNmsgS->usable = 1; //正在填充数据
     pNmsgS->head = NET_CMD_HEAD;
-		pNmsgS->len = len;
+    pNmsgS->len = len;
     //获取新的发送Sn
     getmsgSN();
-    
+
 #if BIGENDIAN
     pNmsgS->sn[0] = (uint8_t)((msgSN >> 8) & 0xff);
     pNmsgS->sn[1] = (uint8_t) msgSN & 0xff;
@@ -665,11 +665,12 @@ void NET_fetchParseInstruction()
 
                 }
 
-            }else
-						{
-							//未接收到完整的数据帧 退回
-							NET_read_backward(1);
-						}
+            }
+            else
+            {
+                //未接收到完整的数据帧 退回
+                NET_read_backward(1);
+            }
 
         }
         else
@@ -687,22 +688,19 @@ void NET_fetchParseInstruction()
 //应答包解析
 void Ans_parse(struct msgStu *pNmsgR)
 {
-    uint16_t sn = ((pNmsgR->sn[1] << 8) | pNmsgR->sn[0]) - 1 ;
-    uint8_t sn1 = (sn >> 8) & 0xff;
-    uint8_t sn2 = sn & 0xff;
-
 
     uint16_t i = 0;
     //修改对应重发列表的 usable
-    while (i < SEND_CMDS_NUM)
+    for (i = 0; i < SEND_CMDS_NUM; i++)
     {
-        if (sendBuf[i][0] > 1 && sn1 == sendBuf[i][2] && sn2 == sendBuf[i][3])
+        if ( (netSendDataCMDS[i].sn[0] == pNmsgR->sn[0]) && (netSendDataCMDS[i].sn[0] == pNmsgR->sn[0]))
         {
-            sendBuf[i][0] = 0;
+            //如果出现两个sn相同的怎么办？
+            netSendDataCMDS[i].usable = 0;
             break;
         }
-        i++;
     }
+
 }
 
 
@@ -818,7 +816,7 @@ void NET_parseData(struct msgStu *pNmsgR)
                 pdevTbs->ActSt = (pNmsgR->data[index] << 8 | pNmsgR->data[index + 1]);
 
                 //下发Zigbee设置指令
-								zigbee_operate(pdevTbs);
+                zigbee_operate(pdevTbs);
 
             }
 
@@ -876,27 +874,34 @@ void NET_parseData(struct msgStu *pNmsgR)
   */
 void NET_parseInstruction(struct msgStu *pNmsgR)
 {
+    uint16_t sn;
     if (pNmsgR->usable != 2)
         return;
 
+#if BIGENDIAN
+    sn = (uint16_t)(((pNmsgR->sn[0] << 8 | pNmsgR->sn[1])) );
+#else
+    sn = (uint16_t)(((pNmsgR->sn[1] << 8 | pNmsgR->sn[0])) );
+#endif
 
-    if ((pNmsgR->sn[0] == 0 && pNmsgR->sn[1] == 0)) //心跳sn=0
+    if (sn == 0) //心跳sn=0
     {
 
     }
-    else if (pNmsgR->sn[1] % 2 == 0)
-    {
-        //偶数为应答信息
-        Ans_parse(pNmsgR);
-
-    }
-    else if (pNmsgR->sn[1] % 2)
+    else if (sn % 2 == 0)
     {
         //返回应答信息
         Net_Ans(pNmsgR);
-        //奇数表示指令信息
+        //偶数表示服务器下发指令信息
         NET_parseData(pNmsgR);
 
+    }
+    else if (sn % 2)
+    {
+
+        //奇数为网关发送后服务器返回应答信息
+
+        Ans_parse(pNmsgR);
     }
 
     pNmsgR->usable = 0;

@@ -5,8 +5,9 @@
 #include ".\System\GPIO\led.h"
 #include ".\System\Timer\timer.h"
 
-#include ".\Zigbee\zigbee.h"
 #include ".\Net\net.h"
+#include ".\Zigbee\zigbee.h"
 #include ".\Policy\policy.h"
+
 #include ".\ERR\err.h"
 #endif	/* CONFIG_H */
