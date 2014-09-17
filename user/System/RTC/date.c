@@ -13,7 +13,7 @@ static int month_days[12] = {	31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 /*
  * This only works for the Gregorian calendar - i.e. after 1752 (in the UK)
  */
- /*¼ÆËã¹«Àú*/
+ /*è®¡ç®—å…¬å†*/
 void GregorianDay(struct rtc_time * tm)
 {
 	int leapsToDate;
@@ -23,10 +23,10 @@ void GregorianDay(struct rtc_time * tm)
 
 	lastYear=tm->tm_year-1;
 
-	/*¼ÆËã´Ó¹«ÔªÔªÄêµ½¼ÆÊıµÄÇ°Ò»ÄêÖ®ÖĞÒ»¹²¾­ÀúÁË¶àÉÙ¸öÈòÄê*/
-	leapsToDate = lastYear/4 - lastYear/100 + lastYear/400;      
+	/*è®¡ç®—ä»å…¬å…ƒå…ƒå¹´åˆ°è®¡æ•°çš„å‰ä¸€å¹´ä¹‹ä¸­ä¸€å…±ç»å†äº†å¤šå°‘ä¸ªé—°å¹´*/
+	leapsToDate = lastYear/4 - lastYear/100 + lastYear/400;
 
-     /*ÈçÈô¼ÆÊıµÄÕâÒ»ÄêÎªÈòÄê£¬ÇÒ¼ÆÊıµÄÔÂ·İÔÚ2ÔÂÖ®ºó£¬ÔòÈÕÊı¼Ó1£¬·ñÔò²»¼Ó1*/
+     /*å¦‚è‹¥è®¡æ•°çš„è¿™ä¸€å¹´ä¸ºé—°å¹´ï¼Œä¸”è®¡æ•°çš„æœˆä»½åœ¨2æœˆä¹‹åï¼Œåˆ™æ—¥æ•°åŠ 1ï¼Œå¦åˆ™ä¸åŠ 1*/
 	if((tm->tm_year%4==0) &&
 	   ((tm->tm_year%100!=0) || (tm->tm_year%400==0)) &&
 	   (tm->tm_mon>2)) {
@@ -38,7 +38,7 @@ void GregorianDay(struct rtc_time * tm)
 		day=0;
 	}
 
-	day += lastYear*365 + leapsToDate + MonthOffset[tm->tm_mon-1] + tm->tm_mday; /*¼ÆËã´Ó¹«ÔªÔªÄêÔªµ©µ½¼ÆÊıÈÕÆÚÒ»¹²ÓĞ¶àÉÙÌì*/
+	day += lastYear*365 + leapsToDate + MonthOffset[tm->tm_mon-1] + tm->tm_mday; /*è®¡ç®—ä»å…¬å…ƒå…ƒå¹´å…ƒæ—¦åˆ°è®¡æ•°æ—¥æœŸä¸€å…±æœ‰å¤šå°‘å¤©*/
 
 	tm->tm_wday=day%7;
 }
@@ -58,8 +58,8 @@ void GregorianDay(struct rtc_time * tm)
  * machines were long is 32-bit! (However, as time_t is signed, we
  * will already get problems at other places on 2038-01-19 03:14:08)
 
- *ADD by fire£º±¾º¯ÊıÔÚ¹¤³ÌÖĞµÄÊäÈë²ÎÊıÎª±±¾©Ê±¼ä£¬
- ËùÒÔÔÚ×ª»»³ÉÊ±¼ä´ÁÊ±×îºóÒª´Ó±±¾©Ê±¼ä×ª»»Îª±ê×¼Ê±¼äµÄÊ±¼ä´Á
+ *ADD by fireï¼šæœ¬å‡½æ•°åœ¨å·¥ç¨‹ä¸­çš„è¾“å…¥å‚æ•°ä¸ºåŒ—äº¬æ—¶é—´ï¼Œ
+ æ‰€ä»¥åœ¨è½¬æ¢æˆæ—¶é—´æˆ³æ—¶æœ€åè¦ä»åŒ—äº¬æ—¶é—´è½¬æ¢ä¸ºæ ‡å‡†æ—¶é—´çš„æ—¶é—´æˆ³
  */
 u32 mktimev(struct rtc_time *tm)
 {
@@ -74,9 +74,9 @@ u32 mktimev(struct rtc_time *tm)
 	    )*24 + tm->tm_hour /* now have hours */
 	  )*60 + tm->tm_min /* now have minutes */
 	)*60 + tm->tm_sec-8*60*60; /* finally seconds */
-	/*Add by fire: -8*60*60 °ÑÊäÈëµÄ±±¾©Ê±¼ä×ª»»Îª±ê×¼Ê±¼ä£¬
-	ÔÙĞ´Èë¼ÆÊ±Æ÷ÖĞ£¬È·±£¼ÆÊ±Æ÷µÄÊı¾İÎª±ê×¼µÄUNIXÊ±¼ä´Á*/ 
-	 
+	/*Add by fire: -8*60*60 æŠŠè¾“å…¥çš„åŒ—äº¬æ—¶é—´è½¬æ¢ä¸ºæ ‡å‡†æ—¶é—´ï¼Œ
+	å†å†™å…¥è®¡æ—¶å™¨ä¸­ï¼Œç¡®ä¿è®¡æ—¶å™¨çš„æ•°æ®ä¸ºæ ‡å‡†çš„UNIXæ—¶é—´æˆ³*/
+
 }
 
 void to_tm(u32 tim, struct rtc_time * tm)
@@ -92,13 +92,13 @@ void to_tm(u32 tim, struct rtc_time * tm)
 	tm->tm_min = (hms % 3600) / 60;
 	tm->tm_sec = (hms % 3600) % 60;
 
-	/* Number of years in days */ /*Ëã³öµ±Ç°Äê·İ£¬ÆğÊ¼µÄ¼ÆÊıÄê·İÎª1970Äê*/
+	/* Number of years in days */ /*ç®—å‡ºå½“å‰å¹´ä»½ï¼Œèµ·å§‹çš„è®¡æ•°å¹´ä»½ä¸º1970å¹´*/
 	for (i = STARTOFTIME; day >= days_in_year(i); i++) {
 		day -= days_in_year(i);
 	}
 	tm->tm_year = i;
 
-	/* Number of months in days left */ /*¼ÆËãµ±Ç°µÄÔÂ·İ*/
+	/* Number of months in days left */ /*è®¡ç®—å½“å‰çš„æœˆä»½*/
 	if (leapyear(tm->tm_year)) {
 		days_in_month(FEBRUARY) = 29;
 	}
@@ -108,13 +108,13 @@ void to_tm(u32 tim, struct rtc_time * tm)
 	days_in_month(FEBRUARY) = 28;
 	tm->tm_mon = i;
 
-	/* Days are what is left over (+1) from all that. *//*¼ÆËãµ±Ç°ÈÕÆÚ*/
+	/* Days are what is left over (+1) from all that. *//*è®¡ç®—å½“å‰æ—¥æœŸ*/
 	tm->tm_mday = day + 1;
 
 	/*
 	 * Determine the day of week
 	 */
 	GregorianDay(tm);
-	
+
 }
 

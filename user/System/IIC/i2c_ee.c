@@ -1,23 +1,23 @@
 /********************************************************************************
- * ÎÄ¼şÃû  £ºi2c_ee.c
- * ÃèÊö    £ºi2c EEPROM(AT24C02)Ó¦ÓÃº¯Êı¿â         
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * Ó²¼şÁ¬½Ó£º-----------------
+ * æ–‡ä»¶å  ï¼ši2c_ee.c
+ * æè¿°    ï¼ši2c EEPROM(AT24C02)åº”ç”¨å‡½æ•°åº“
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * ç¡¬ä»¶è¿æ¥ï¼š-----------------
  *          |                 |
  *          |  PB6-I2C1_SCL	  |
  *          |  PB7-I2C1_SDA   |
  *          |                 |
  *           -----------------
- * ¿â°æ±¾  £ºST3.5.0
- * ×÷Õß    £º±£Áô 
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
+ * ä½œè€…    ï¼šä¿ç•™
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "i2c_ee.h"
 
 #define I2C_Speed              400000
 #define I2C1_OWN_ADDRESS7    0x0A
-#define I2C_PageSize           8			/* AT24C02Ã¿Ò³ÓĞ8¸ö×Ö½Ú */
+#define I2C_PageSize           8			/* AT24C02æ¯é¡µæœ‰8ä¸ªå­—èŠ‚ */
 
 uint16_t EEPROM_ADDRESS;
 #define  EEP_Firstpage      0x00
@@ -26,151 +26,151 @@ u8 I2c_Buf_Read[256];
 void I2C_Test(void);
 
 /*
- * º¯ÊıÃû£ºI2C_EE_Test
- * ÃèÊö  £ºI2C(AT24C02)¶ÁĞ´²âÊÔ¡£
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * ·µ»Ø  £ºÎŞ
+ * å‡½æ•°åï¼šI2C_EE_Test
+ * æè¿°  ï¼šI2C(AT24C02)è¯»å†™æµ‹è¯•ã€‚
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è¿”å›  ï¼šæ— 
  */
 void I2C_Test(void)
 {
 	u16 i;
-	
-  /* ´®¿Ú1³õÊ¼»¯ */
+
+  /* ä¸²å£1åˆå§‹åŒ– */
 	USART1_Config();
-	/* I2C ÍâÉè³õ(AT24C02)Ê¼»¯ */
+	/* I2C å¤–è®¾åˆ(AT24C02)å§‹åŒ– */
 	I2C_EE_Init();
-	
-	
-	printf("Ğ´ÈëµÄÊı¾İ\n\r");
-    
-	for ( i=0; i<=255; i++ ) //Ìî³ä»º³å
-  {   
+
+
+	printf("å†™å…¥çš„æ•°æ®\n\r");
+
+	for ( i=0; i<=255; i++ ) //å¡«å……ç¼“å†²
+  {
     I2c_Buf_Write[i] = i;
 
     printf("0x%02X ", I2c_Buf_Write[i]);
-    if(i%16 == 15)    
-        printf("\n\r");    
+    if(i%16 == 15)
+        printf("\n\r");
    }
 
-  //½«I2c_Buf_WriteÖĞË³ĞòµİÔöµÄÊı¾İĞ´ÈëEERPOMÖĞ 
-	I2C_EE_BufferWrite( I2c_Buf_Write, EEP_Firstpage, 256);	 
-  
-  printf("\n\r¶Á³öµÄÊı¾İ\n\r");
-  //½«EEPROM¶Á³öÊı¾İË³Ğò±£³Öµ½I2c_Buf_ReadÖĞ 
-	I2C_EE_BufferRead(I2c_Buf_Read, EEP_Firstpage, 256); 
+  //å°†I2c_Buf_Writeä¸­é¡ºåºé€’å¢çš„æ•°æ®å†™å…¥EERPOMä¸­
+	I2C_EE_BufferWrite( I2c_Buf_Write, EEP_Firstpage, 256);
 
-  //½«I2c_Buf_ReadÖĞµÄÊı¾İÍ¨¹ı´®¿Ú´òÓ¡
+  printf("\n\rè¯»å‡ºçš„æ•°æ®\n\r");
+  //å°†EEPROMè¯»å‡ºæ•°æ®é¡ºåºä¿æŒåˆ°I2c_Buf_Readä¸­
+	I2C_EE_BufferRead(I2c_Buf_Read, EEP_Firstpage, 256);
+
+  //å°†I2c_Buf_Readä¸­çš„æ•°æ®é€šè¿‡ä¸²å£æ‰“å°
 	for (i=0; i<256; i++)
-	{	
+	{
 		if(I2c_Buf_Read[i] != I2c_Buf_Write[i])
 		{
 			printf("0x%02X ", I2c_Buf_Read[i]);
-			printf("´íÎó:I2C EEPROMĞ´ÈëÓë¶Á³öµÄÊı¾İ²»Ò»ÖÂ\n\r");
+			printf("é”™è¯¯:I2C EEPROMå†™å…¥ä¸è¯»å‡ºçš„æ•°æ®ä¸ä¸€è‡´\n\r");
 			return;
 		}
     printf("0x%02X ", I2c_Buf_Read[i]);
-    if(i%16 == 15)    
+    if(i%16 == 15)
         printf("\n\r");
-    
+
 	}
-  printf("I2C(AT24C02)¶ÁĞ´²âÊÔ³É¹¦\n\r");
+  printf("I2C(AT24C02)è¯»å†™æµ‹è¯•æˆåŠŸ\n\r");
 }
 /*
- * º¯ÊıÃû£ºI2C_GPIO_Config
- * ÃèÊö  £ºI2C1 I/OÅäÖÃ
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÄÚ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šI2C_GPIO_Config
+ * æè¿°  ï¼šI2C1 I/Oé…ç½®
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå†…éƒ¨è°ƒç”¨
  */
 static void I2C_GPIO_Config(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStructure; 
+  GPIO_InitTypeDef  GPIO_InitStructure;
 
-	/* Ê¹ÄÜÓë I2C1 ÓĞ¹ØµÄÊ±ÖÓ */
+	/* ä½¿èƒ½ä¸ I2C1 æœ‰å…³çš„æ—¶é’Ÿ */
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1,ENABLE);  
-    
-  /* PB6-I2C1_SCL¡¢PB7-I2C1_SDA*/
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_I2C1,ENABLE);
+
+  /* PB6-I2C1_SCLã€PB7-I2C1_SDA*/
   GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_6 | GPIO_Pin_7;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;	       // ¿ªÂ©Êä³ö
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;	       // å¼€æ¼è¾“å‡º
   GPIO_Init(GPIOB, &GPIO_InitStructure);
 }
 
 /*
- * º¯ÊıÃû£ºI2C_Configuration
- * ÃèÊö  £ºI2C ¹¤×÷Ä£Ê½ÅäÖÃ
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÄÚ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šI2C_Configuration
+ * æè¿°  ï¼šI2C å·¥ä½œæ¨¡å¼é…ç½®
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå†…éƒ¨è°ƒç”¨
  */
 static void I2C_Mode_Configu(void)
 {
-  I2C_InitTypeDef  I2C_InitStructure; 
+  I2C_InitTypeDef  I2C_InitStructure;
 
-  /* I2C ÅäÖÃ */
+  /* I2C é…ç½® */
   I2C_InitStructure.I2C_Mode = I2C_Mode_I2C;
   I2C_InitStructure.I2C_DutyCycle = I2C_DutyCycle_2;
-  I2C_InitStructure.I2C_OwnAddress1 =I2C1_OWN_ADDRESS7; 
+  I2C_InitStructure.I2C_OwnAddress1 =I2C1_OWN_ADDRESS7;
   I2C_InitStructure.I2C_Ack = I2C_Ack_Enable ;
   I2C_InitStructure.I2C_AcknowledgedAddress = I2C_AcknowledgedAddress_7bit;
   I2C_InitStructure.I2C_ClockSpeed = I2C_Speed;
-  
-  /* Ê¹ÄÜ I2C1 */
+
+  /* ä½¿èƒ½ I2C1 */
   I2C_Cmd(I2C1, ENABLE);
 
-  /* I2C1 ³õÊ¼»¯ */
+  /* I2C1 åˆå§‹åŒ– */
   I2C_Init(I2C1, &I2C_InitStructure);
 
-   
+
 }
 
 /*
- * º¯ÊıÃû£ºI2C_EE_Init
- * ÃèÊö  £ºI2C ÍâÉè(EEPROM)³õÊ¼»¯
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šI2C_EE_Init
+ * æè¿°  ï¼šI2C å¤–è®¾(EEPROM)åˆå§‹åŒ–
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 void I2C_EE_Init(void)
 {
 
-  I2C_GPIO_Config(); 
- 
+  I2C_GPIO_Config();
+
   I2C_Mode_Configu();
 
-/* ¸ù¾İÍ·ÎÄ¼şi2c_ee.hÖĞµÄ¶¨ÒåÀ´Ñ¡ÔñEEPROMÒªĞ´ÈëµÄµØÖ· */
+/* æ ¹æ®å¤´æ–‡ä»¶i2c_ee.hä¸­çš„å®šä¹‰æ¥é€‰æ‹©EEPROMè¦å†™å…¥çš„åœ°å€ */
 #ifdef EEPROM_Block0_ADDRESS
-  /* Ñ¡Ôñ EEPROM Block0 À´Ğ´Èë */
+  /* é€‰æ‹© EEPROM Block0 æ¥å†™å…¥ */
   EEPROM_ADDRESS = EEPROM_Block0_ADDRESS;
 #endif
 
-#ifdef EEPROM_Block1_ADDRESS  
-	/* Ñ¡Ôñ EEPROM Block1 À´Ğ´Èë */
+#ifdef EEPROM_Block1_ADDRESS
+	/* é€‰æ‹© EEPROM Block1 æ¥å†™å…¥ */
   EEPROM_ADDRESS = EEPROM_Block1_ADDRESS;
 #endif
 
-#ifdef EEPROM_Block2_ADDRESS  
-	/* Ñ¡Ôñ EEPROM Block2 À´Ğ´Èë */
+#ifdef EEPROM_Block2_ADDRESS
+	/* é€‰æ‹© EEPROM Block2 æ¥å†™å…¥ */
   EEPROM_ADDRESS = EEPROM_Block2_ADDRESS;
 #endif
 
-#ifdef EEPROM_Block3_ADDRESS  
-	/* Ñ¡Ôñ EEPROM Block3 À´Ğ´Èë */
+#ifdef EEPROM_Block3_ADDRESS
+	/* é€‰æ‹© EEPROM Block3 æ¥å†™å…¥ */
   EEPROM_ADDRESS = EEPROM_Block3_ADDRESS;
 #endif
 }
 
 /*
- * º¯ÊıÃû£ºI2C_EE_BufferWrite
- * ÃèÊö  £º½«»º³åÇøÖĞµÄÊı¾İĞ´µ½I2C EEPROMÖĞ
- * ÊäÈë  £º-pBuffer »º³åÇøÖ¸Õë
- *         -WriteAddr ½ÓÊÕÊı¾İµÄEEPROMµÄµØÖ·
- *         -NumByteToWrite ÒªĞ´ÈëEEPROMµÄ×Ö½ÚÊı
- * Êä³ö  £ºÎŞ
- * ·µ»Ø  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šI2C_EE_BufferWrite
+ * æè¿°  ï¼šå°†ç¼“å†²åŒºä¸­çš„æ•°æ®å†™åˆ°I2C EEPROMä¸­
+ * è¾“å…¥  ï¼š-pBuffer ç¼“å†²åŒºæŒ‡é’ˆ
+ *         -WriteAddr æ¥æ”¶æ•°æ®çš„EEPROMçš„åœ°å€
+ *         -NumByteToWrite è¦å†™å…¥EEPROMçš„å­—èŠ‚æ•°
+ * è¾“å‡º  ï¼šæ— 
+ * è¿”å›  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 void I2C_EE_BufferWrite(u8* pBuffer, u8 WriteAddr, u16 NumByteToWrite)
 {
@@ -180,22 +180,22 @@ void I2C_EE_BufferWrite(u8* pBuffer, u8 WriteAddr, u16 NumByteToWrite)
   count = I2C_PageSize - Addr;
   NumOfPage =  NumByteToWrite / I2C_PageSize;
   NumOfSingle = NumByteToWrite % I2C_PageSize;
- 
+
   /* If WriteAddr is I2C_PageSize aligned  */
-  if(Addr == 0) 
+  if(Addr == 0)
   {
     /* If NumByteToWrite < I2C_PageSize */
-    if(NumOfPage == 0) 
+    if(NumOfPage == 0)
     {
       I2C_EE_PageWrite(pBuffer, WriteAddr, NumOfSingle);
       I2C_EE_WaitEepromStandbyState();
     }
     /* If NumByteToWrite > I2C_PageSize */
-    else  
+    else
     {
       while(NumOfPage--)
       {
-        I2C_EE_PageWrite(pBuffer, WriteAddr, I2C_PageSize); 
+        I2C_EE_PageWrite(pBuffer, WriteAddr, I2C_PageSize);
     	I2C_EE_WaitEepromStandbyState();
         WriteAddr +=  I2C_PageSize;
         pBuffer += I2C_PageSize;
@@ -209,10 +209,10 @@ void I2C_EE_BufferWrite(u8* pBuffer, u8 WriteAddr, u16 NumByteToWrite)
     }
   }
   /* If WriteAddr is not I2C_PageSize aligned  */
-  else 
+  else
   {
     /* If NumByteToWrite < I2C_PageSize */
-    if(NumOfPage== 0) 
+    if(NumOfPage== 0)
     {
       I2C_EE_PageWrite(pBuffer, WriteAddr, NumOfSingle);
       I2C_EE_WaitEepromStandbyState();
@@ -222,40 +222,40 @@ void I2C_EE_BufferWrite(u8* pBuffer, u8 WriteAddr, u16 NumByteToWrite)
     {
       NumByteToWrite -= count;
       NumOfPage =  NumByteToWrite / I2C_PageSize;
-      NumOfSingle = NumByteToWrite % I2C_PageSize;	
-      
+      NumOfSingle = NumByteToWrite % I2C_PageSize;
+
       if(count != 0)
-      {  
+      {
         I2C_EE_PageWrite(pBuffer, WriteAddr, count);
         I2C_EE_WaitEepromStandbyState();
         WriteAddr += count;
         pBuffer += count;
-      } 
-      
+      }
+
       while(NumOfPage--)
       {
         I2C_EE_PageWrite(pBuffer, WriteAddr, I2C_PageSize);
         I2C_EE_WaitEepromStandbyState();
         WriteAddr +=  I2C_PageSize;
-        pBuffer += I2C_PageSize;  
+        pBuffer += I2C_PageSize;
       }
       if(NumOfSingle != 0)
       {
-        I2C_EE_PageWrite(pBuffer, WriteAddr, NumOfSingle); 
+        I2C_EE_PageWrite(pBuffer, WriteAddr, NumOfSingle);
         I2C_EE_WaitEepromStandbyState();
       }
     }
-  }  
+  }
 }
 
 /*
- * º¯ÊıÃû£ºI2C_EE_ByteWrite
- * ÃèÊö  £ºĞ´Ò»¸ö×Ö½Úµ½I2C EEPROMÖĞ
- * ÊäÈë  £º-pBuffer »º³åÇøÖ¸Õë
- *         -WriteAddr ½ÓÊÕÊı¾İµÄEEPROMµÄµØÖ· 
- * Êä³ö  £ºÎŞ
- * ·µ»Ø  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šI2C_EE_ByteWrite
+ * æè¿°  ï¼šå†™ä¸€ä¸ªå­—èŠ‚åˆ°I2C EEPROMä¸­
+ * è¾“å…¥  ï¼š-pBuffer ç¼“å†²åŒºæŒ‡é’ˆ
+ *         -WriteAddr æ¥æ”¶æ•°æ®çš„EEPROMçš„åœ°å€
+ * è¾“å‡º  ï¼šæ— 
+ * è¿”å›  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 void I2C_EE_ByteWrite(u8* pBuffer, u8 WriteAddr)
 {
@@ -263,72 +263,72 @@ void I2C_EE_ByteWrite(u8* pBuffer, u8 WriteAddr)
   I2C_GenerateSTART(I2C1, ENABLE);
 
   /* Test on EV5 and clear it */
-  while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));  
+  while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
 
   /* Send EEPROM address for write */
   I2C_Send7bitAddress(I2C1, EEPROM_ADDRESS, I2C_Direction_Transmitter);
-  
+
   /* Test on EV6 and clear it */
   while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
-      
+
   /* Send the EEPROM's internal address to write to */
   I2C_SendData(I2C1, WriteAddr);
-  
+
   /* Test on EV8 and clear it */
   while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
 
   /* Send the byte to be written */
-  I2C_SendData(I2C1, *pBuffer); 
-   
+  I2C_SendData(I2C1, *pBuffer);
+
   /* Test on EV8 and clear it */
   while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
-  
+
   /* Send STOP condition */
   I2C_GenerateSTOP(I2C1, ENABLE);
 }
 
 /*
- * º¯ÊıÃû£ºI2C_EE_PageWrite
- * ÃèÊö  £ºÔÚEEPROMµÄÒ»¸öĞ´Ñ­»·ÖĞ¿ÉÒÔĞ´¶à¸ö×Ö½Ú£¬µ«Ò»´ÎĞ´ÈëµÄ×Ö½ÚÊı
- *         ²»ÄÜ³¬¹ıEEPROMÒ³µÄ´óĞ¡¡£AT24C02Ã¿Ò³ÓĞ8¸ö×Ö½Ú¡£
- * ÊäÈë  £º-pBuffer »º³åÇøÖ¸Õë
- *         -WriteAddr ½ÓÊÕÊı¾İµÄEEPROMµÄµØÖ· 
- *         -NumByteToWrite ÒªĞ´ÈëEEPROMµÄ×Ö½ÚÊı
- * Êä³ö  £ºÎŞ
- * ·µ»Ø  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šI2C_EE_PageWrite
+ * æè¿°  ï¼šåœ¨EEPROMçš„ä¸€ä¸ªå†™å¾ªç¯ä¸­å¯ä»¥å†™å¤šä¸ªå­—èŠ‚ï¼Œä½†ä¸€æ¬¡å†™å…¥çš„å­—èŠ‚æ•°
+ *         ä¸èƒ½è¶…è¿‡EEPROMé¡µçš„å¤§å°ã€‚AT24C02æ¯é¡µæœ‰8ä¸ªå­—èŠ‚ã€‚
+ * è¾“å…¥  ï¼š-pBuffer ç¼“å†²åŒºæŒ‡é’ˆ
+ *         -WriteAddr æ¥æ”¶æ•°æ®çš„EEPROMçš„åœ°å€
+ *         -NumByteToWrite è¦å†™å…¥EEPROMçš„å­—èŠ‚æ•°
+ * è¾“å‡º  ï¼šæ— 
+ * è¿”å›  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 void I2C_EE_PageWrite(u8* pBuffer, u8 WriteAddr, u8 NumByteToWrite)
 {
     while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY)); // Added by Najoua 27/08/2008
-    
+
   /* Send START condition */
   I2C_GenerateSTART(I2C1, ENABLE);
-  
+
   /* Test on EV5 and clear it */
-  while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT)); 
-  
+  while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
+
   /* Send EEPROM address for write */
   I2C_Send7bitAddress(I2C1, EEPROM_ADDRESS, I2C_Direction_Transmitter);
-  
-  /* Test on EV6 and clear it */
-  while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));  
 
-  /* Send the EEPROM's internal address to write to */    
-  I2C_SendData(I2C1, WriteAddr);  
+  /* Test on EV6 and clear it */
+  while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
+
+  /* Send the EEPROM's internal address to write to */
+  I2C_SendData(I2C1, WriteAddr);
 
   /* Test on EV8 and clear it */
   while(! I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
 
   /* While there is data to be written */
-  while(NumByteToWrite--)  
+  while(NumByteToWrite--)
   {
     /* Send the current byte */
-    I2C_SendData(I2C1, *pBuffer); 
+    I2C_SendData(I2C1, *pBuffer);
 
     /* Point to the next byte to be written */
-    pBuffer++; 
-  
+    pBuffer++;
+
     /* Test on EV8 and clear it */
     while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
   }
@@ -339,25 +339,25 @@ void I2C_EE_PageWrite(u8* pBuffer, u8 WriteAddr, u8 NumByteToWrite)
 
 
 /*
- * º¯ÊıÃû£ºI2C_EE_BufferRead
- * ÃèÊö  £º´ÓEEPROMÀïÃæ¶ÁÈ¡Ò»¿éÊı¾İ¡£ 
- * ÊäÈë  £º-pBuffer ´æ·Å´ÓEEPROM¶ÁÈ¡µÄÊı¾İµÄ»º³åÇøÖ¸Õë¡£
- *         -WriteAddr ½ÓÊÕÊı¾İµÄEEPROMµÄµØÖ·¡£ 
- *         -NumByteToWrite Òª´ÓEEPROM¶ÁÈ¡µÄ×Ö½ÚÊı¡£
- * Êä³ö  £ºÎŞ
- * ·µ»Ø  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šI2C_EE_BufferRead
+ * æè¿°  ï¼šä»EEPROMé‡Œé¢è¯»å–ä¸€å—æ•°æ®ã€‚
+ * è¾“å…¥  ï¼š-pBuffer å­˜æ”¾ä»EEPROMè¯»å–çš„æ•°æ®çš„ç¼“å†²åŒºæŒ‡é’ˆã€‚
+ *         -WriteAddr æ¥æ”¶æ•°æ®çš„EEPROMçš„åœ°å€ã€‚
+ *         -NumByteToWrite è¦ä»EEPROMè¯»å–çš„å­—èŠ‚æ•°ã€‚
+ * è¾“å‡º  ï¼šæ— 
+ * è¿”å›  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 void I2C_EE_BufferRead(u8* pBuffer, u8 ReadAddr, u16 NumByteToRead)
-{  
-  //*((u8 *)0x4001080c) |=0x80; 
+{
+  //*((u8 *)0x4001080c) |=0x80;
     while(I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY)); // Added by Najoua 27/08/2008
-    
-    
+
+
   /* Send START condition */
   I2C_GenerateSTART(I2C1, ENABLE);
   //*((u8 *)0x4001080c) &=~0x80;
-  
+
   /* Test on EV5 and clear it */
   while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
 
@@ -366,52 +366,52 @@ void I2C_EE_BufferRead(u8* pBuffer, u8 ReadAddr, u16 NumByteToRead)
 
   /* Test on EV6 and clear it */
   while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED));
-  
+
   /* Clear EV6 by setting again the PE bit */
   I2C_Cmd(I2C1, ENABLE);
 
   /* Send the EEPROM's internal address to write to */
-  I2C_SendData(I2C1, ReadAddr);  
+  I2C_SendData(I2C1, ReadAddr);
 
   /* Test on EV8 and clear it */
   while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED));
-  
-  /* Send STRAT condition a second time */  
+
+  /* Send STRAT condition a second time */
   I2C_GenerateSTART(I2C1, ENABLE);
-  
+
   /* Test on EV5 and clear it */
   while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT));
-  
+
   /* Send EEPROM address for read */
   I2C_Send7bitAddress(I2C1, EEPROM_ADDRESS, I2C_Direction_Receiver);
-  
+
   /* Test on EV6 and clear it */
   while(!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED));
-  
+
   /* While there is data to be read */
-  while(NumByteToRead)  
+  while(NumByteToRead)
   {
     if(NumByteToRead == 1)
     {
       /* Disable Acknowledgement */
       I2C_AcknowledgeConfig(I2C1, DISABLE);
-      
+
       /* Send STOP Condition */
       I2C_GenerateSTOP(I2C1, ENABLE);
     }
 
     /* Test on EV7 and clear it */
-    if(I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED))  
-    {      
+    if(I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED))
+    {
       /* Read a byte from the EEPROM */
       *pBuffer = I2C_ReceiveData(I2C1);
 
       /* Point to the next location where the byte read will be saved */
-      pBuffer++; 
-      
+      pBuffer++;
+
       /* Decrement the read bytes counter */
-      NumByteToRead--;        
-    }   
+      NumByteToRead--;
+    }
   }
 
   /* Enable Acknowledgement to be ready for another reception */
@@ -420,14 +420,14 @@ void I2C_EE_BufferRead(u8* pBuffer, u8 ReadAddr, u16 NumByteToRead)
 
 
 /*
- * º¯ÊıÃû£ºI2C_EE_WaitEepromStandbyState
- * ÃèÊö  £ºWait for EEPROM Standby state 
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * ·µ»Ø  £ºÎŞ
- * µ÷ÓÃ  £º 
+ * å‡½æ•°åï¼šI2C_EE_WaitEepromStandbyState
+ * æè¿°  ï¼šWait for EEPROM Standby state
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è¿”å›  ï¼šæ— 
+ * è°ƒç”¨  ï¼š
  */
-void I2C_EE_WaitEepromStandbyState(void)      
+void I2C_EE_WaitEepromStandbyState(void)
 {
   vu16 SR1_Tmp = 0;
 
@@ -440,11 +440,11 @@ void I2C_EE_WaitEepromStandbyState(void)
     /* Send EEPROM address for write */
     I2C_Send7bitAddress(I2C1, EEPROM_ADDRESS, I2C_Direction_Transmitter);
   }while(!(I2C_ReadRegister(I2C1, I2C_Register_SR1) & 0x0002));
-  
+
   /* Clear AF flag */
   I2C_ClearFlag(I2C1, I2C_FLAG_AF);
-    /* STOP condition */    
-    I2C_GenerateSTOP(I2C1, ENABLE); 
+    /* STOP condition */
+    I2C_GenerateSTOP(I2C1, ENABLE);
 }
 
 /*************************END OF FILE*************************************/

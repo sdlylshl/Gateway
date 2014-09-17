@@ -1,26 +1,26 @@
 /*******************************************************************************
- * ÎÄ¼şÃû  £ºrtc.c
- * ÃèÊö    £ºÀûÓÃSTM32µÄRTCÊµÏÖÒ»¸ö¼òÒ×µÄµç×ÓÊ±ÖÓ¡£
- *           ÏÔÊ¾¸ñÊ½Îª Time: XX : XX : XX(Ê±£º·Ö£ºÃë)¡£         
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * Ó²¼şÁ¬½Ó£º-------------------
+ * æ–‡ä»¶å  ï¼šrtc.c
+ * æè¿°    ï¼šåˆ©ç”¨STM32çš„RTCå®ç°ä¸€ä¸ªç®€æ˜“çš„ç”µå­æ—¶é’Ÿã€‚
+ *           æ˜¾ç¤ºæ ¼å¼ä¸º Time: XX : XX : XX(æ—¶ï¼šåˆ†ï¼šç§’)ã€‚
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * ç¡¬ä»¶è¿æ¥ï¼š-------------------
  *          |                   |
- *          | VBATÒı½ÅĞèÍâ½Óµç³Ø|
+ *          | VBATå¼•è„šéœ€å¤–æ¥ç”µæ± |
  *          |                   |
  *           -----------------
- * ¿â°æ±¾  £ºST3.5.0
- * ×÷Õß    £º±£Áô 
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
+ * ä½œè€…    ï¼šä¿ç•™
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "rtc.h"
 #include "stdio.h"
 
-/* ÃëÖĞ¶Ï±êÖ¾£¬½øÈëÃëÖĞ¶ÏÊ±ÖÃ1£¬µ±Ê±¼ä±»Ë¢ĞÂÖ®ºóÇå0 */
-__IO uint32_t TimeDisplay;	
+/* ç§’ä¸­æ–­æ ‡å¿—ï¼Œè¿›å…¥ç§’ä¸­æ–­æ—¶ç½®1ï¼Œå½“æ—¶é—´è¢«åˆ·æ–°ä¹‹åæ¸…0 */
+__IO uint32_t TimeDisplay;
 
 
-/*Ê±¼ä½á¹¹Ìå*/
+/*æ—¶é—´ç»“æ„ä½“*/
 struct rtc_time systmtime;
 
 
@@ -31,13 +31,13 @@ struct rtc_time systmtime;
   */
 int RTC_test2()
 {
-			
-	  	/* ÅäÖÃRTCÃëÖĞ¶ÏÓÅÏÈ¼¶ */
+
+	  	/* é…ç½®RTCç§’ä¸­æ–­ä¼˜å…ˆçº§ */
 	  NVIC_Configuration();
 	  USART1_Config();
 	  RTC_CheckAndConfig(&systmtime);
 
-	
+
 	  /* Display time in infinite loop */
 	  Time_Show(&systmtime);
 }
@@ -45,30 +45,30 @@ int RTC_test2()
 
 
 int RTC_test(void)
-{	
+{
 	/* USART1 config */
 	USART1_Config();
-	
-	/* ÅäÖÃRTCÃëÖĞ¶ÏÓÅÏÈ¼¶ */
+
+	/* é…ç½®RTCç§’ä¸­æ–­ä¼˜å…ˆçº§ */
 	NVIC_Configuration();
-	
+
 	printf( "\r\n This is a RTC demo...... \r\n" );
-	
+
 	if (BKP_ReadBackupRegister(BKP_DR1) != 0xA5A5)
 	{
 		/* Backup data register value is not correct or not yet programmed (when
 		the first time the program is executed) */
 		printf("\r\nThis is a RTC demo!\r\n");
 		printf("\r\n\n RTC not yet configured....");
-		
+
 		/* RTC Configuration */
 		RTC_Configuration();
-		
+
 		printf("\r\n RTC configured....");
-		
+
 		/* Adjust time by values entred by the user on the hyperterminal */
 		Time_Adjust();
-		
+
 		BKP_WriteBackupRegister(BKP_DR1, 0xA5A5);
 	}
 	else
@@ -83,58 +83,58 @@ int RTC_test(void)
 		{
 			printf("\r\n\n External Reset occurred....");
 		}
-		
+
 		printf("\r\n No need to configure RTC....");
 		/* Wait for RTC registers synchronization */
 		RTC_WaitForSynchro();
-		
+
 		/* Enable the RTC Second */
 		RTC_ITConfig(RTC_IT_SEC, ENABLE);
-		
+
 		/* Wait until last write operation on RTC registers has finished */
 		RTC_WaitForLastTask();
 	}
-	
+
 	#ifdef RTCClockOutput_Enable
 	/* Enable PWR and BKP clocks */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);
-	
+
 	/* Allow access to BKP Domain */
 	PWR_BackupAccessCmd(ENABLE);
-	
+
 	/* Disable the Tamper Pin */
 	BKP_TamperPinCmd(DISABLE); /* To output RTCCLK/64 on Tamper pin, the tamper
 	             functionality must be disabled */
-	
+
 	/* Enable RTC Clock Output on Tamper Pin */
 	BKP_RTCOutputConfig(BKP_RTCOutputSource_CalibClock);
 	#endif
-	
+
 	/* Clear reset flags */
 	RCC_ClearFlag();
-	
+
 	/* Display time in infinite loop */
 	Time_Show();
-	
+
 	while (1)
 	{
-	
+
 	}
 }
 /*
- * º¯ÊıÃû£ºNVIC_Configuration
- * ÃèÊö  £ºÅäÖÃRTCÃëÖĞ¶ÏµÄÖ÷ÖĞ¶ÏÓÅÏÈ¼¶Îª1£¬´ÎÓÅÏÈ¼¶Îª0
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šNVIC_Configuration
+ * æè¿°  ï¼šé…ç½®RTCç§’ä¸­æ–­çš„ä¸»ä¸­æ–­ä¼˜å…ˆçº§ä¸º1ï¼Œæ¬¡ä¼˜å…ˆçº§ä¸º0
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 void NVIC_Configuration(void)
 {
 	NVIC_InitTypeDef NVIC_InitStructure;
-	
+
 	/* Configure one bit for preemption priority */
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-	
+
 	/* Enable the RTC Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = RTC_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
@@ -144,70 +144,70 @@ void NVIC_Configuration(void)
 }
 
 /*
- * º¯ÊıÃû£ºRTC_Configuration
- * ÃèÊö  £ºÅäÖÃRTC
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šRTC_Configuration
+ * æè¿°  ï¼šé…ç½®RTC
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 void RTC_Configuration(void)
 {
 	/* Enable PWR and BKP clocks */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR | RCC_APB1Periph_BKP, ENABLE);
-	
+
 	/* Allow access to BKP Domain */
 	PWR_BackupAccessCmd(ENABLE);
-	
+
 	/* Reset Backup Domain */
 	BKP_DeInit();
-	
+
 	/* Enable LSE */
 	RCC_LSEConfig(RCC_LSE_ON);
 	/* Wait till LSE is ready */
 	while (RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
 	{}
-	
+
 	/* Select LSE as RTC Clock Source */
 	RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
-	
+
 	/* Enable RTC Clock */
 	RCC_RTCCLKCmd(ENABLE);
-	
+
 	/* Wait for RTC registers synchronization */
 	RTC_WaitForSynchro();
-	
+
 	/* Wait until last write operation on RTC registers has finished */
 	RTC_WaitForLastTask();
-	
+
 	/* Enable the RTC Second */
 	RTC_ITConfig(RTC_IT_SEC, ENABLE);
-	
+
 	/* Wait until last write operation on RTC registers has finished */
 	RTC_WaitForLastTask();
-	
+
 	/* Set RTC prescaler: set RTC period to 1sec */
 	RTC_SetPrescaler(32767); /* RTC period = RTCCLK/RTC_PR = (32.768 KHz)/(32767+1) */
-	
+
 	/* Wait until last write operation on RTC registers has finished */
 	RTC_WaitForLastTask();
 }
 
 
 /*
- * º¯ÊıÃû£ºTime_Regulate
- * ÃèÊö  £º·µ»ØÓÃ»§ÔÚ³¬¼¶ÖÕ¶ËÖĞÊäÈëµÄÊ±¼äÖµ£¬²¢½«Öµ´¢´æÔÚ
- *         RTC ¼ÆÊı¼Ä´æÆ÷ÖĞ¡£
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÓÃ»§ÔÚ³¬¼¶ÖÕ¶ËÖĞÊäÈëµÄÊ±¼äÖµ£¬µ¥Î»Îª s
- * µ÷ÓÃ  £ºÄÚ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šTime_Regulate
+ * æè¿°  ï¼šè¿”å›ç”¨æˆ·åœ¨è¶…çº§ç»ˆç«¯ä¸­è¾“å…¥çš„æ—¶é—´å€¼ï¼Œå¹¶å°†å€¼å‚¨å­˜åœ¨
+ *         RTC è®¡æ•°å¯„å­˜å™¨ä¸­ã€‚
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šç”¨æˆ·åœ¨è¶…çº§ç»ˆç«¯ä¸­è¾“å…¥çš„æ—¶é—´å€¼ï¼Œå•ä½ä¸º s
+ * è°ƒç”¨  ï¼šå†…éƒ¨è°ƒç”¨
  */
 uint32_t Time_Regulate(void)
 {
 	uint32_t Tmp_HH = 0xFF, Tmp_MM = 0xFF, Tmp_SS = 0xFF;
-	
+
 	printf("\r\n==============Time Settings=====================================");
 	printf("\r\n  Please Set Hours");
-	
+
 	while (Tmp_HH == 0xFF)
 	{
 		Tmp_HH = USART_Scanf(23);
@@ -225,18 +225,18 @@ uint32_t Time_Regulate(void)
 		Tmp_SS = USART_Scanf(59);
 	}
 	printf(":  %d", Tmp_SS);
-	
+
 	/* Return the value to store in RTC counter register */
 	return((Tmp_HH*3600 + Tmp_MM*60 + Tmp_SS));
 }
 
 
 /*
- * º¯ÊıÃû£ºTime_Adjust
- * ÃèÊö  £ºÊ±¼äµ÷½Ú
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šTime_Adjust
+ * æè¿°  ï¼šæ—¶é—´è°ƒèŠ‚
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 void Time_Adjust(void)
 {
@@ -250,38 +250,38 @@ void Time_Adjust(void)
 
 
 /*
- * º¯ÊıÃû£ºTime_Display
- * ÃèÊö  £ºÏÔÊ¾µ±Ç°Ê±¼äÖµ
- * ÊäÈë  £º-TimeVar RTC¼ÆÊıÖµ£¬µ¥Î»Îª s
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÄÚ²¿µ÷ÓÃ
- */	
+ * å‡½æ•°åï¼šTime_Display
+ * æè¿°  ï¼šæ˜¾ç¤ºå½“å‰æ—¶é—´å€¼
+ * è¾“å…¥  ï¼š-TimeVar RTCè®¡æ•°å€¼ï¼Œå•ä½ä¸º s
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå†…éƒ¨è°ƒç”¨
+ */
 void Time_Display(uint32_t TimeVar)
 {
 	uint32_t THH = 0, TMM = 0, TSS = 0;
-	
+
 	/* Compute  hours */
 	THH = TimeVar / 3600;
 	/* Compute minutes */
 	TMM = (TimeVar % 3600) / 60;
 	/* Compute seconds */
 	TSS = (TimeVar % 3600) % 60;
-	
+
 	printf(" Time: %0.2d:%0.2d:%0.2d\r", THH, TMM, TSS);
 }
 
 
 /*
- * º¯ÊıÃû£ºTime_Show
- * ÃèÊö  £ºÔÚ³¬¼¶ÖÕ¶ËÖĞÏÔÊ¾µ±Ç°Ê±¼äÖµ
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
- */   
+ * å‡½æ•°åï¼šTime_Show
+ * æè¿°  ï¼šåœ¨è¶…çº§ç»ˆç«¯ä¸­æ˜¾ç¤ºå½“å‰æ—¶é—´å€¼
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
+ */
 void Time_Show(void)
 {
 	printf("\n\r");
-	
+
 	/* Infinite loop */
 	while (1)
 	{
@@ -297,24 +297,24 @@ void Time_Show(void)
 
 
 /*
- * º¯ÊıÃû£ºUSART_Scanf
- * ÃèÊö  £º´®¿Ú´Ó³¬¼¶ÖÕ¶ËÖĞ»ñÈ¡ÊıÖµ
- * ÊäÈë  £º- value ÓÃ»§ÔÚ³¬¼¶ÖÕ¶ËÖĞÊäÈëµÄÊıÖµ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÄÚ²¿µ÷ÓÃ
- */ 
+ * å‡½æ•°åï¼šUSART_Scanf
+ * æè¿°  ï¼šä¸²å£ä»è¶…çº§ç»ˆç«¯ä¸­è·å–æ•°å€¼
+ * è¾“å…¥  ï¼š- value ç”¨æˆ·åœ¨è¶…çº§ç»ˆç«¯ä¸­è¾“å…¥çš„æ•°å€¼
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå†…éƒ¨è°ƒç”¨
+ */
 uint8_t USART_Scanf(uint32_t value)
 {
 	uint32_t index = 0;
 	uint32_t tmp[2] = {0, 0};
-	
+
 	while (index < 2)
 	{
 		/* Loop until RXNE = 1 */
 		while (USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET)
 		{}
 		tmp[index++] = (USART_ReceiveData(USART1));
-		// ´Ó´®¿ÚÖÕ¶ËÀïÃæÊä½øÈ¥µÄÊıÊÇASCIIÂëÖµ
+		// ä»ä¸²å£ç»ˆç«¯é‡Œé¢è¾“è¿›å»çš„æ•°æ˜¯ASCIIç å€¼
 		if ((tmp[index - 1] < 0x30) || (tmp[index - 1] > 0x39))
 		{
 			printf("\n\rPlease enter valid number between 0 and 9");

@@ -1,12 +1,12 @@
 /******************** (C) COPYRIGHT 2012 WildFire Team **************************
- * ÎÄ¼şÃû  £ºmain.c
- * ÃèÊö    £º»ª°î 2M´®ĞĞflash²âÊÔ£¬²¢½«²âÊÔĞÅÏ¢Í¨¹ı´®¿Ú1ÔÚµçÄÔµÄ³¬¼¶ÖÕ¶ËÖĞ´òÓ¡³öÀ´¡£         
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * ¿â°æ±¾  £ºST3.5.0
+ * æ–‡ä»¶å  ï¼šmain.c
+ * æè¿°    ï¼šåé‚¦ 2Mä¸²è¡Œflashæµ‹è¯•ï¼Œå¹¶å°†æµ‹è¯•ä¿¡æ¯é€šè¿‡ä¸²å£1åœ¨ç”µè„‘çš„è¶…çº§ç»ˆç«¯ä¸­æ‰“å°å‡ºæ¥ã€‚
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
  *
- * ×÷Õß    £ºwildfire team 
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ * ä½œè€…    ï¼šwildfire team
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "stm32f10x.h"
 #include "usart1.h"
@@ -14,7 +14,7 @@
 
 typedef enum { FAILED = 0, PASSED = !FAILED} TestStatus;
 
-/* »ñÈ¡»º³åÇøµÄ³¤¶È */
+/* è·å–ç¼“å†²åŒºçš„é•¿åº¦ */
 #define TxBufferSize1   (countof(TxBuffer1) - 1)
 #define RxBufferSize1   (countof(TxBuffer1) - 1)
 #define countof(a)      (sizeof(a) / sizeof(*(a)))
@@ -25,91 +25,91 @@ typedef enum { FAILED = 0, PASSED = !FAILED} TestStatus;
 #define  FLASH_SectorToErase    FLASH_WriteAddress
 #define  sFLASH_ID              0xEF3015     //W25X16
 //#define  sFLASH_ID              0xEF4015	 //W25Q16
-     
 
-/* ·¢ËÍ»º³åÇø³õÊ¼»¯ */
-uint8_t Tx_Buffer[] = " ¸ĞĞ»ÄúÑ¡ÓÃÒ°»ğstm32¿ª·¢°å\r\n                http://firestm32.taobao.com";
+
+/* å‘é€ç¼“å†²åŒºåˆå§‹åŒ– */
+uint8_t Tx_Buffer[] = " æ„Ÿè°¢æ‚¨é€‰ç”¨é‡ç«stm32å¼€å‘æ¿\r\n                http://firestm32.taobao.com";
 uint8_t Rx_Buffer[BufferSize];
 
 __IO uint32_t DeviceID = 0;
 __IO uint32_t FlashID = 0;
 __IO TestStatus TransferStatus1 = FAILED;
 
-// º¯ÊıÔ­ĞÍÉùÃ÷
+// å‡½æ•°åŸå‹å£°æ˜
 void Delay(__IO uint32_t nCount);
 TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength);
 
 /*
- * º¯ÊıÃû£ºmain
- * ÃèÊö  £ºÖ÷º¯Êı
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
+ * å‡½æ•°åï¼šmain
+ * æè¿°  ï¼šä¸»å‡½æ•°
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
  */
 int main(void)
-{ 	
-	/* ÅäÖÃ´®¿Ú1Îª£º115200 8-N-1 */
+{
+	/* é…ç½®ä¸²å£1ä¸ºï¼š115200 8-N-1 */
 	USART1_Config();
-	printf("\r\n ÕâÊÇÒ»¸ö2M´®ĞĞflash(W25X16)ÊµÑé \r\n");
-	
-	/* 2M´®ĞĞflash W25X16³õÊ¼»¯ */
+	printf("\r\n è¿™æ˜¯ä¸€ä¸ª2Mä¸²è¡Œflash(W25X16)å®éªŒ \r\n");
+
+	/* 2Mä¸²è¡Œflash W25X16åˆå§‹åŒ– */
 	SPI_FLASH_Init();
-	
+
 	/* Get SPI Flash Device ID */
 	DeviceID = SPI_FLASH_ReadDeviceID();
-	
+
 	Delay( 200 );
-	
+
 	/* Get SPI Flash ID */
 	FlashID = SPI_FLASH_ReadID();
-	
+
 	printf("\r\n FlashID is 0x%X,  Manufacturer Device ID is 0x%X\r\n", FlashID, DeviceID);
-	
+
 	/* Check the SPI Flash ID */
 	if (FlashID == sFLASH_ID)  /* #define  sFLASH_ID  0xEF3015 */
-	{	
-		printf("\r\n ¼ì²âµ½»ª°î´®ĞĞflash W25X16 !\r\n");
-		
+	{
+		printf("\r\n æ£€æµ‹åˆ°åé‚¦ä¸²è¡Œflash W25X16 !\r\n");
+
 		/* Erase SPI FLASH Sector to write on */
-		SPI_FLASH_SectorErase(FLASH_SectorToErase);	 	 
-		
-		/* ½«·¢ËÍ»º³åÇøµÄÊı¾İĞ´µ½flashÖĞ */
+		SPI_FLASH_SectorErase(FLASH_SectorToErase);
+
+		/* å°†å‘é€ç¼“å†²åŒºçš„æ•°æ®å†™åˆ°flashä¸­ */
 		SPI_FLASH_BufferWrite(Tx_Buffer, FLASH_WriteAddress, BufferSize);
-		printf("\r\n Ğ´ÈëµÄÊı¾İÎª£º%s \r\t", Tx_Buffer);
-		
-		/* ½«¸Õ¸ÕĞ´ÈëµÄÊı¾İ¶Á³öÀ´·Åµ½½ÓÊÕ»º³åÇøÖĞ */
+		printf("\r\n å†™å…¥çš„æ•°æ®ä¸ºï¼š%s \r\t", Tx_Buffer);
+
+		/* å°†åˆšåˆšå†™å…¥çš„æ•°æ®è¯»å‡ºæ¥æ”¾åˆ°æ¥æ”¶ç¼“å†²åŒºä¸­ */
 		SPI_FLASH_BufferRead(Rx_Buffer, FLASH_ReadAddress, BufferSize);
-		printf("\r\n ¶Á³öµÄÊı¾İÎª£º%s \r\n", Tx_Buffer);
-		
-		/* ¼ì²éĞ´ÈëµÄÊı¾İÓë¶Á³öµÄÊı¾İÊÇ·ñÏàµÈ */
+		printf("\r\n è¯»å‡ºçš„æ•°æ®ä¸ºï¼š%s \r\n", Tx_Buffer);
+
+		/* æ£€æŸ¥å†™å…¥çš„æ•°æ®ä¸è¯»å‡ºçš„æ•°æ®æ˜¯å¦ç›¸ç­‰ */
 		TransferStatus1 = Buffercmp(Tx_Buffer, Rx_Buffer, BufferSize);
-		
+
 		if( PASSED == TransferStatus1 )
-		{    
-			printf("\r\n 2M´®ĞĞflash(W25X16)²âÊÔ³É¹¦!\n\r");
+		{
+			printf("\r\n 2Mä¸²è¡Œflash(W25X16)æµ‹è¯•æˆåŠŸ!\n\r");
 		}
 		else
-		{        
-			printf("\r\n 2M´®ĞĞflash(W25X16)²âÊÔÊ§°Ü!\n\r");
+		{
+			printf("\r\n 2Mä¸²è¡Œflash(W25X16)æµ‹è¯•å¤±è´¥!\n\r");
 		}
 	}// if (FlashID == sFLASH_ID)
 	else
-	{    
-		printf("\r\n »ñÈ¡²»µ½ W25X16 ID!\n\r");
+	{
+		printf("\r\n è·å–ä¸åˆ° W25X16 ID!\n\r");
 	}
-	
-	SPI_Flash_PowerDown();  
-	while(1);  
+
+	SPI_Flash_PowerDown();
+	while(1);
 }
 
 /*
- * º¯ÊıÃû£ºBuffercmp
- * ÃèÊö  £º±È½ÏÁ½¸ö»º³åÇøÖĞµÄÊı¾İÊÇ·ñÏàµÈ
- * ÊäÈë  £º-pBuffer1     src»º³åÇøÖ¸Õë
- *         -pBuffer2     dst»º³åÇøÖ¸Õë
- *         -BufferLength »º³åÇø³¤¶È
- * Êä³ö  £ºÎŞ
- * ·µ»Ø  £º-PASSED pBuffer1 µÈÓÚ   pBuffer2
- *         -FAILED pBuffer1 ²»Í¬ÓÚ pBuffer2
+ * å‡½æ•°åï¼šBuffercmp
+ * æè¿°  ï¼šæ¯”è¾ƒä¸¤ä¸ªç¼“å†²åŒºä¸­çš„æ•°æ®æ˜¯å¦ç›¸ç­‰
+ * è¾“å…¥  ï¼š-pBuffer1     srcç¼“å†²åŒºæŒ‡é’ˆ
+ *         -pBuffer2     dstç¼“å†²åŒºæŒ‡é’ˆ
+ *         -BufferLength ç¼“å†²åŒºé•¿åº¦
+ * è¾“å‡º  ï¼šæ— 
+ * è¿”å›  ï¼š-PASSED pBuffer1 ç­‰äº   pBuffer2
+ *         -FAILED pBuffer1 ä¸åŒäº pBuffer2
  */
 TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength)
 {

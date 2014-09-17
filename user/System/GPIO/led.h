@@ -3,14 +3,14 @@
 
 #include "stm32f10x.h"
 
-/* the macro definition to trigger the led on or off 
+/* the macro definition to trigger the led on or off
  * 1 - off
  - 0 - on
  */
 #define ON  0
 #define OFF 1
 
-//´ø²Îºê£¬¿ÉÒÔÏñÄÚÁªº¯ÊıÒ»ÑùÊ¹ÓÃ
+//å¸¦å‚å®ï¼Œå¯ä»¥åƒå†…è”å‡½æ•°ä¸€æ ·ä½¿ç”¨
 #define LED1(a)	if (a)	\
 					GPIO_SetBits(GPIOC,GPIO_Pin_3);\
 					else		\
@@ -28,7 +28,7 @@
 #define LED8(a)	if (a)	\
 					GPIO_SetBits(GPIOB,GPIO_Pin_8);\
 					else		\
-					GPIO_ResetBits(GPIOB,GPIO_Pin_8)					
+					GPIO_ResetBits(GPIOB,GPIO_Pin_8)
 
 void LED_GPIO_Config(void);
 

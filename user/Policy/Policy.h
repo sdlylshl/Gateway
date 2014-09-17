@@ -3,10 +3,10 @@
 
 
 /**
-  * @brief  ¿ØÖÆ²ßÂÔÖ´ĞĞ Ñ­»·¼ì²â Éè±¸×´Ì¬±í
+  * @brief  æ§åˆ¶ç­–ç•¥æ‰§è¡Œ å¾ªç¯æ£€æµ‹ è®¾å¤‡çŠ¶æ€è¡¨
   * @param  NETID:
   * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
-  * @retval ·¢ËÍ³É¹¦·µ»Ø OK
+  * @retval å‘é€æˆåŠŸè¿”å› OK
     * @writer lishoulei
     *   @modify
   */

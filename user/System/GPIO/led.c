@@ -1,47 +1,47 @@
 /******************** (C) COPYRIGHT 2012 WildFire Team ***************************
- * ÎÄ¼şÃû  £ºled.c
- * ÃèÊö    £ºled Ó¦ÓÃº¯Êı¿â         
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * Ó²¼şÁ¬½Ó£º-----------------
+ * æ–‡ä»¶å  ï¼šled.c
+ * æè¿°    ï¼šled åº”ç”¨å‡½æ•°åº“
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * ç¡¬ä»¶è¿æ¥ï¼š-----------------
  *          |   PC3 - LED1     |
  *          |   PC4 - LED2     |
  *          |   PC5 - LED3     |
- *           ----------------- 
- * ¿â°æ±¾  £ºST3.5.0
- * ×÷Õß    £ºwildfire team 
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ *           -----------------
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
+ * ä½œè€…    ï¼šwildfire team
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "led.h"
 
 /*
- * º¯ÊıÃû£ºLED_GPIO_Config
- * ÃèÊö  £ºÅäÖÃLEDÓÃµ½µÄI/O¿Ú
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
+ * å‡½æ•°åï¼šLED_GPIO_Config
+ * æè¿°  ï¼šé…ç½®LEDç”¨åˆ°çš„I/Oå£
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
  */
 void LED_GPIO_Config(void)
-{		
-	/*¶¨ÒåÒ»¸öGPIO_InitTypeDefÀàĞÍµÄ½á¹¹Ìå*/
+{
+	/*å®šä¹‰ä¸€ä¸ªGPIO_InitTypeDefç±»å‹çš„ç»“æ„ä½“*/
 	GPIO_InitTypeDef GPIO_InitStructure;
 
-	/*¿ªÆôGPIOCµÄÍâÉèÊ±ÖÓ*/
-	RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC, ENABLE); 
-	RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOB, ENABLE); 
-	/*Ñ¡ÔñÒª¿ØÖÆµÄGPIOCÒı½Å*/															   
-  	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_All;	
+	/*å¼€å¯GPIOCçš„å¤–è®¾æ—¶é’Ÿ*/
+	RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC, ENABLE);
+	RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOB, ENABLE);
+	/*é€‰æ‹©è¦æ§åˆ¶çš„GPIOCå¼•è„š*/
+  	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_All;
 
-	/*ÉèÖÃÒı½ÅÄ£Ê½ÎªÍ¨ÓÃÍÆÍìÊä³ö*/
-  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   
+	/*è®¾ç½®å¼•è„šæ¨¡å¼ä¸ºé€šç”¨æ¨æŒ½è¾“å‡º*/
+  	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 
-	/*ÉèÖÃÒı½ÅËÙÂÊÎª50MHz */   
-  	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
+	/*è®¾ç½®å¼•è„šé€Ÿç‡ä¸º50MHz */
+  	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
-	/*µ÷ÓÃ¿âº¯Êı£¬³õÊ¼»¯GPIOC*/
-  	GPIO_Init(GPIOC, &GPIO_InitStructure);		  
-  	GPIO_Init(GPIOB, &GPIO_InitStructure);	
-	/* ¹Ø±ÕËùÓĞledµÆ	*/
-	GPIO_SetBits(GPIOC, GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5);	 
+	/*è°ƒç”¨åº“å‡½æ•°ï¼Œåˆå§‹åŒ–GPIOC*/
+  	GPIO_Init(GPIOC, &GPIO_InitStructure);
+  	GPIO_Init(GPIOB, &GPIO_InitStructure);
+	/* å…³é—­æ‰€æœ‰ledç¯	*/
+	GPIO_SetBits(GPIOC, GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5);
 }
 
 

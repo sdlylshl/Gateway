@@ -1,20 +1,20 @@
 /******************** (C) COPYRIGHT 2012 WildFire Team ***************************
- * ÎÄ¼şÃû  £ºcrc.c
- * ÃèÊö    £ºcrc£¨Ñ­»·ÈßÓàĞ£Ñé£©Ó¦ÓÃº¯Êı¿â
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * Ó²¼şÁ¬½Ó£º--------------------------
+ * æ–‡ä»¶å  ï¼šcrc.c
+ * æè¿°    ï¼šcrcï¼ˆå¾ªç¯å†—ä½™æ ¡éªŒï¼‰åº”ç”¨å‡½æ•°åº“
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * ç¡¬ä»¶è¿æ¥ï¼š--------------------------
  *          |                          |
- *          | ÀûÓÃµÄÊÇCPUÄÚ²¿µÄCRCÓ²¼ş |
+ *          | åˆ©ç”¨çš„æ˜¯CPUå†…éƒ¨çš„CRCç¡¬ä»¶ |
  *          |                          |
  *           --------------------------
- * ¿â°æ±¾  £ºST3.5.0
- * ×÷Õß    £ºwildfire team
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
+ * ä½œè€…    ï¼šwildfire team
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "crc.h"
 
-__IO uint32_t CRCValue = 0;		 // ÓÃÓÚ´æ·Å²úÉúµÄCRCĞ£ÑéÖµ
+__IO uint32_t CRCValue = 0;		 // ç”¨äºå­˜æ”¾äº§ç”Ÿçš„CRCæ ¡éªŒå€¼
 
 
 int CRC_test(void)
@@ -24,18 +24,18 @@ int CRC_test(void)
 	/* USART1 config 115200 8-N-1 */
 	USART1_Config();
 
-	/* Ê¹ÄÜCRCÊ±ÖÓ */
+	/* ä½¿èƒ½CRCæ—¶é’Ÿ */
 	CRC_Enable();
 
-	printf("\r\n ÕâÊÇÒ»¸ö CRC(Ñ­»·ÈßÓàĞ£Ñé)ÊµÑé \r\n");
+	printf("\r\n è¿™æ˜¯ä¸€ä¸ª CRC(å¾ªç¯å†—ä½™æ ¡éªŒ)å®éªŒ \r\n");
 
 	/* Compute the CRC of "DataBuffer" */
 	for(i=0; i<BUFFER_SIZE; i++ )
 	{
 		CRCValue = CRC_CalcBlockCRC((uint32_t *)DataBuffer, BUFFER_SIZE);
-		printf("\r\n32-bit CRC Ğ£ÑéÂëÎª:0X%X\r\n", CRCValue);
+		printf("\r\n32-bit CRC æ ¡éªŒç ä¸º:0X%X\r\n", CRCValue);
 	}
-	printf("\r\nCRC(Ñ­»·ÈßÓàĞ£Ñé)²âÊÔ³É¹¦\r\n");
+	printf("\r\nCRC(å¾ªç¯å†—ä½™æ ¡éªŒ)æµ‹è¯•æˆåŠŸ\r\n");
 
 	for(;;)
 	{
@@ -44,11 +44,11 @@ int CRC_test(void)
 }
 
 /*
- * º¯ÊıÃû£ºCRC_Config
- * ÃèÊö  £ºÊ¹ÄÜCRCÊ±ÖÓ
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  : Íâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šCRC_Config
+ * æè¿°  ï¼šä½¿èƒ½CRCæ—¶é’Ÿ
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  : å¤–éƒ¨è°ƒç”¨
  */
 void CRC_Enable(void)
 {

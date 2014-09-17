@@ -1,29 +1,29 @@
 /******************** (C) COPYRIGHT 2012 WildFire Team **************************
- * ÎÄ¼şÃû  £ºmain.c
- * ÃèÊö    £º´®¿Ú1(USART1)ÏòµçÄÔµÄ³¬¼¶ÖÕ¶ËÒÔ1sÎª¼ä¸ô´òÓ¡µ±Ç°ADC1µÄ×ª»»µçÑ¹Öµ         
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * ¿â°æ±¾  £ºST3.5.0
+ * æ–‡ä»¶å  ï¼šmain.c
+ * æè¿°    ï¼šä¸²å£1(USART1)å‘ç”µè„‘çš„è¶…çº§ç»ˆç«¯ä»¥1sä¸ºé—´éš”æ‰“å°å½“å‰ADC1çš„è½¬æ¢ç”µå‹å€¼
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
  *
- * ×÷Õß    £ºwildfire team 
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ * ä½œè€…    ï¼šwildfire team
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "stm32f10x.h"
 #include "usart1.h"
 #include "adc.h"
 
-// ADC1×ª»»µÄµçÑ¹ÖµÍ¨¹ıMDA·½Ê½´«µ½SRAM
+// ADC1è½¬æ¢çš„ç”µå‹å€¼é€šè¿‡MDAæ–¹å¼ä¼ åˆ°SRAM
 extern __IO uint16_t ADC_ConvertedValue;
 
-// ¾Ö²¿±äÁ¿£¬ÓÃÓÚ±£´æ×ª»»¼ÆËãºóµÄµçÑ¹Öµ			 
+// å±€éƒ¨å˜é‡ï¼Œç”¨äºä¿å­˜è½¬æ¢è®¡ç®—åçš„ç”µå‹å€¼
 
-float ADC_ConvertedValueLocal;        
+float ADC_ConvertedValueLocal;
 
-// Èí¼şÑÓÊ±
+// è½¯ä»¶å»¶æ—¶
 void Delay(__IO uint32_t nCount)
 {
   for(; nCount != 0; nCount--);
-} 
+}
 
 /**
   * @brief  Main program.
@@ -32,24 +32,24 @@ void Delay(__IO uint32_t nCount)
   */
 
 int main(void)
-{	
+{
 	/* USART1 config */
 	USART1_Config();
-	
+
 	/* enable adc1 and config adc1 to dma mode */
 	ADC1_Init();
-	
-	printf("\r\n -------ÕâÊÇÒ»¸öADCÊµÑé------\r\n");
-	
+
+	printf("\r\n -------è¿™æ˜¯ä¸€ä¸ªADCå®éªŒ------\r\n");
+
 	while (1)
 	{
-		ADC_ConvertedValueLocal =(float) ADC_ConvertedValue/4096*3.3; // ¶ÁÈ¡×ª»»µÄADÖµ
-	
-		printf("\r\n The current AD value = 0x%04X \r\n", ADC_ConvertedValue); 
-		printf("\r\n The current AD value = %f V \r\n",ADC_ConvertedValueLocal); 
+		ADC_ConvertedValueLocal =(float) ADC_ConvertedValue/4096*3.3; // è¯»å–è½¬æ¢çš„ADå€¼
 
-		Delay(0xffffee);                              // ÑÓÊ± 
-	
+		printf("\r\n The current AD value = 0x%04X \r\n", ADC_ConvertedValue);
+		printf("\r\n The current AD value = %f V \r\n",ADC_ConvertedValueLocal);
+
+		Delay(0xffffee);                              // å»¶æ—¶
+
 
 	}
 }

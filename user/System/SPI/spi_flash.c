@@ -1,17 +1,17 @@
 /**********************************************************************************
- * ÎÄ¼şÃû  £ºspi_flash.c
- * ÃèÊö    £ºspi µ×²ãÓ¦ÓÃº¯Êı¿â         
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * Ó²¼şÁ¬½Ó ----------------------------
+ * æ–‡ä»¶å  ï¼šspi_flash.c
+ * æè¿°    ï¼šspi åº•å±‚åº”ç”¨å‡½æ•°åº“
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * ç¡¬ä»¶è¿æ¥ ----------------------------
  *         | PA4-SPI1-NSS  : W25X16-CS  |
  *         | PA5-SPI1-SCK  : W25X16-CLK |
  *         | PA6-SPI1-MISO : W25X16-DO  |
  *         | PA7-SPI1-MOSI : W25X16-DIO |
  *          ----------------------------
- * ¿â°æ±¾  £ºST3.5.0
- * ×÷Õß    £º±£Áô 
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
+ * ä½œè€…    ï¼šä¿ç•™
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "spi_flash.h"
 
@@ -23,22 +23,22 @@
 #define SPI_FLASH_PerWritePageSize      256
 
 /* Private define ------------------------------------------------------------*/
-#define W25X_WriteEnable		      0x06 
-#define W25X_WriteDisable		      0x04 
-#define W25X_ReadStatusReg		    0x05 
-#define W25X_WriteStatusReg		    0x01 
-#define W25X_ReadData			        0x03 
-#define W25X_FastReadData		      0x0B 
-#define W25X_FastReadDual		      0x3B 
-#define W25X_PageProgram		      0x02 
-#define W25X_BlockErase			      0xD8 
-#define W25X_SectorErase		      0x20 
-#define W25X_ChipErase			      0xC7 
-#define W25X_PowerDown			      0xB9 
-#define W25X_ReleasePowerDown	    0xAB 
-#define W25X_DeviceID			        0xAB 
-#define W25X_ManufactDeviceID   	0x90 
-#define W25X_JedecDeviceID		    0x9F 
+#define W25X_WriteEnable		      0x06
+#define W25X_WriteDisable		      0x04
+#define W25X_ReadStatusReg		    0x05
+#define W25X_WriteStatusReg		    0x01
+#define W25X_ReadData			        0x03
+#define W25X_FastReadData		      0x0B
+#define W25X_FastReadDual		      0x3B
+#define W25X_PageProgram		      0x02
+#define W25X_BlockErase			      0xD8
+#define W25X_SectorErase		      0x20
+#define W25X_ChipErase			      0xC7
+#define W25X_PowerDown			      0xB9
+#define W25X_ReleasePowerDown	    0xAB
+#define W25X_DeviceID			        0xAB
+#define W25X_ManufactDeviceID   	0x90
+#define W25X_JedecDeviceID		    0x9F
 
 #define WIP_Flag                  0x01  /* Write In Progress (WIP) flag */
 
@@ -55,17 +55,17 @@ void SPI_FLASH_Init(void)
 {
   SPI_InitTypeDef  SPI_InitStructure;
   GPIO_InitTypeDef GPIO_InitStructure;
-  
+
   /* Enable SPI1 and GPIO clocks */
-  /*!< SPI_FLASH_SPI_CS_GPIO, SPI_FLASH_SPI_MOSI_GPIO, 
-       SPI_FLASH_SPI_MISO_GPIO, SPI_FLASH_SPI_DETECT_GPIO 
+  /*!< SPI_FLASH_SPI_CS_GPIO, SPI_FLASH_SPI_MOSI_GPIO,
+       SPI_FLASH_SPI_MISO_GPIO, SPI_FLASH_SPI_DETECT_GPIO
        and SPI_FLASH_SPI_SCK_GPIO Periph clock enable */
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOD, ENABLE);
 
   /*!< SPI_FLASH_SPI Periph clock enable */
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
- 
-  
+
+
   /*!< Configure SPI_FLASH_SPI pins: SCK */
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
@@ -89,7 +89,7 @@ void SPI_FLASH_Init(void)
   SPI_FLASH_CS_HIGH();
 
   /* SPI1 configuration */
-  // W25X16: data input on the DIO pin is sampled on the rising edge of the CLK. 
+  // W25X16: data input on the DIO pin is sampled on the rising edge of the CLK.
   // Data on the DO and DIO pins are clocked out on the falling edge of CLK.
   SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
   SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
@@ -380,7 +380,7 @@ u32 SPI_FLASH_ReadDeviceID(void)
   SPI_FLASH_SendByte(Dummy_Byte);
   SPI_FLASH_SendByte(Dummy_Byte);
   SPI_FLASH_SendByte(Dummy_Byte);
-  
+
   /* Read a byte from the FLASH */
   Temp = SPI_FLASH_SendByte(Dummy_Byte);
 
@@ -521,7 +521,7 @@ void SPI_FLASH_WaitForWriteEnd(void)
   {
     /* Send a dummy byte to generate the clock needed by the FLASH
     and put the value of the status register in FLASH_Status variable */
-    FLASH_Status = SPI_FLASH_SendByte(Dummy_Byte);	 
+    FLASH_Status = SPI_FLASH_SendByte(Dummy_Byte);
   }
   while ((FLASH_Status & WIP_Flag) == SET); /* Write in progress */
 
@@ -530,9 +530,9 @@ void SPI_FLASH_WaitForWriteEnd(void)
 }
 
 
-//½øÈëµôµçÄ£Ê½
-void SPI_Flash_PowerDown(void)   
-{ 
+//è¿›å…¥æ‰ç”µæ¨¡å¼
+void SPI_Flash_PowerDown(void)
+{
   /* Select the FLASH: Chip Select low */
   SPI_FLASH_CS_LOW();
 
@@ -541,10 +541,10 @@ void SPI_Flash_PowerDown(void)
 
   /* Deselect the FLASH: Chip Select high */
   SPI_FLASH_CS_HIGH();
-}   
+}
 
-//»½ĞÑ
-void SPI_Flash_WAKEUP(void)   
+//å”¤é†’
+void SPI_Flash_WAKEUP(void)
 {
   /* Select the FLASH: Chip Select low */
   SPI_FLASH_CS_LOW();
@@ -553,7 +553,7 @@ void SPI_Flash_WAKEUP(void)
   SPI_FLASH_SendByte(W25X_ReleasePowerDown);
 
   /* Deselect the FLASH: Chip Select high */
-  SPI_FLASH_CS_HIGH();                   //µÈ´ıTRES1
-}   
+  SPI_FLASH_CS_HIGH();                   //ç­‰å¾…TRES1
+}
 
 /******************************END OF FILE*****************************/

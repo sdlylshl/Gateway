@@ -1,41 +1,41 @@
 /******************** (C) COPYRIGHT 2012 WildFire Team **************************
- * ÎÄ¼şÃû  £ºpwm_output.c
- * ÃèÊö    £º         
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * Ó²¼şÁ¬½Ó£º---------------------
+ * æ–‡ä»¶å  ï¼špwm_output.c
+ * æè¿°    ï¼š
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * ç¡¬ä»¶è¿æ¥ï¼š---------------------
  *          |  PA.06: (TIM3_CH1)  |
  *          |  PA.07: (TIM3_CH2)  |
- *      	|  PB.00: (TIM3_CH3)  | 
+ *      	|  PB.00: (TIM3_CH3)  |
  *    		|  PB.01: (TIM3_CH4)  |
- *           ---------------------    			
- * ¿â°æ±¾  £ºST3.5.0
- * ×÷Õß    £ºwildfire team 
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ *           ---------------------
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
+ * ä½œè€…    ï¼šwildfire team
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "pwm_output.h"
 
 /*
- * º¯ÊıÃû£ºTIM3_GPIO_Config
- * ÃèÊö  £ºÅäÖÃTIM3¸´ÓÃÊä³öPWMÊ±ÓÃµ½µÄI/O
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÄÚ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šTIM3_GPIO_Config
+ * æè¿°  ï¼šé…ç½®TIM3å¤ç”¨è¾“å‡ºPWMæ—¶ç”¨åˆ°çš„I/O
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå†…éƒ¨è°ƒç”¨
  */
-static void TIM3_GPIO_Config(void) 
+static void TIM3_GPIO_Config(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
 
 	/* TIM3 clock enable */
-	//PCLK1¾­¹ı2±¶Æµºó×÷ÎªTIM3µÄÊ±ÖÓÔ´µÈÓÚ72MHz
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE); 
+	//PCLK1ç»è¿‡2å€é¢‘åä½œä¸ºTIM3çš„æ—¶é’Ÿæºç­‰äº72MHz
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
 
   /* GPIOA and GPIOB clock enable */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB, ENABLE); 
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_GPIOB, ENABLE);
 
   /*GPIOA Configuration: TIM3 channel 1 and 2 as alternate function push-pull */
   GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_6 | GPIO_Pin_7;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;		    // ¸´ÓÃÍÆÍìÊä³ö
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;		    // å¤ç”¨æ¨æŒ½è¾“å‡º
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
   GPIO_Init(GPIOA, &GPIO_InitStructure);
@@ -47,19 +47,19 @@ static void TIM3_GPIO_Config(void)
 }
 
 /*
- * º¯ÊıÃû£ºTIM3_Mode_Config
- * ÃèÊö  £ºÅäÖÃTIM3Êä³öµÄPWMĞÅºÅµÄÄ£Ê½£¬ÈçÖÜÆÚ¡¢¼«ĞÔ¡¢Õ¼¿Õ±È
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÄÚ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šTIM3_Mode_Config
+ * æè¿°  ï¼šé…ç½®TIM3è¾“å‡ºçš„PWMä¿¡å·çš„æ¨¡å¼ï¼Œå¦‚å‘¨æœŸã€ææ€§ã€å ç©ºæ¯”
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå†…éƒ¨è°ƒç”¨
  */
 static void TIM3_Mode_Config(void)
 {
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 	TIM_OCInitTypeDef  TIM_OCInitStructure;
 
-	/* PWMĞÅºÅµçÆ½Ìø±äÖµ */
-	u16 CCR1_Val = 500;        
+	/* PWMä¿¡å·ç”µå¹³è·³å˜å€¼ */
+	u16 CCR1_Val = 500;
 	u16 CCR2_Val = 375;
 	u16 CCR3_Val = 250;
 	u16 CCR4_Val = 125;
@@ -75,66 +75,66 @@ static void TIM3_Mode_Config(void)
     TIM3 Channel4 duty cycle = (TIM3_CCR4/ TIM3_ARR)* 100 = 12.5%
   ----------------------------------------------------------------------- */
 
-  /* Time base configuration */		 
-  TIM_TimeBaseStructure.TIM_Period = 999;       //µ±¶¨Ê±Æ÷´Ó0¼ÆÊıµ½999£¬¼´Îª1000´Î£¬ÎªÒ»¸ö¶¨Ê±ÖÜÆÚ
-  TIM_TimeBaseStructure.TIM_Prescaler = 0;	    //ÉèÖÃÔ¤·ÖÆµ£º²»Ô¤·ÖÆµ£¬¼´Îª72MHz
-  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1 ;	//ÉèÖÃÊ±ÖÓ·ÖÆµÏµÊı£º²»·ÖÆµ
-  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //ÏòÉÏ¼ÆÊıÄ£Ê½
+  /* Time base configuration */
+  TIM_TimeBaseStructure.TIM_Period = 999;       //å½“å®šæ—¶å™¨ä»0è®¡æ•°åˆ°999ï¼Œå³ä¸º1000æ¬¡ï¼Œä¸ºä¸€ä¸ªå®šæ—¶å‘¨æœŸ
+  TIM_TimeBaseStructure.TIM_Prescaler = 0;	    //è®¾ç½®é¢„åˆ†é¢‘ï¼šä¸é¢„åˆ†é¢‘ï¼Œå³ä¸º72MHz
+  TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1 ;	//è®¾ç½®æ—¶é’Ÿåˆ†é¢‘ç³»æ•°ï¼šä¸åˆ†é¢‘
+  TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  //å‘ä¸Šè®¡æ•°æ¨¡å¼
 
   TIM_TimeBaseInit(TIM3, &TIM_TimeBaseStructure);
 
   /* PWM1 Mode configuration: Channel1 */
-  TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;	    //ÅäÖÃÎªPWMÄ£Ê½1
-  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;	
-  TIM_OCInitStructure.TIM_Pulse = CCR1_Val;	   //ÉèÖÃÌø±äÖµ£¬µ±¼ÆÊıÆ÷¼ÆÊıµ½Õâ¸öÖµÊ±£¬µçÆ½·¢ÉúÌø±ä
-  TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;  //µ±¶¨Ê±Æ÷¼ÆÊıÖµĞ¡ÓÚCCR1_ValÊ±Îª¸ßµçÆ½
+  TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;	    //é…ç½®ä¸ºPWMæ¨¡å¼1
+  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
+  TIM_OCInitStructure.TIM_Pulse = CCR1_Val;	   //è®¾ç½®è·³å˜å€¼ï¼Œå½“è®¡æ•°å™¨è®¡æ•°åˆ°è¿™ä¸ªå€¼æ—¶ï¼Œç”µå¹³å‘ç”Ÿè·³å˜
+  TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;  //å½“å®šæ—¶å™¨è®¡æ•°å€¼å°äºCCR1_Valæ—¶ä¸ºé«˜ç”µå¹³
 
-  TIM_OC1Init(TIM3, &TIM_OCInitStructure);	 //Ê¹ÄÜÍ¨µÀ1
+  TIM_OC1Init(TIM3, &TIM_OCInitStructure);	 //ä½¿èƒ½é€šé“1
 
   TIM_OC1PreloadConfig(TIM3, TIM_OCPreload_Enable);
 
   /* PWM1 Mode configuration: Channel2 */
   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-  TIM_OCInitStructure.TIM_Pulse = CCR2_Val;	  //ÉèÖÃÍ¨µÀ2µÄµçÆ½Ìø±äÖµ£¬Êä³öÁíÍâÒ»¸öÕ¼¿Õ±ÈµÄPWM
+  TIM_OCInitStructure.TIM_Pulse = CCR2_Val;	  //è®¾ç½®é€šé“2çš„ç”µå¹³è·³å˜å€¼ï¼Œè¾“å‡ºå¦å¤–ä¸€ä¸ªå ç©ºæ¯”çš„PWM
 
-  TIM_OC2Init(TIM3, &TIM_OCInitStructure);	  //Ê¹ÄÜÍ¨µÀ2
+  TIM_OC2Init(TIM3, &TIM_OCInitStructure);	  //ä½¿èƒ½é€šé“2
 
   TIM_OC2PreloadConfig(TIM3, TIM_OCPreload_Enable);
 
   /* PWM1 Mode configuration: Channel3 */
   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-  TIM_OCInitStructure.TIM_Pulse = CCR3_Val;	//ÉèÖÃÍ¨µÀ3µÄµçÆ½Ìø±äÖµ£¬Êä³öÁíÍâÒ»¸öÕ¼¿Õ±ÈµÄPWM
+  TIM_OCInitStructure.TIM_Pulse = CCR3_Val;	//è®¾ç½®é€šé“3çš„ç”µå¹³è·³å˜å€¼ï¼Œè¾“å‡ºå¦å¤–ä¸€ä¸ªå ç©ºæ¯”çš„PWM
 
-  TIM_OC3Init(TIM3, &TIM_OCInitStructure);	 //Ê¹ÄÜÍ¨µÀ3
+  TIM_OC3Init(TIM3, &TIM_OCInitStructure);	 //ä½¿èƒ½é€šé“3
 
   TIM_OC3PreloadConfig(TIM3, TIM_OCPreload_Enable);
 
   /* PWM1 Mode configuration: Channel4 */
   TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-  TIM_OCInitStructure.TIM_Pulse = CCR4_Val;	//ÉèÖÃÍ¨µÀ4µÄµçÆ½Ìø±äÖµ£¬Êä³öÁíÍâÒ»¸öÕ¼¿Õ±ÈµÄPWM
+  TIM_OCInitStructure.TIM_Pulse = CCR4_Val;	//è®¾ç½®é€šé“4çš„ç”µå¹³è·³å˜å€¼ï¼Œè¾“å‡ºå¦å¤–ä¸€ä¸ªå ç©ºæ¯”çš„PWM
 
-  TIM_OC4Init(TIM3, &TIM_OCInitStructure);	//Ê¹ÄÜÍ¨µÀ4
+  TIM_OC4Init(TIM3, &TIM_OCInitStructure);	//ä½¿èƒ½é€šé“4
 
   TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);
 
-  TIM_ARRPreloadConfig(TIM3, ENABLE);			 // Ê¹ÄÜTIM3ÖØÔØ¼Ä´æÆ÷ARR
+  TIM_ARRPreloadConfig(TIM3, ENABLE);			 // ä½¿èƒ½TIM3é‡è½½å¯„å­˜å™¨ARR
 
   /* TIM3 enable counter */
-  TIM_Cmd(TIM3, ENABLE);                   //Ê¹ÄÜ¶¨Ê±Æ÷3	
+  TIM_Cmd(TIM3, ENABLE);                   //ä½¿èƒ½å®šæ—¶å™¨3
 }
 
 /*
- * º¯ÊıÃû£ºTIM3_PWM_Init
- * ÃèÊö  £ºTIM3 Êä³öPWMĞÅºÅ³õÊ¼»¯£¬Ö»Òªµ÷ÓÃÕâ¸öº¯Êı
- *         TIM3µÄËÄ¸öÍ¨µÀ¾Í»áÓĞPWMĞÅºÅÊä³ö
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šTIM3_PWM_Init
+ * æè¿°  ï¼šTIM3 è¾“å‡ºPWMä¿¡å·åˆå§‹åŒ–ï¼Œåªè¦è°ƒç”¨è¿™ä¸ªå‡½æ•°
+ *         TIM3çš„å››ä¸ªé€šé“å°±ä¼šæœ‰PWMä¿¡å·è¾“å‡º
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 void TIM3_PWM_Init(void)
 {
 	TIM3_GPIO_Config();
-	TIM3_Mode_Config();	
+	TIM3_Mode_Config();
 }
 
 /******************* (C) COPYRIGHT 2012 WildFire Team *****END OF FILE************/

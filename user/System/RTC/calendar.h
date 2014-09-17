@@ -3,9 +3,9 @@
 * Author             : www.armjishu.com Team
 * Version            : V1.0
 * Date               : 10/1/2009
-* Description      : ³¬Ç¿µÄÈÕÀú£¬Ö§³ÖÅ©Àú£¬24½ÚÆø¼¸ºõËùÓĞÈÕÀúµÄ¹¦ÄÜ
-                          ÈÕÀúÊ±¼äÒÔ1970ÄêÎªÔªÄê£¬ÓÃ32bitµÄÊ±¼ä¼Ä´æÆ÷¿ÉÒÔÔË
-                          ĞĞµ½2100Äê×óÓÒ
+* Description      : è¶…å¼ºçš„æ—¥å†ï¼Œæ”¯æŒå†œå†ï¼Œ24èŠ‚æ°”å‡ ä¹æ‰€æœ‰æ—¥å†çš„åŠŸèƒ½
+                          æ—¥å†æ—¶é—´ä»¥1970å¹´ä¸ºå…ƒå¹´ï¼Œç”¨32bitçš„æ—¶é—´å¯„å­˜å™¨å¯ä»¥è¿
+                          è¡Œåˆ°2100å¹´å·¦å³
 *******************************************************************************/
 
 #ifndef __CALENDAR_H
@@ -20,4 +20,4 @@ void StrCopy(u8 *target,u8 const *source,u8 no);
 void GetChinaCalendarStr(u16 year,u8 month,u8 day,u8 *str);
 u8 GetJieQi(u16 year,u8 month,u8 day,u8 *JQdate);
 u8 GetJieQiStr(u16 year,u8 month,u8 day,u8 *str);
-#endif 
+#endif

@@ -1,51 +1,51 @@
 /******************** (C) COPYRIGHT 2012 WildFire Team ***************************
- * ÎÄ¼şÃû  £ºchipid.c
- * ÃèÊö    £º»ñÈ¡CPUµÄIDº¯Êı£¬Ã¿¸öĞ¾Æ¬¶¼ÓĞÎ¨Ò»µÄ 96_bit unique ID         
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * Ó²¼şÁ¬½Ó£º-----------------
+ * æ–‡ä»¶å  ï¼šchipid.c
+ * æè¿°    ï¼šè·å–CPUçš„IDå‡½æ•°ï¼Œæ¯ä¸ªèŠ¯ç‰‡éƒ½æœ‰å”¯ä¸€çš„ 96_bit unique ID
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * ç¡¬ä»¶è¿æ¥ï¼š-----------------
  *          |                 |
- *          |       ÎŞ        |
+ *          |       æ—         |
  *          |                 |
  *           -----------------
- * ¿â°æ±¾  £ºST3.5.0
- * ×÷Õß    £ºwildfire team 
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
+ * ä½œè€…    ï¼šwildfire team
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "chipid.h"
 
 uint32_t ChipUniqueID[3];
 
 /*
- * º¯ÊıÃû£ºGet_ChipID
- * ÃèÊö  £º»ñÈ¡Ğ¾Æ¬ID
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
+ * å‡½æ•°åï¼šGet_ChipID
+ * æè¿°  ï¼šè·å–èŠ¯ç‰‡ID
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
  */
 void Get_ChipID(void)
 {
-	ChipUniqueID[0] = *(__IO u32 *)(0X1FFFF7F0); // ¸ß×Ö½Ú
-	ChipUniqueID[1] = *(__IO u32 *)(0X1FFFF7EC); // 
-	ChipUniqueID[2] = *(__IO u32 *)(0X1FFFF7E8); // µÍ×Ö½Ú
+	ChipUniqueID[0] = *(__IO u32 *)(0X1FFFF7F0); // é«˜å­—èŠ‚
+	ChipUniqueID[1] = *(__IO u32 *)(0X1FFFF7EC); //
+	ChipUniqueID[2] = *(__IO u32 *)(0X1FFFF7E8); // ä½å­—èŠ‚
 }
 int ChipID_test(void)
-{	
+{
 	/* USART1 config 115200 8-N-1 */
 	USART1_Config();
 
 	/* to get the chipid and put it in ChipUniqueID[3] */
-	Get_ChipID();	
-	
+	Get_ChipID();
+
 	/* printf the chipid */
-	printf("\r\nĞ¾Æ¬µÄÎ¨Ò»IDÎª: %X-%X-%X\r\n",
+	printf("\r\nèŠ¯ç‰‡çš„å”¯ä¸€IDä¸º: %X-%X-%X\r\n",
 	        ChipUniqueID[0],ChipUniqueID[1],ChipUniqueID[2]);
-	
+
 	/* printf the flash memory amount */
-	printf("\r\nĞ¾Æ¬flashµÄÈİÁ¿Îª: %dK \r\n", *(__IO u16 *)(0X1FFFF7E0));
+	printf("\r\nèŠ¯ç‰‡flashçš„å®¹é‡ä¸º: %dK \r\n", *(__IO u16 *)(0X1FFFF7E0));
 
 	for(;;)
 	{
-		
+
 	}
 }
 

@@ -1,19 +1,19 @@
 /******************** (C) COPYRIGHT 2012 WildFire Team **************************
- * ÎÄ¼şÃû  £ºusart2.c
- * ÃèÊö    £º½«printfº¯ÊıÖØ¶¨Ïòµ½USART3¡£ÕâÑù¾Í¿ÉÒÔÓÃprintfº¯Êı½«µ¥Æ¬»úµÄÊı¾İ
- *           ´òÓ¡µ½PCÉÏµÄ³¬¼¶ÖÕ¶Ë»ò´®¿Úµ÷ÊÔÖúÊÖ¡£
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * Ó²¼şÁ¬½Ó£º---------------------
+ * æ–‡ä»¶å  ï¼šusart2.c
+ * æè¿°    ï¼šå°†printfå‡½æ•°é‡å®šå‘åˆ°USART3ã€‚è¿™æ ·å°±å¯ä»¥ç”¨printfå‡½æ•°å°†å•ç‰‡æœºçš„æ•°æ®
+ *           æ‰“å°åˆ°PCä¸Šçš„è¶…çº§ç»ˆç«¯æˆ–ä¸²å£è°ƒè¯•åŠ©æ‰‹ã€‚
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * ç¡¬ä»¶è¿æ¥ï¼š---------------------
  *          | 									  |
  *          | PA2  - USART3(Tx)   |
  *          | PA3  - USART3(Rx)   |
  *          |                     |
  *           ---------------------
- * ¿â°æ±¾  £ºST3.5.0
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
  *
- * ×÷Õß    £ºwildfire team
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ * ä½œè€…    ï¼šwildfire team
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "usart.h"
 #include <stdarg.h>
@@ -22,11 +22,11 @@
 uint8_t SendBuff[SENDBUFF_SIZE];
 
 /*
- * º¯ÊıÃû£ºUSART3_Config
- * ÃèÊö  £ºUSART3 GPIO ÅäÖÃ,¹¤×÷Ä£Ê½ÅäÖÃ
- * ÊäÈë  £ºÎŞ
- * Êä³ö  : ÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šUSART3_Config
+ * æè¿°  ï¼šUSART3 GPIO é…ç½®,å·¥ä½œæ¨¡å¼é…ç½®
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  : æ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 
 void USARTx_Clock(USART_TypeDef* USARTx)
@@ -37,7 +37,7 @@ void USARTx_Clock(USART_TypeDef* USARTx)
     {
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
         RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
-			
+
 
     }
     else if (USARTx == USART2)
@@ -104,20 +104,20 @@ void USARTx_IO_Config(USART_TypeDef* USARTx)
     }
 }
 /*
- * º¯ÊıÃû£ºNVIC_Config
- * ÃèÊö  £ºDMA ÖĞ¶ÏÅäÖÃ
- * ÊäÈë  £ºÎŞ
- * Êä³ö  : ÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šNVIC_Config
+ * æè¿°  ï¼šDMA ä¸­æ–­é…ç½®
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  : æ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
  */
 static void NVIC_Config(void)
 {
   NVIC_InitTypeDef NVIC_InitStructure;
-  
+
   /* Configure one bit for preemption priority */
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-  
-  /* ÅäÖÃP[A|B|C|D|E]0ÎªÖĞ¶ÏÔ´ */
+
+  /* é…ç½®P[A|B|C|D|E]0ä¸ºä¸­æ–­æº */
   NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel4_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
@@ -128,96 +128,96 @@ void DMA_Config(void)
 {
     DMA_InitTypeDef DMA_InitStructure;
 
-	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);	//¿ªÆôDMAÊ±ÖÓ
-	NVIC_Config();	   			//ÅäÖÃDMAÖĞ¶Ï
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);	//å¼€å¯DMAæ—¶é’Ÿ
+	NVIC_Config();	   			//é…ç½®DMAä¸­æ–­
 
- 	/*ÉèÖÃDMAÔ´£ºÄÚ´æµØÖ·&´®¿ÚÊı¾İ¼Ä´æÆ÷µØÖ·*/
-    DMA_InitStructure.DMA_PeripheralBaseAddr = USART1_DR_Base;	   
+ 	/*è®¾ç½®DMAæºï¼šå†…å­˜åœ°å€&ä¸²å£æ•°æ®å¯„å­˜å™¨åœ°å€*/
+    DMA_InitStructure.DMA_PeripheralBaseAddr = USART1_DR_Base;
 
-	/*ÄÚ´æµØÖ·(Òª´«ÊäµÄ±äÁ¿µÄÖ¸Õë)*/
+	/*å†…å­˜åœ°å€(è¦ä¼ è¾“çš„å˜é‡çš„æŒ‡é’ˆ)*/
     DMA_InitStructure.DMA_MemoryBaseAddr = (u32)SendBuff;
-	
-	/*·½Ïò£º´ÓÄÚ´æµ½ÍâÉè*/		
-    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;	
-	
-	/*´«Êä´óĞ¡DMA_BufferSize=SENDBUFF_SIZE*/	
+
+	/*æ–¹å‘ï¼šä»å†…å­˜åˆ°å¤–è®¾*/
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
+
+	/*ä¼ è¾“å¤§å°DMA_BufferSize=SENDBUFF_SIZE*/
     DMA_InitStructure.DMA_BufferSize = SENDBUFF_SIZE;
-	
-	/*ÍâÉèµØÖ·²»Ôö*/	    
-    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable; 
-	
-	/*ÄÚ´æµØÖ·×ÔÔö*/
-    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;	
-	
-	/*ÍâÉèÊı¾İµ¥Î»*/	
+
+	/*å¤–è®¾åœ°å€ä¸å¢*/
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+
+	/*å†…å­˜åœ°å€è‡ªå¢*/
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+
+	/*å¤–è®¾æ•°æ®å•ä½*/
     DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
-	
-	/*ÄÚ´æÊı¾İµ¥Î» 8bit*/
-    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;	 
-	
-	/*DMAÄ£Ê½£ºÒ»´Î´«Êä£¬Ñ­»·*/
-    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal ;	 
-	
-	/*ÓÅÏÈ¼¶£ºÖĞ*/	
-    DMA_InitStructure.DMA_Priority = DMA_Priority_Medium;  
-	
-	/*½ûÖ¹ÄÚ´æµ½ÄÚ´æµÄ´«Êä	*/
+
+	/*å†…å­˜æ•°æ®å•ä½ 8bit*/
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+
+	/*DMAæ¨¡å¼ï¼šä¸€æ¬¡ä¼ è¾“ï¼Œå¾ªç¯*/
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal ;
+
+	/*ä¼˜å…ˆçº§ï¼šä¸­*/
+    DMA_InitStructure.DMA_Priority = DMA_Priority_Medium;
+
+	/*ç¦æ­¢å†…å­˜åˆ°å†…å­˜çš„ä¼ è¾“	*/
     DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
-	
-	/*ÅäÖÃDMA1µÄ4Í¨µÀ*/		   
-    DMA_Init(DMA1_Channel4, &DMA_InitStructure); 	   
-	
-	DMA_Cmd (DMA1_Channel4,ENABLE);					//Ê¹ÄÜDMA
-	DMA_ITConfig(DMA1_Channel4,DMA_IT_TC,ENABLE);  //ÅäÖÃDMA·¢ËÍÍê³Éºó²úÉúÖĞ¶Ï
+
+	/*é…ç½®DMA1çš„4é€šé“*/
+    DMA_Init(DMA1_Channel4, &DMA_InitStructure);
+
+	DMA_Cmd (DMA1_Channel4,ENABLE);					//ä½¿èƒ½DMA
+	DMA_ITConfig(DMA1_Channel4,DMA_IT_TC,ENABLE);  //é…ç½®DMAå‘é€å®Œæˆåäº§ç”Ÿä¸­æ–­
 
 }
 
 
 void NVIC_Configuration(USART_TypeDef* USARTx)
 {
-	NVIC_InitTypeDef NVIC_InitStructure; 
-	
+	NVIC_InitTypeDef NVIC_InitStructure;
+
 	 /* Set the Vector Table base location at 0x08000000 */
    NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);
-	
-	/* Configure the NVIC Preemption Priority Bits */  
+
+	/* Configure the NVIC Preemption Priority Bits */
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
-	
+
 	/* Enable the USARTy Interrupt */
 if (USARTx == USART1)
     {
-	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;	 
+	NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
  	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);			
+	NVIC_Init(&NVIC_InitStructure);
 		}
     else if (USARTx == USART2)
     {
-	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;	 
+	NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;	
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);			  
+	NVIC_Init(&NVIC_InitStructure);
 		}
     else
     {
         if (USARTx == USART3)
         {
-	NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;	 
+	NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;		
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&NVIC_InitStructure);				
+	NVIC_Init(&NVIC_InitStructure);
 	        }
-    }				
+    }
 
 }
 typedef enum {POLLING = 0, INTERRUPT,DMA} USART_RXMode;
 void USARTx_ModeConfig(USART_TypeDef* USARTx)
 {
     USART_InitTypeDef USART_InitStructure;
-	
+
     if (USARTx == USART1)
     {
         /* USART1 mode config */
@@ -340,15 +340,15 @@ void USART3_Config(void)
     USART_Cmd(USART3, ENABLE);
 }
 /*
- * º¯ÊıÃû£ºfputc
- * ÃèÊö  £ºÖØ¶¨Ïòc¿âº¯Êıprintfµ½USART3
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÓÉprintfµ÷ÓÃ
+ * å‡½æ•°åï¼šfputc
+ * æè¿°  ï¼šé‡å®šå‘cåº“å‡½æ•°printfåˆ°USART3
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šç”±printfè°ƒç”¨
  */
 int fputc(int ch, FILE *f)
 {
-    /* ½«PrintfÄÚÈİ·¢Íù´®¿Ú */
+    /* å°†Printfå†…å®¹å‘å¾€ä¸²å£ */
     USART_SendData(USART1, (unsigned char) ch);
     while (!(USART1->SR & USART_FLAG_TXE));
 
@@ -356,15 +356,15 @@ int fputc(int ch, FILE *f)
 }
 
 /*
- * º¯ÊıÃû£ºitoa
- * ÃèÊö  £º½«ÕûĞÎÊı¾İ×ª»»³É×Ö·û´®
- * ÊäÈë  £º-radix =10 ±íÊ¾10½øÖÆ£¬ÆäËû½á¹ûÎª0
- *         -value Òª×ª»»µÄÕûĞÎÊı
- *         -buf ×ª»»ºóµÄ×Ö·û´®
+ * å‡½æ•°åï¼šitoa
+ * æè¿°  ï¼šå°†æ•´å½¢æ•°æ®è½¬æ¢æˆå­—ç¬¦ä¸²
+ * è¾“å…¥  ï¼š-radix =10 è¡¨ç¤º10è¿›åˆ¶ï¼Œå…¶ä»–ç»“æœä¸º0
+ *         -value è¦è½¬æ¢çš„æ•´å½¢æ•°
+ *         -buf è½¬æ¢åçš„å­—ç¬¦ä¸²
  *         -radix = 10
- * Êä³ö  £ºÎŞ
- * ·µ»Ø  £ºÎŞ
- * µ÷ÓÃ  £º±»USART3_printf()µ÷ÓÃ
+ * è¾“å‡º  ï¼šæ— 
+ * è¿”å›  ï¼šæ— 
+ * è°ƒç”¨  ï¼šè¢«USART3_printf()è°ƒç”¨
  */
 static char *itoa(int value, char *string, int radix)
 {
@@ -415,15 +415,15 @@ static char *itoa(int value, char *string, int radix)
 } /* NCL_Itoa */
 
 /*
- * º¯ÊıÃû£ºUSART3_printf
- * ÃèÊö  £º¸ñÊ½»¯Êä³ö£¬ÀàËÆÓÚC¿âÖĞµÄprintf£¬µ«ÕâÀïÃ»ÓĞÓÃµ½C¿â
- * ÊäÈë  £º-USARTx ´®¿ÚÍ¨µÀ£¬ÕâÀïÖ»ÓÃµ½ÁË´®¿Ú2£¬¼´USART3
- *		     -Data   Òª·¢ËÍµ½´®¿ÚµÄÄÚÈİµÄÖ¸Õë
- *			   -...    ÆäËû²ÎÊı
- * Êä³ö  £ºÎŞ
- * ·µ»Ø  £ºÎŞ
- * µ÷ÓÃ  £ºÍâ²¿µ÷ÓÃ
- *         µäĞÍÓ¦ÓÃUSART3_printf( USART3, "\r\n this is a demo \r\n" );
+ * å‡½æ•°åï¼šUSART3_printf
+ * æè¿°  ï¼šæ ¼å¼åŒ–è¾“å‡ºï¼Œç±»ä¼¼äºCåº“ä¸­çš„printfï¼Œä½†è¿™é‡Œæ²¡æœ‰ç”¨åˆ°Cåº“
+ * è¾“å…¥  ï¼š-USARTx ä¸²å£é€šé“ï¼Œè¿™é‡Œåªç”¨åˆ°äº†ä¸²å£2ï¼Œå³USART3
+ *		     -Data   è¦å‘é€åˆ°ä¸²å£çš„å†…å®¹çš„æŒ‡é’ˆ
+ *			   -...    å…¶ä»–å‚æ•°
+ * è¾“å‡º  ï¼šæ— 
+ * è¿”å›  ï¼šæ— 
+ * è°ƒç”¨  ï¼šå¤–éƒ¨è°ƒç”¨
+ *         å…¸å‹åº”ç”¨USART3_printf( USART3, "\r\n this is a demo \r\n" );
  *            		 USART3_printf( USART3, "\r\n %d \r\n", i );
  *            		 USART3_printf( USART3, "\r\n %s \r\n", j );
  */
@@ -436,18 +436,18 @@ void USARTx_printf(USART_TypeDef* USARTx, int8_t *Data,...)
     va_list ap;
     va_start(ap, Data);
 
-    while ( *Data != 0)     // ÅĞ¶ÏÊÇ·ñµ½´ï×Ö·û´®½áÊø·û
+    while ( *Data != 0)     // åˆ¤æ–­æ˜¯å¦åˆ°è¾¾å­—ç¬¦ä¸²ç»“æŸç¬¦
     {
         if ( *Data == 0x5c )  //'\'
         {
             switch ( *++Data )
             {
-            case 'r':							          //»Ø³µ·û
+            case 'r':							          //å›è½¦ç¬¦
                 USART_SendData(USARTx, 0x0d);
                 Data ++;
                 break;
 
-            case 'n':							          //»»ĞĞ·û
+            case 'n':							          //æ¢è¡Œç¬¦
                 USART_SendData(USARTx, 0x0a);
                 Data ++;
                 break;
@@ -462,7 +462,7 @@ void USARTx_printf(USART_TypeDef* USARTx, int8_t *Data,...)
             //
             switch ( *++Data )
             {
-            case 's':										  //×Ö·û´®
+            case 's':										  //å­—ç¬¦ä¸²
                 s = va_arg(ap, const char *);
                 for ( ; *s; s++)
                 {
@@ -472,7 +472,7 @@ void USARTx_printf(USART_TypeDef* USARTx, int8_t *Data,...)
                 Data++;
                 break;
 
-            case 'd':										//Ê®½øÖÆ
+            case 'd':										//åè¿›åˆ¶
                 d = va_arg(ap, int);
                 itoa(d, buf, 10);
                 for (s = buf; *s; s++)
@@ -489,7 +489,7 @@ void USARTx_printf(USART_TypeDef* USARTx, int8_t *Data,...)
         } /* end of else if */
         else USART_SendData(USARTx, *Data++);
         while( USART_GetFlagStatus(USARTx, USART_FLAG_TC) == RESET );
-				
+
     }
 }
 /******************* (C) COPYRIGHT 2012 WildFire Team *****END OF FILE************/

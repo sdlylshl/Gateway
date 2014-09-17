@@ -2,14 +2,14 @@
 #include "config.h"
 
 
-//È«¾ÖÉè±¸±í
+//å…¨å±€è®¾å¤‡è¡¨
 extern struct devTable  devTbs[MAX_DEVTABLE_NUM];
 
 /**
-  * @brief  ¿ØÖÆ²ßÂÔÖ´ĞĞ Ñ­»·¼ì²â Éè±¸×´Ì¬±í
+  * @brief  æ§åˆ¶ç­–ç•¥æ‰§è¡Œ å¾ªç¯æ£€æµ‹ è®¾å¤‡çŠ¶æ€è¡¨
   * @param  NETID:
   * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
-  * @retval ·¢ËÍ³É¹¦·µ»Ø OK
+  * @retval å‘é€æˆåŠŸè¿”å› OK
     * @writer lishoulei
     *   @modify
   */
@@ -22,17 +22,17 @@ void strategy_implementation(void)
     for (i = 0; i < MAX_DEVTABLE_NUM; i++)
     {
         status = (devTbs[i].ActSt ^ devTbs[i].ActSt);
-        //²éÑ¯×´Ì¬Ö¸Áî
+        //æŸ¥è¯¢çŠ¶æ€æŒ‡ä»¤
         if (status & 0x8000)
         {
 
         }
-        //¼ì²âÊÇ·ñÓĞĞèÒªÖ´ĞĞµÄÉè±¸
+        //æ£€æµ‹æ˜¯å¦æœ‰éœ€è¦æ‰§è¡Œçš„è®¾å¤‡
         if (status & 0x7FFF)
         {
-           
 
-					/*/¼ì²âÒª¿ØÖÆµÄIO
+
+					/*/æ£€æµ‹è¦æ§åˆ¶çš„IO
             for (j = 0; j < 5; j++)
             {
 
@@ -52,7 +52,7 @@ void strategy_implementation(void)
 
                 }
             }
-						*/                    
+						*/
 						if (devTbs[i].ActSt & 1 )
                     {
                         IOmode = IO_MODE_GPIO_OUTPUT_1;
@@ -61,9 +61,9 @@ void strategy_implementation(void)
                     {
                         IOmode = IO_MODE_GPIO_OUTPUT_0;
                     }
-										
+
 						 zigbee_remote_set_net_io(devTbs[i].netId, IO_D2, IOmode , 0);
-						
+
 
         }
     }

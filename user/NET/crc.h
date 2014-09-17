@@ -5,7 +5,7 @@
 
 //#define BUFFER_SIZE    114
 
-// ÓÃÓÚ²úÉúCRCĞ£ÑéÂëµÄÔ­Ê¼Êı
+// ç”¨äºäº§ç”ŸCRCæ ¡éªŒç çš„åŸå§‹æ•°
 /*
 static const uint32_t DataBuffer[BUFFER_SIZE] =
 {

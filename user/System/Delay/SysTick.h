@@ -13,7 +13,7 @@
 void Delay_us(__IO uint32_t dtime);
 void Delay_ms(__IO uint32_t dtime);
 
-//#define Delay_ms(x) Delay_us(100*x)	 //µ•Œªms
+//#define Delay_ms(x) Delay_us(100*x)	 //Âçï‰Ωçms
 
 void SysTick_Handle(void);
 

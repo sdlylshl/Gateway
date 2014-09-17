@@ -4,7 +4,7 @@
 
 #include "stm32f10x.h"
 
-/* Èç¹û¶¨ÒåÁËÏÂÃæÕâ¸öºêµÄ»°,PC13¾Í»áÊä³öÆµÂÊÎªRTC Clock/64µÄÊ±ÖÓ */   
+/* å¦‚æœå®šä¹‰äº†ä¸‹é¢è¿™ä¸ªå®çš„è¯,PC13å°±ä¼šè¾“å‡ºé¢‘ç‡ä¸ºRTC Clock/64çš„æ—¶é’Ÿ */
 //#define RTCClockOutput_Enable  /* RTC Clock/64 is output on tamper pin(PC.13) */
 
 void NVIC_Configuration(void);

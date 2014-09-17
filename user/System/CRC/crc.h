@@ -8,7 +8,7 @@
 
 #define CRC_BUFFER_SIZE    114
 
-// 用于产生CRC校验码的原始数据
+// 鐢ㄤ簬浜х敓CRC鏍￠獙鐮佺殑鍘熷鏁版嵁
 static const uint32_t DataBuffer[CRC_BUFFER_SIZE] =
 {
 	0x00001021, 0x20423063, 0x408450a5, 0x60c670e7, 0x9129a14a, 0xb16bc18c,

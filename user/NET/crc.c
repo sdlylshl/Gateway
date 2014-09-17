@@ -1,27 +1,27 @@
 /******************** (C) COPYRIGHT 2012 WildFire Team ***************************
- * ÎÄ¼þÃû  £ºcrc.c
- * ÃèÊö    £ºcrc£¨Ñ­»·ÈßÓàÐ£Ñé£©Ó¦ÓÃº¯Êý¿â         
- * ÊµÑéÆ½Ì¨£ºÒ°»ðSTM32¿ª·¢°å
- * Ó²¼þÁ¬½Ó£º--------------------------
+ * æ–‡ä»¶å  ï¼šcrc.c
+ * æè¿°    ï¼šcrcï¼ˆå¾ªçŽ¯å†—ä½™æ ¡éªŒï¼‰åº”ç”¨å‡½æ•°åº“
+ * å®žéªŒå¹³å°ï¼šé‡Žç«STM32å¼€å‘æ¿
+ * ç¡¬ä»¶è¿žæŽ¥ï¼š--------------------------
  *          |                          |
- *          | ÀûÓÃµÄÊÇCPUÄÚ²¿µÄCRCÓ²¼þ |
+ *          | åˆ©ç”¨çš„æ˜¯CPUå†…éƒ¨çš„CRCç¡¬ä»¶ |
  *          |                          |
  *           --------------------------
- * ¿â°æ±¾  £ºST3.5.0
- * ×÷Õß    £ºwildfire team 
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
+ * ä½œè€…    ï¼šwildfire team
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "crc.h"
 
-__IO uint32_t CRCValue = 0;		 // ÓÃÓÚ´æ·Å²úÉúµÄCRCÐ£ÑéÖµ
+__IO uint32_t CRCValue = 0;		 // ç”¨äºŽå­˜æ”¾äº§ç”Ÿçš„CRCæ ¡éªŒå€¼
 
 /*
- * º¯ÊýÃû£ºCRC_Config
- * ÃèÊö  £ºÊ¹ÄÜCRCÊ±ÖÓ
- * ÊäÈë  £ºÎÞ
- * Êä³ö  £ºÎÞ
- * µ÷ÓÃ  : Íâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šCRC_Config
+ * æè¿°  ï¼šä½¿èƒ½CRCæ—¶é’Ÿ
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  : å¤–éƒ¨è°ƒç”¨
  */
 void CRC_Config(void)
 {

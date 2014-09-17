@@ -348,9 +348,9 @@ void SPI2_IRQHandler()
     Interrupt_DBG(Interrupt_DBG_USARTx, "SPI2_IRQHandler");
     while (1) {}
 }
-//���жϷ�������У�����������Ӧ�ж�ʱ����֪�����ĸ��ж�Դ�����ж�����
-//��˱������жϷ�������ж��ж�Դ�����б�Ȼ��ֱ���д�����
-//��Ȼ�����ֻ�漰��һ���ж������ǲ����������б�ġ���������ʲô������������б��Ǹ���ϰ��
+//在中断服务程序中，由于主机响应中断时并不知道是哪个中断源发出中断请求，
+//因此必须在中断服务程序中对中断源进行判别，然后分别进行处理。
+//当然，如果只涉及到一个中断请求，是不用做上述判别的。但是无论什么情况，做上述判别是个好习惯
 
 //usart1 === net
 void USART1_IRQHandler(void)

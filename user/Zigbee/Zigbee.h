@@ -11,55 +11,55 @@
 //#define ZIGBEE_REQ_NET_ADDR 0x5C24
 //#define ZIGBEE_SWITCH_MODE 	0x2A21
 
-//Ğ¡¶ËÄ£Ê½ Êı¾İµÄµÍÎ» ´æ·ÅÔÚµÍµØÖ·ÖĞ
-//         ¶ÔÓÚ·¢ËÍÀ´Ëµ£¬µÍÎ»ÏÈ·¢ËÍ
+//å°ç«¯æ¨¡å¼ æ•°æ®çš„ä½ä½ å­˜æ”¾åœ¨ä½åœ°å€ä¸­
+//         å¯¹äºå‘é€æ¥è¯´ï¼Œä½ä½å…ˆå‘é€
 #define ZIGBEE_API_FRAME_HEAD			0xfe
 
-//Zigbee Ö¸Áî»ØÓ¦
+//Zigbee æŒ‡ä»¤å›åº”
 #define ZIGBEE_CMD_RSP 						0x8044
 
-//Êı¾İ·¢ËÍÖ¸Áî
+//æ•°æ®å‘é€æŒ‡ä»¤
 #define ZIGBEE_SND_DATA					0x5F24
-//·¢ËÍ»ØÓ¦Ö¸Áî
+//å‘é€å›åº”æŒ‡ä»¤
 #define ZIGBEE_SND_DATA_RSP 			0x8044
-//Êı¾İ½ÓÊÕÖ¸Áî
+//æ•°æ®æ¥æ”¶æŒ‡ä»¤
 #define ZIGBEE_RECV_DATA 					0x5f44
 
-//Ô¶³Ì²éÑ¯IO ×´Ì¬½ÓÊÕ
+//è¿œç¨‹æŸ¥è¯¢IO çŠ¶æ€æ¥æ”¶
 #define ZIGBEE_REMOTE_REQ_IO 			0x5e24
 #define ZIGBEE_REMOTE_REQ_IO_RSP 	0x8044
 #define ZIGBEE_REMOTE_REQ_RECV_DATA 	0x5e44
 
-//Ô¶³ÌÉèÖÃIO ×´Ì¬½ÓÊÕ
+//è¿œç¨‹è®¾ç½®IO çŠ¶æ€æ¥æ”¶
 #define ZIGBEE_REMOTE_SET_IO 			0x6024
 #define ZIGBEE_REMOTE_SET_IO_RSP 	0x8044
 #define ZIGBEE_REMOTE_SET_RECV_DATA		0x6044
 
-//Zigbee ÍøÂç²éÑ¯²Ù×÷
-//Zigbee ²éÑ¯ÍøÄÚËùÓĞÉè±¸
+//Zigbee ç½‘ç»œæŸ¥è¯¢æ“ä½œ
+//Zigbee æŸ¥è¯¢ç½‘å†…æ‰€æœ‰è®¾å¤‡
 #define ZIGBEE_ALL_REQ 						0x5b24
-//Í¨¹ıMACµØÖ·²éÑ¯ÍøÂçµØÖ·
+//é€šè¿‡MACåœ°å€æŸ¥è¯¢ç½‘ç»œåœ°å€
 #define ZIGBEE_NETID_REQ_ADDR 		0x5c24
-//Í¨¹ıÍøÂçºÅ²éÑ¯MACµØÖ·
+//é€šè¿‡ç½‘ç»œå·æŸ¥è¯¢MACåœ°å€
 #define ZIGBEE_MAC_REQ_ADDR 			0x5d24
 
-//ÍøÂç²Ù×÷»ØÓ¦
+//ç½‘ç»œæ“ä½œå›åº”
 #define ZIGBEE_NET_REQ_RSP 				0x8044
 #define ZIGBEE_NET_RECV_DATA      0x5d44
 
-//Zigbee Ä£Ê½ÇĞ»»
+//Zigbee æ¨¡å¼åˆ‡æ¢
 #define ZIGBEE_MODE_SWITCH 				0x2a21
 #define ZIGBEE_MODE_SWITCH_RSP 		0x2a61
 
 //#define ZIGBEE_REQ_SET_RSP 			0x2b61
-//Zigbee Éè±¸²ÎÊıÉèÖÃ[]
+//Zigbee è®¾å¤‡å‚æ•°è®¾ç½®[]
 #define ZIGBEE_DEV_PAR_SET 				0x2b21
-//Zigbee Éè±¸²ÎÊı»ØÓ¦[]
+//Zigbee è®¾å¤‡å‚æ•°å›åº”[]
 #define ZIGBEE_DEV_PAR_SET_RSP 		0x2b61
 
-//Zigbee ÏµÍ³²ÎÊıÉèÖÃ[save reset start]
+//Zigbee ç³»ç»Ÿå‚æ•°è®¾ç½®[save reset start]
 #define ZIGBEE_SYS_PAR_SET 				0x2c21
-//Zigbee ÏµÍ³²ÎÊı»ØÓ¦[save reset start]
+//Zigbee ç³»ç»Ÿå‚æ•°å›åº”[save reset start]
 #define ZIGBEE_SYS_PAR_SET_RSP 		0x2c61
 
 
@@ -112,50 +112,50 @@
 #define CMD_SYS_START_NET 0x03
 
 
-//IO ½Ó¿Ú¶¨Òå
+//IO æ¥å£å®šä¹‰
 #define IO_D0 0
 #define IO_D1 1
 #define IO_D2 2
 #define IO_D3 3
 #define IO_D4 4
-//IO Ä£Ê½ÉèÖÃ
+//IO æ¨¡å¼è®¾ç½®
 #define IO_MODE_NOUSE 			0
 #define IO_MODE_ANALOG_INPUT 	1
 #define IO_MODE_GPIO_INPUT 		2
-#define IO_MODE_GPIO_OUTPUT_0 	3	//Êµ¼ÊÇé¿öºÍÊÖ²áÏà·´
-#define IO_MODE_GPIO_OUTPUT_1 	4	//Êµ¼ÊÇé¿öºÍÊÖ²áÏà·´
+#define IO_MODE_GPIO_OUTPUT_0 	3	//å®é™…æƒ…å†µå’Œæ‰‹å†Œç›¸å
+#define IO_MODE_GPIO_OUTPUT_1 	4	//å®é™…æƒ…å†µå’Œæ‰‹å†Œç›¸å
 #define IO_MODE_PULSE_COUNT 	5
-//Zigbee Éè±¸ÀàĞÍ
+//Zigbee è®¾å¤‡ç±»å‹
 #define ZIGBEE_COORDINATOR 	0
 #define ZIGBEE_ROUTER 		1
 #define ZIGBEE_DEVICE 		2
-//Zigbee ´«ÊäÄ£Ê½
+//Zigbee ä¼ è¾“æ¨¡å¼
 #define ZIGBEE_MODE_TRANSPARENT 	0
 #define ZIGBEE_MODE_AT 				1
 #define ZIGBEE_MODE_API 			2
-//ÖĞ¶Ï½ÓÊÕ»º³åÇø´óĞ¡
+//ä¸­æ–­æ¥æ”¶ç¼“å†²åŒºå¤§å°
 #define BUFFSIZE 512
-//µ¥ÌõÖ¸Áî´óĞ¡
+//å•æ¡æŒ‡ä»¤å¤§å°
 #define CMDSIZE 32
 
-//ÖĞ¶Ï½ÓÊÕ»º³åÇø´óĞ¡
+//ä¸­æ–­æ¥æ”¶ç¼“å†²åŒºå¤§å°
 #define ZIGEBEE_DATA_LEN 17
 
-//ÖĞ¶Ï½ÓÊÕ»º³åÇø´óĞ¡
+//ä¸­æ–­æ¥æ”¶ç¼“å†²åŒºå¤§å°
 #define ZIGBEE_BUFFSIZE 512
-//µ¥ÌõÖ¸Áî´óĞ¡
+//å•æ¡æŒ‡ä»¤å¤§å°
 #define CMDSIZE 32
-//¶¨Òå×î´ó·¢ËÍÖ¸ÁîÌõÊı
+//å®šä¹‰æœ€å¤§å‘é€æŒ‡ä»¤æ¡æ•°
 #define ZIGEBE_SEND_CMD_NUM 30
 #define ZIGEBE_RECV_CMD_NUM 2
 struct Zigbee_msgStu
 {
     uint8_t    usable;
     uint8_t    head  ;    //0xFE
-    uint8_t    len;       //data µÄ³¤¶È
-    uint8_t    cmd[2]  ;  //ÃüÁîcmd[0]´æ·ÅµÍ×Ö½Ú
+    uint8_t    len;       //data çš„é•¿åº¦
+    uint8_t    cmd[2]  ;  //å‘½ä»¤cmd[0]å­˜æ”¾ä½å­—èŠ‚
     uint8_t    data[ZIGEBEE_DATA_LEN];
-    uint8_t    chk;       //Ğ£ÑéºÍ
+    uint8_t    chk;       //æ ¡éªŒå’Œ
     uint8_t    endl;      //0x00
 
 };
@@ -168,14 +168,14 @@ extern __IO uint16_t Zigbee_write;
 void SendCMD(uint8_t data);
 
 /**
-  * @brief  ·¢ËÍÊı¾İ
+  * @brief  å‘é€æ•°æ®
   * @param  NETID:
   * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
   * @retval None
   */
 extern int8_t zigbee_send_data(uint8_t len,uint16_t netid, uint8_t buf[]);
 /**
-  * @brief  Í¨¹ıÍøÂçºÅÔ¶³Ì²éÑ¯¶ÔÓ¦IO×´Ì¬
+  * @brief  é€šè¿‡ç½‘ç»œå·è¿œç¨‹æŸ¥è¯¢å¯¹åº”IOçŠ¶æ€
   * @param  NETID:
   * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
   * @retval None
@@ -183,7 +183,7 @@ extern int8_t zigbee_send_data(uint8_t len,uint16_t netid, uint8_t buf[]);
 extern void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn );
 
 /**
-  * @brief  Í¨¹ıÍøÂçºÅÔ¶³Ì²éÑ¯¶ÔÓ¦IO×´Ì¬
+  * @brief  é€šè¿‡ç½‘ç»œå·è¿œç¨‹æŸ¥è¯¢å¯¹åº”IOçŠ¶æ€
   * @param  NETID:
   * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
   * @param  IOmode:
@@ -202,7 +202,7 @@ extern void zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn,uint8_t IOmode,
 extern void zigbee_operate_ALL(void);
 
 
-//´ÓÊı¾İ»º³å³ØÖĞ½«Ö¸ÁîÌáÈ¡³öÀ´ ·ÅÈëZigbee_msgStu[]
+//ä»æ•°æ®ç¼“å†²æ± ä¸­å°†æŒ‡ä»¤æå–å‡ºæ¥ æ”¾å…¥Zigbee_msgStu[]
 extern void Zigbee_fetchParseInstruction (void);
 extern void Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS);
 

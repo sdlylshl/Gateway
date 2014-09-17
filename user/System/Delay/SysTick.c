@@ -1,17 +1,17 @@
 /******************** (C) COPYRIGHT 2012 WildFire Team ***************************
- * ÎÄ¼şÃû  £ºSysTick.c
- * ÃèÊö    £ºSysTick ÏµÍ³µÎ´ğÊ±ÖÓ10usÖĞ¶Ïº¯Êı¿â,ÖĞ¶ÏÊ±¼ä¿É×ÔÓÉÅäÖÃ£¬
- *           ³£ÓÃµÄÓĞ 1us 10us 1ms ÖĞ¶Ï¡£
- * ÊµÑéÆ½Ì¨£ºÒ°»ğSTM32¿ª·¢°å
- * Ó²¼şÁ¬½Ó£º-----------------
+ * æ–‡ä»¶å  ï¼šSysTick.c
+ * æè¿°    ï¼šSysTick ç³»ç»Ÿæ»´ç­”æ—¶é’Ÿ10usä¸­æ–­å‡½æ•°åº“,ä¸­æ–­æ—¶é—´å¯è‡ªç”±é…ç½®ï¼Œ
+ *           å¸¸ç”¨çš„æœ‰ 1us 10us 1ms ä¸­æ–­ã€‚
+ * å®éªŒå¹³å°ï¼šé‡ç«STM32å¼€å‘æ¿
+ * ç¡¬ä»¶è¿æ¥ï¼š-----------------
  *          |                 |
- *          |      ÎŞ         |
+ *          |      æ—          |
  *          |                 |
  *           -----------------
- * ¿â°æ±¾  £ºST3.5.0
- * ×÷Õß    £ºwildfire team
- * ÂÛÌ³    £ºhttp://www.amobbs.com/forum-1008-1.html
- * ÌÔ±¦    £ºhttp://firestm32.taobao.com
+ * åº“ç‰ˆæœ¬  ï¼šST3.5.0
+ * ä½œè€…    ï¼šwildfire team
+ * è®ºå›    ï¼šhttp://www.amobbs.com/forum-1008-1.html
+ * æ·˜å®    ï¼šhttp://firestm32.taobao.com
 **********************************************************************************/
 #include "SysTick.h"
 
@@ -31,43 +31,43 @@ static __IO u32 TimingDelay;
   */
 void SysTick_Init(uint32_t dely)
 {
-    // SystemFrequency / 1000    1msÖĞ¶ÏÒ»´Î
+    // SystemFrequency / 1000    1msä¸­æ–­ä¸€æ¬¡
 		//SysTick_Config ---- inline core_cm3.h
-    //  if (SysTick_Config(SystemFrequency / dely))   // ST3.0.0¿â°æ±¾
-		// 1sÖÓÖ´ĞĞSystemCoreClock¸öÊ±ÖÓÖÜÆÚ
-    if (SysTick_Config(SystemCoreClock / dely)) // ST3.5.0¿â°æ±¾
+    //  if (SysTick_Config(SystemFrequency / dely))   // ST3.0.0åº“ç‰ˆæœ¬
+		// 1sé’Ÿæ‰§è¡ŒSystemCoreClockä¸ªæ—¶é’Ÿå‘¨æœŸ
+    if (SysTick_Config(SystemCoreClock / dely)) // ST3.5.0åº“ç‰ˆæœ¬
     {
         /* Capture error */
         //TODO DEBUG
         return;
     }
-    // ¹Ø±ÕµÎ´ğ¶¨Ê±Æ÷
+    // å…³é—­æ»´ç­”å®šæ—¶å™¨
     //SysTick->CTRL &= ~ SysTick_CTRL_ENABLE_Msk;
 }
 
 void SysTick_Enable(void)
 {
-    // Ê¹ÄÜµÎ´ğ¶¨Ê±Æ÷
+    // ä½¿èƒ½æ»´ç­”å®šæ—¶å™¨
     SysTick->CTRL |=  SysTick_CTRL_ENABLE_Msk;
 }
 void SysTick_Disable(void)
 {
-    // ¹Ø±ÕµÎ´ğ¶¨Ê±Æ÷
+    // å…³é—­æ»´ç­”å®šæ—¶å™¨
     SysTick->CTRL &= ~ SysTick_CTRL_ENABLE_Msk;
 }
 /*
- * º¯ÊıÃû£ºDelay_us
- * ÃèÊö  £ºusÑÓÊ±³ÌĞò,10usÎªÒ»¸öµ¥Î»
- * ÊäÈë  £º- dtime
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºDelay_us( 1 ) ÔòÊµÏÖµÄÑÓÊ±Îª 1 * 10us = 10us
- *       £ºÍâ²¿µ÷ÓÃ
+ * å‡½æ•°åï¼šDelay_us
+ * æè¿°  ï¼šuså»¶æ—¶ç¨‹åº,10usä¸ºä¸€ä¸ªå•ä½
+ * è¾“å…¥  ï¼š- dtime
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šDelay_us( 1 ) åˆ™å®ç°çš„å»¶æ—¶ä¸º 1 * 10us = 10us
+ *       ï¼šå¤–éƒ¨è°ƒç”¨
  */
 
 void Delay_us(__IO uint32_t dtime)
 {
     TimingDelay = dtime;
-    //Æô¶¯SysTick
+    //å¯åŠ¨SysTick
     SysTick_Enable();
 
     SysTick_Init(SYSTICK_1US);
@@ -78,7 +78,7 @@ void Delay_us(__IO uint32_t dtime)
 void Delay_ms(__IO uint32_t dtime)
 {
     TimingDelay = dtime;
-    //Æô¶¯SysTick
+    //å¯åŠ¨SysTick
     SysTick_Enable();
 
     SysTick_Init(SYSTICK_1MS);
@@ -87,11 +87,11 @@ void Delay_ms(__IO uint32_t dtime)
 }
 
 /*
- * º¯ÊıÃû£ºSysTick_Handle
- * ÃèÊö  £º»ñÈ¡½ÚÅÄ³ÌĞò
- * ÊäÈë  £ºÎŞ
- * Êä³ö  £ºÎŞ
- * µ÷ÓÃ  £ºÔÚ SysTick ÖĞ¶Ïº¯Êı SysTick_Handler()µ÷ÓÃ
+ * å‡½æ•°åï¼šSysTick_Handle
+ * æè¿°  ï¼šè·å–èŠ‚æ‹ç¨‹åº
+ * è¾“å…¥  ï¼šæ— 
+ * è¾“å‡º  ï¼šæ— 
+ * è°ƒç”¨  ï¼šåœ¨ SysTick ä¸­æ–­å‡½æ•° SysTick_Handler()è°ƒç”¨
  */
 void SysTick_Handle(void)
 {
