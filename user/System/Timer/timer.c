@@ -14,7 +14,7 @@
  * 淘宝    ：http://firestm32.taobao.com
 **********************************************************************************/
 #include "timer.h"
-
+#include "config.h"
 
 __IO u32 time; // ms 计时变量
 
@@ -168,6 +168,7 @@ void TIM4_Configuration(void)
 
 
 // 中断服务子程序
+
 void TIM1_UP_IRQHandle(void)
 {
     GPIOC->ODR ^= (1 << 4);                        //闪灯
@@ -187,3 +188,25 @@ void TIM1_CC_IRQHandle(void)
         //TIM_SetCounter(TIM2,0x0000);
     }
 }
+void TIM2_IRQHandle(void)
+{
+    if ( TIM_GetITStatus(TIM2 , TIM_IT_Update) != RESET )
+    {
+        TIM_ClearITPendingBit(TIM2 , TIM_FLAG_Update);
+        time++;
+			
+			
+        if (time>500)
+        {
+						LED8( ON );
+        }
+				if(time >1000){
+				
+					LED8( OFF );
+					time=0;
+					
+				}
+
+    }
+}
+

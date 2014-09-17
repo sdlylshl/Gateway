@@ -5,10 +5,9 @@
 
 extern __IO u32 time;
 
-#define START_TIME  time=0;RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 , ENABLE);TIM_Cmd(TIM2, ENABLE)
-#define STOP_TIME  TIM_Cmd(TIM2, DISABLE);RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 , DISABLE)
+#define START_TIME()  time=0;RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 , ENABLE);TIM_Cmd(TIM2, ENABLE)
+#define STOP_TIME()  TIM_Cmd(TIM2, DISABLE);RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 , DISABLE)
 
-void TIM2_NVIC_Configuration(void);
-void TIM2_Configuration(void);
-
+extern void TIM2_Configuration(void);
+extern void TIM2_IRQHandle(void);
 #endif	/* TIME_TEST_H */
