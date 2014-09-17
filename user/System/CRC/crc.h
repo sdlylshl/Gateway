@@ -3,10 +3,13 @@
 
 #include "stm32f10x.h"
 
-#define BUFFER_SIZE    114
+#define CRC_Config CRC_Enable
+#define CRC_Init CRC_Enable
+
+#define CRC_BUFFER_SIZE    114
 
 // 用于产生CRC校验码的原始数据
-static const uint32_t DataBuffer[BUFFER_SIZE] =
+static const uint32_t DataBuffer[CRC_BUFFER_SIZE] =
 {
 	0x00001021, 0x20423063, 0x408450a5, 0x60c670e7, 0x9129a14a, 0xb16bc18c,
 	0xd1ade1ce, 0xf1ef1231, 0x32732252, 0x52b54294, 0x72f762d6, 0x93398318,

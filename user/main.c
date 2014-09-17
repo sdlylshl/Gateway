@@ -62,7 +62,11 @@ int main(void)
     USARTx_printf(USART2, "\r\n This is a USART2_printf demo \r\n");
     USARTx_printf(USART3, "\r\n This is a USART3_printf demo \r\n");
     //USARTx_printf(USART1, "\r\n ("__DATE__ " - " __TIME__ ") \r\n");
-    devInit();
+
+    //设备模拟初始化
+		devInit();
+
+		// CRC启动
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE);
     /* Infinite loop */
 

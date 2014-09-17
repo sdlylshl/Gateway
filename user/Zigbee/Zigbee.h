@@ -163,8 +163,8 @@ struct Zigbee_msgStu
 extern uint8_t Zigbee_buf[BUFFSIZE] ;
 extern uint8_t Zigbee_cmd[CMDSIZE];
 
-extern volatile uint16_t Zigbee_read;
-extern volatile uint16_t Zigbee_write;
+extern __IO uint16_t Zigbee_read;
+extern __IO uint16_t Zigbee_write;
 void SendCMD(uint8_t data);
 
 /**
