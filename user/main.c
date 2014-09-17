@@ -102,8 +102,7 @@ int main(void)
         // zigbee_send_data(1, 3600, buffer);
         // zigbee_send_data(1, 3601, buffer);
         // zigbee_remote_set_net_io(3600, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
-        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
-        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
+        Delay_ms(2000);
         LED8( ON );
         // zigbee_remote_set_net_io(3601, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
 
