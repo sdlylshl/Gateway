@@ -168,8 +168,8 @@ struct msgStu
 extern struct devTable  devTbs[MAX_DEVTABLE_NUM];
 extern uint8_t NET_buf[NET_BUFFSIZE];
 extern uint8_t buf[NET_BUFFSIZE];
-extern volatile uint16_t NET_write ;
-extern volatile uint16_t NET_read ;
+extern __IO uint16_t NET_write ;
+extern __IO uint16_t NET_read ;
 
 void Delay(__IO uint32_t nTime);
 

@@ -15,8 +15,8 @@ uint8_t Zigbee_cmd[CMDSIZE];
 struct Zigbee_msgStu Zigbee_RecvBuff[ZIGEBE_RECV_CMD_NUM];
 struct Zigbee_msgStu Zigbee_SendBuff[ZIGEBE_SEND_CMD_NUM];
 
-volatile uint16_t Zigbee_read = 0;
-volatile uint16_t Zigbee_write = 0;
+__IO uint16_t Zigbee_read = 0;
+__IO uint16_t Zigbee_write = 0;
 extern void zigbee_operate(struct devTable *pdevTbs);
 void SendCMD(uint8_t data)
 {

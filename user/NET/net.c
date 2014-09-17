@@ -12,8 +12,8 @@ uint8_t sendBuf[SEND_CMDS_NUM][CMD_DATA_LEN];
 //接收缓冲器 512
 uint8_t NET_buf[NET_BUFFSIZE];
 //读写指针
-volatile uint16_t NET_write ;
-volatile uint16_t NET_read ;
+__IO uint16_t NET_write ;
+__IO uint16_t NET_read ;
 
 extern void zigbee_operate(struct devTable *pdevTbs);
 
@@ -257,7 +257,7 @@ int8_t Net_send_data(uint8_t len, uint8_t data[])
     }
     //TODO
     //生成CRC校验码
-    psndat = &pNmsgS->sn[0];
+    psndat = &pNmsgS->len;
     CRC_ResetDR();
     for (i = 0; i < len + 3; i++)
     {
@@ -643,7 +643,7 @@ void NET_fetchParseInstruction()
                 NET_read_forward();
 
                 //CRC校验
-                psndat = &pNmsgR->sn[0];
+                psndat = &pNmsgR->len;
                 CRC_ResetDR();
                 for (i = 0; i < len_tmp + 3; i++)
                 {

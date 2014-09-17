@@ -16,7 +16,7 @@
 #include "timer.h"
 
 
-volatile u32 time; // ms 计时变量
+__IO u32 time; // ms 计时变量
 
 void TIM2_test(){
 

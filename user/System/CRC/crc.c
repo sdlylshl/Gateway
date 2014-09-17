@@ -1,6 +1,6 @@
 /******************** (C) COPYRIGHT 2012 WildFire Team ***************************
  * 文件名  ：crc.c
- * 描述    ：crc（循环冗余校验）应用函数库         
+ * 描述    ：crc（循环冗余校验）应用函数库
  * 实验平台：野火STM32开发板
  * 硬件连接：--------------------------
  *          |                          |
@@ -8,7 +8,7 @@
  *          |                          |
  *           --------------------------
  * 库版本  ：ST3.5.0
- * 作者    ：wildfire team 
+ * 作者    ：wildfire team
  * 论坛    ：http://www.amobbs.com/forum-1008-1.html
  * 淘宝    ：http://firestm32.taobao.com
 **********************************************************************************/
@@ -20,17 +20,17 @@ __IO uint32_t CRCValue = 0;		 // 用于存放产生的CRC校验值
 int CRC_test(void)
 {
 	uint8_t i = 0;
-		
+
 	/* USART1 config 115200 8-N-1 */
 	USART1_Config();
-	
+
 	/* 使能CRC时钟 */
-	CRC_Config();
-	
+	CRC_Enable();
+
 	printf("\r\n 这是一个 CRC(循环冗余校验)实验 \r\n");
-	
+
 	/* Compute the CRC of "DataBuffer" */
-	for(i=0; i<BUFFER_SIZE; i++ ) 
+	for(i=0; i<BUFFER_SIZE; i++ )
 	{
 		CRCValue = CRC_CalcBlockCRC((uint32_t *)DataBuffer, BUFFER_SIZE);
 		printf("\r\n32-bit CRC 校验码为:0X%X\r\n", CRCValue);
@@ -39,7 +39,7 @@ int CRC_test(void)
 
 	for(;;)
 	{
-		
+
 	}
 }
 
@@ -50,10 +50,15 @@ int CRC_test(void)
  * 输出  ：无
  * 调用  : 外部调用
  */
-void CRC_Config(void)
+void CRC_Enable(void)
 {
 	/* Enable CRC clock */
 	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE);
 }
 
+void CRC_Disable(void){
+	/* Disable CRC clock */
+	RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, DISABLE);
+
+}
 /******************* (C) COPYRIGHT 2012 WildFire Team *****END OF FILE************/
