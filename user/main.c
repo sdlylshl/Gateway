@@ -36,6 +36,7 @@
 #include <stdio.h>
 
 #include "config.h"
+
 void Delay(__IO u32 nCount)
 {
     for (; nCount != 0; nCount--);
@@ -104,7 +105,7 @@ int main(void)
         // zigbee_send_data(1, 3601, buffer);
         // zigbee_remote_set_net_io(3600, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
         Delay_ms(2000);
-        
+
         // zigbee_remote_set_net_io(3601, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
 
         //Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF); Delay(0x0FFFEF);    Delay(0x0FFFEF);

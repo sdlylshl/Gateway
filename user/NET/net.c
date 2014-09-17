@@ -1047,16 +1047,55 @@ void devInit(void)
 {
     //pwNr = 0;
 
-    devTbs[1].mac[0] = 10;
-    devTbs[1].mac[1] = 10;
+    devTbs[1].mac[0] = 0x01;
     devTbs[1].netId = 0x3600;
     devTbs[1].protocol = 3;
     devTbs[1].devstate = 1;
 
-    devTbs[2].mac[0] = 25;
-    devTbs[2].netId = 3600;
+    devTbs[2].mac[0] = 0x02;
+    devTbs[2].netId = 0x3600;
     devTbs[2].protocol = 4;
     devTbs[2].devstate = 2;
+
+    devTbs[3].mac[0] = 0x03;
+    devTbs[3].netId = 0x3603;
+    devTbs[3].protocol = 3;
+    devTbs[3].devstate = 1;
+
+    devTbs[4].mac[0] = 0x04;
+    devTbs[4].netId = 0x3604;
+    devTbs[4].protocol = 3;
+    devTbs[4].devstate = 1;
+
+    devTbs[5].mac[0] = 0x05;
+    devTbs[5].netId = 0x3605;
+    devTbs[5].protocol = 3;
+    devTbs[5].devstate = 1;
+
+    devTbs[6].mac[0] = 0x06;
+    devTbs[6].netId = 0x3606;
+    devTbs[6].protocol = 3;
+    devTbs[6].devstate = 1;
+
+    devTbs[7].mac[0] = 0x07;
+    devTbs[7].netId = 0x3607;
+    devTbs[7].protocol = 3;
+    devTbs[7].devstate = 1;
+
+    devTbs[8].mac[0] = 0x08;
+    devTbs[8].netId = 0x3608;
+    devTbs[8].protocol = 3;
+    devTbs[8].devstate = 1;
+
+    devTbs[9].mac[0] = 0x09;
+    devTbs[9].netId = 0x3609;
+    devTbs[9].protocol = 3;
+    devTbs[9].devstate = 1;
+
+    devTbs[0].mac[0] = 0x10;
+    devTbs[0].netId = 0x3610;
+    devTbs[0].protocol = 3;
+    devTbs[0].devstate = 1;
 
 }
 uint32_t writeFlag = 0;
