@@ -36,6 +36,7 @@
 #include <stdio.h>
 
 #include "config.h"
+
 void Delay(__IO u32 nCount)
 {
     for (; nCount != 0; nCount--);
@@ -69,7 +70,8 @@ int main(void)
 		// CRC启动
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE);
     /* Infinite loop */
-
+    TIM2_Configuration();
+    START_TIME();
     while (1)
     {
         //取命令 并解析
@@ -102,9 +104,8 @@ int main(void)
         // zigbee_send_data(1, 3600, buffer);
         // zigbee_send_data(1, 3601, buffer);
         // zigbee_remote_set_net_io(3600, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
-        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
-        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
-        LED8( ON );
+        Delay_ms(2000);
+
         // zigbee_remote_set_net_io(3601, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
 
         //Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF); Delay(0x0FFFEF);    Delay(0x0FFFEF);
@@ -113,12 +114,9 @@ int main(void)
         Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
         Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
         Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
-        LED8( OFF );
+        //LED8( OFF );
         // zigbee_remote_set_net_io(3601, IO_D2 , IO_MODE_GPIO_OUTPUT_0, 0);
         //Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF); Delay(0x0FFFEF);    Delay(0x0FFFEF);
-
-
-
 
     }
 }

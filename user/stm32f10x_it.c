@@ -306,11 +306,7 @@ void TIM1_CC_IRQHandler()
 
 void TIM2_IRQHandler(void)
 {
-    if ( TIM_GetITStatus(TIM2 , TIM_IT_Update) != RESET )
-    {
-        TIM_ClearITPendingBit(TIM2 , TIM_FLAG_Update);
-        time++;
-    }
+    TIM2_IRQHandle();
 }
 void TIM3_IRQHandler()
 {

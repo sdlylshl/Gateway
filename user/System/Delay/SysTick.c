@@ -33,7 +33,8 @@ void SysTick_Init(uint32_t dely)
 {
     // SystemFrequency / 1000    1ms中断一次
 		//SysTick_Config ---- inline core_cm3.h
-    //  if (SysTick_Config(SystemFrequency / 100000))   // ST3.0.0库版本
+    //  if (SysTick_Config(SystemFrequency / dely))   // ST3.0.0库版本
+		// 1s钟执行SystemCoreClock个时钟周期
     if (SysTick_Config(SystemCoreClock / dely)) // ST3.5.0库版本
     {
         /* Capture error */
@@ -66,10 +67,10 @@ void SysTick_Disable(void)
 void Delay_us(__IO uint32_t dtime)
 {
     TimingDelay = dtime;
-    SysTick_Init(SYSTICK_1US);
     //启动SysTick
     SysTick_Enable();
 
+    SysTick_Init(SYSTICK_1US);
     while (TimingDelay != 0);
     SysTick_Disable();
 }
@@ -77,23 +78,14 @@ void Delay_us(__IO uint32_t dtime)
 void Delay_ms(__IO uint32_t dtime)
 {
     TimingDelay = dtime;
+    //启动SysTick
+    SysTick_Enable();
+
     SysTick_Init(SYSTICK_1MS);
-    //启动SysTick
-    SysTick_Enable();
-
     while (TimingDelay != 0);
      SysTick_Disable();
 }
-void Delay_s(__IO uint32_t dtime)
-{
-    TimingDelay = dtime;
-    SysTick_Init(SYSTICK_1S);
-    //启动SysTick
-    SysTick_Enable();
 
-    while (TimingDelay != 0);
-     SysTick_Disable();
-}
 /*
  * 函数名：SysTick_Handle
  * 描述  ：获取节拍程序

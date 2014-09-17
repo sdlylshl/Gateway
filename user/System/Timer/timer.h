@@ -3,12 +3,12 @@
 
 #include "stm32f10x.h"
 
-extern __IO u32 time;
+extern __IO uint32_t time;
 
-#define START_TIME  time=0;RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 , ENABLE);TIM_Cmd(TIM2, ENABLE)
-#define STOP_TIME  TIM_Cmd(TIM2, DISABLE);RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 , DISABLE)
 
-void TIM2_NVIC_Configuration(void);
-void TIM2_Configuration(void);
+#define START_TIME()  time=0;RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 , ENABLE);TIM_Cmd(TIM2, ENABLE)
+#define STOP_TIME()  TIM_Cmd(TIM2, DISABLE);RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2 , DISABLE)
 
+extern void TIM2_Configuration(void);
+extern void TIM2_IRQHandle(void);
 #endif	/* TIME_TEST_H */
