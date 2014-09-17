@@ -403,7 +403,7 @@ void USART3_IRQHandler(void)
             c = USART3->DR;
 
         }
-
+				c=c;
 }
 
 void EXTI15_10_IRQHandler()

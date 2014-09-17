@@ -14,6 +14,25 @@ uint8_t NET_buf[NET_BUFFSIZE];
 //读写指针
 __IO uint16_t NET_write ;
 __IO uint16_t NET_read ;
+//全局设备表
+struct devTable  devTbs[MAX_DEVTABLE_NUM];
+
+//最大全局策略表大小
+struct strgytable strategytable[MAX_DESTABLE_NUM];
+
+//最大 指令表 发送到服务器指令
+struct msgStu netSendDataCMDS[SEND_CMDS_NUM];
+//最大 指令表 接收到服务器指令
+struct msgStu netRecvDataCMDS[RECV_CMDS_NUM];
+
+
+//extern uint32_t Net_cmd[20];
+//uint8_t data[200];
+//uint32_t cmdRcv = 0;
+//uint32_t cmdDeal = -1;
+
+//发送数据包随机号 ：指令包为奇数 应答包为用偶数，  0 表示心跳
+uint16_t  msgSN = 1;
 
 extern void zigbee_operate(struct devTable *pdevTbs);
 
@@ -34,8 +53,8 @@ void uart_print( uint8_t len, uint8_t *data)
 
 }
 
-
-void Net_sendTimer()
+//完成指令的未相应重发
+void Net_sendTimer(void)
 {
     uint8_t i;
 
@@ -44,13 +63,27 @@ void Net_sendTimer()
         if(netSendDataCMDS[i].usable){
 
             netSendDataCMDS[i].usable++;
-        }
-        // 重发条件
-         if(netSendDataCMDS[i].usable>10){
+					
+					 // 重发条件
+					switch(netSendDataCMDS[i].usable)
+					{
+						case 10:
+						case 20:
+						case 30:
+						case 40:
+						case 50:
+							Net_send(&netSendDataCMDS[i]);
+						break;
+					}
+					// 死指令 丢弃
+				if( netSendDataCMDS[i].usable>50){
 
             Net_send(&netSendDataCMDS[i]);
+						netSendDataCMDS[i].usable=0;
+        }	
+					
         }
-
+       
     }
 
 }
@@ -58,25 +91,6 @@ void Net_sendTimer()
 
 
 
-//全局设备表
-struct devTable  devTbs[MAX_DEVTABLE_NUM];
-
-//最大全局策略表大小
-struct strgytable strategytable[MAX_DESTABLE_NUM];
-
-//最大 指令表 发送到服务器指令
-struct msgStu netSendDataCMDS[SEND_CMDS_NUM];
-//最大 指令表 接收到服务器指令
-struct msgStu netRecvDataCMDS[RECV_CMDS_NUM];
-
-
-//extern uint32_t Net_cmd[20];
-//uint8_t data[200];
-//uint32_t cmdRcv = 0;
-//uint32_t cmdDeal = -1;
-
-//发送数据包随机号 ：指令包为奇数 应答包为用偶数，  0 表示心跳
-uint16_t  msgSN = 1;
 
 
 void loadDevMsg()
@@ -156,7 +170,7 @@ uint16_t getmsgSN()
   * @writer lishoulei
   *   @modify
   */
-int8_t Net_send(struct msgStu *pNmsgS)
+uint8_t Net_send(struct msgStu *pNmsgS)
 {
     // 填充完成
     if (pNmsgS->usable > 1)
@@ -177,7 +191,7 @@ int8_t Net_send(struct msgStu *pNmsgS)
         Net_PutChar(pNmsgS->crc[3]);
         Net_PutChar(pNmsgS->endl);
     }
-    pNmsgS->usable = 3;
+    pNmsgS->usable++;
     return OK;
 }
 
@@ -601,7 +615,7 @@ void NET_fetchParseInstruction()
             //当前无效帧
             if (len_tmp > CMD_DATA_LEN)
             {
-                break;
+                continue;
             }
             else if ((NET_write + NET_BUFFSIZE - NET_read) % NET_BUFFSIZE > len_tmp + 7)
             {
@@ -1125,7 +1139,7 @@ uint32_t net(void)
         //策略解析，修改对应 设备表
         policydecisions();
         //重发机制
-        sendTimer();
+        Net_sendTimer();
         Delay(60);
         Net_PutChar(0xaa);
 

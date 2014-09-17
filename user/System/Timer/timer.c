@@ -18,6 +18,7 @@
 
 __IO uint32_t time; // ms 计时变量
 __IO uint32_t Zigbee_time; // ms 计时变量
+__IO uint32_t Net_time; // ms 计时变量
 
 void TIM2_test()
 {
@@ -195,18 +196,20 @@ void TIM2_IRQHandle(void)
     {
         TIM_ClearITPendingBit(TIM2 , TIM_FLAG_Update);
         time++;
+        Zigbee_time++;
+        Net_time++;
 
-
-        if (time>500)
+        if (time > 500)
         {
-						LED8( ON );
+            LED8( ON );
         }
-				if(time >1000){
+        if (time > 1000)
+        {
 
-					LED8( OFF );
-					time=0;
+            LED8( OFF );
+            time = 0;
 
-				}
+        }
 
     }
 }

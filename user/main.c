@@ -49,7 +49,7 @@ void Delay(__IO u32 nCount)
   */
 int main(void)
 {
-    uint8_t i;
+    //uint8_t i;
     //uint8_t buffer[10];
     LED_GPIO_Config();
 
@@ -85,38 +85,34 @@ int main(void)
         // print_DEVS();
 
         //定时执行 对执行来说 不关心是否执行成功 所以 要定时执行
-        //zigbee_operate_ALL();
+        //2.5S 执行一次
+        if (Zigbee_time>2500)
+        {
+          zigbee_operate_ALL();
+          Zigbee_time=0;
+        }
+        //
         //定时查询状态
 
-        //重发机制
-        // sendTimer();
+        //重发机制 1S重发一次 清理一次
+        if (Net_time>100)
+        {
+          Net_sendTimer();
+          Net_time=0;
+        }
 
-        zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_0,  0);
+
+        //zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_0,  0);
 
 
         //zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_1,  0);
-        //SendCMD(NET_write);
         // strategy_implementation();
-        if (i == 200)
-            i = 0;
-        // buffer[0] = i++;
-        //
+
         // zigbee_send_data(1, 3600, buffer);
         // zigbee_send_data(1, 3601, buffer);
         // zigbee_remote_set_net_io(3600, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
-        Delay_ms(2000);
-
         // zigbee_remote_set_net_io(3601, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
 
-        //Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF); Delay(0x0FFFEF);    Delay(0x0FFFEF);
-
-        // zigbee_remote_set_net_io(3600, IO_D2 , IO_MODE_GPIO_OUTPUT_0, 0);
-        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
-        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
-        Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF); Delay(0x0FFF);
-        //LED8( OFF );
-        // zigbee_remote_set_net_io(3601, IO_D2 , IO_MODE_GPIO_OUTPUT_0, 0);
-        //Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF);    Delay(0x0FFFEF); Delay(0x0FFFEF);    Delay(0x0FFFEF);
 
     }
 }

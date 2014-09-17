@@ -215,8 +215,7 @@ void Zigbee_fetchParseInstruction (void)
             if (len_tmp > ZIGEBEE_DATA_LEN)
             {
 
-
-                break;
+                continue;
             }
             else if ((Zigbee_write + ZIGBEE_BUFFSIZE - Zigbee_read) % ZIGBEE_BUFFSIZE > len_tmp + 4)
             {

@@ -194,7 +194,9 @@ extern void parseAllCmd(void);
 //策略解析，修改对应 设备表
 extern void policydecisions(void);
 //重发机制
-extern void  sendTimer(void);
+extern void Net_sendTimer(void);
+extern uint8_t Net_send(struct msgStu *pNmsgS);
+
 extern void print_CMDS(void);
 extern void print_DEVS(void);
 extern uint8_t Net_send_device(struct  devTable *devTbs, uint8_t CMD, uint8_t control);
