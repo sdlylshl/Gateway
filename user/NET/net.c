@@ -35,21 +35,24 @@ void uart_print( uint8_t len, uint8_t *data)
 }
 
 
-void sendTimer()
+void Net_sendTimer()
 {
-    uint32_t i = 0;
-    while (i < SEND_CMDS_NUM)
+    uint8_t i;
+
+    for (i = 0; i < SEND_CMDS_NUM; i++)
     {
-        if (sendBuf[i][0] > 1)
-        {
-            sendBuf[i][0]++;
+        if(netSendDataCMDS[i].usable){
+
+            netSendDataCMDS[i].usable++;
         }
-        if (sendBuf[i][0] > 3)
-        {
-            uart_print(0, sendBuf[i]);
+        // 重发条件
+         if(netSendDataCMDS[i].usable>10){
+
+            Net_send(&netSendDataCMDS[i]);
         }
-        i++;
+
     }
+
 }
 
 
@@ -155,7 +158,8 @@ uint16_t getmsgSN()
   */
 int8_t Net_send(struct msgStu *pNmsgS)
 {
-    if (pNmsgS->usable == 2)
+    // 填充完成
+    if (pNmsgS->usable > 1)
     {
         uint8_t i;
         Net_PutChar(pNmsgS->head);
@@ -176,6 +180,7 @@ int8_t Net_send(struct msgStu *pNmsgS)
     pNmsgS->usable = 3;
     return OK;
 }
+
 void Net_Ans(struct msgStu *pansmsgS)
 {
     uint16_t sn;
@@ -754,7 +759,7 @@ void NET_parseData(struct msgStu *pNmsgR)
                 {
                     Net_send_device(pdevTbs, DEVTAB_UPDATE, pNmsgR->data[1]);
                 }
-                index += 4;
+                index += 8;
             }
 
         }
@@ -805,7 +810,7 @@ void NET_parseData(struct msgStu *pNmsgR)
             mac = &pNmsgR->data[index];
             pdevTbs = getDevTbsByMac(mac);
 
-            index += 4;
+            index += 8;
         }
         //状态设置
         if (pNmsgR->data[1] & 0x10)
