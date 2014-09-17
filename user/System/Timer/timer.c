@@ -16,7 +16,8 @@
 #include "timer.h"
 #include "config.h"
 
-__IO u32 time; // ms 计时变量
+__IO uint32_t time; // ms 计时变量
+__IO uint32_t Zigbee_time; // ms 计时变量
 
 void TIM2_test()
 {
@@ -194,17 +195,17 @@ void TIM2_IRQHandle(void)
     {
         TIM_ClearITPendingBit(TIM2 , TIM_FLAG_Update);
         time++;
-			
-			
+
+
         if (time>500)
         {
 						LED8( ON );
         }
 				if(time >1000){
-				
+
 					LED8( OFF );
 					time=0;
-					
+
 				}
 
     }

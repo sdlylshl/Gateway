@@ -693,7 +693,7 @@ void Ans_parse(struct msgStu *pNmsgR)
     //修改对应重发列表的 usable
     for (i = 0; i < SEND_CMDS_NUM; i++)
     {
-        if ( (netSendDataCMDS[i].sn[0] == pNmsgR->sn[0]) && (netSendDataCMDS[i].sn[0] == pNmsgR->sn[0]))
+        if ( (netSendDataCMDS[i].sn[0] == pNmsgR->sn[0]) && (netSendDataCMDS[i].sn[1] == pNmsgR->sn[1]))
         {
             //如果出现两个sn相同的怎么办？
             netSendDataCMDS[i].usable = 0;
