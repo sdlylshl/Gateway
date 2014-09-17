@@ -155,7 +155,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
     Interrupt_DBG(Interrupt_DBG_USARTx, "\r\n SysTick_Handler \r\n");
-    while (1) {}
+    SysTick_Handle();
 }
 
 /*                 STM32F10x Peripherals Interrupt Handlers                   */

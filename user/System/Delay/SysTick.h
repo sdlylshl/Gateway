@@ -11,9 +11,9 @@
 #define  SYSTICK_100MS  10
 #define  SYSTICK_1S     1
 
-void Delay_us(__IO u32 nTime);	  //单位10us
+void Delay_us(__IO u32 nTime);	  //单位1us
 
-#define Delay_ms(x) Delay_us(100*x)	 //单位ms
+//#define Delay_ms(x) Delay_us(100*x)	 //单位ms
 
 void SysTick_Handle(void);
 

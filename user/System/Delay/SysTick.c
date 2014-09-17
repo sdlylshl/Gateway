@@ -32,7 +32,7 @@ static __IO u32 TimingDelay;
 void SysTick_Init(uint32_t dely)
 {
     // SystemFrequency / 1000    1ms中断一次
-
+		//SysTick_Config ---- inline core_cm3.h
     //  if (SysTick_Config(SystemFrequency / 100000))   // ST3.0.0库版本
     if (SysTick_Config(SystemCoreClock / dely)) // ST3.5.0库版本
     {
@@ -57,23 +57,43 @@ void SysTick_Disable(void)
 /*
  * 函数名：Delay_us
  * 描述  ：us延时程序,10us为一个单位
- * 输入  ：- nTime
+ * 输入  ：- dtime
  * 输出  ：无
  * 调用  ：Delay_us( 1 ) 则实现的延时为 1 * 10us = 10us
  *       ：外部调用
  */
 
-void Delay_us(__IO uint32_t nTime)
+void Delay_us(__IO uint32_t dtime)
 {
-    TimingDelay = nTime;
+    TimingDelay = dtime;
     SysTick_Init(SYSTICK_1US);
     //启动SysTick
     SysTick_Enable();
 
     while (TimingDelay != 0);
+    SysTick_Disable();
 }
 
+void Delay_ms(__IO uint32_t dtime)
+{
+    TimingDelay = dtime;
+    SysTick_Init(SYSTICK_1MS);
+    //启动SysTick
+    SysTick_Enable();
 
+    while (TimingDelay != 0);
+     SysTick_Disable();
+}
+void Delay_s(__IO uint32_t dtime)
+{
+    TimingDelay = dtime;
+    SysTick_Init(SYSTICK_1S);
+    //启动SysTick
+    SysTick_Enable();
+
+    while (TimingDelay != 0);
+     SysTick_Disable();
+}
 /*
  * 函数名：SysTick_Handle
  * 描述  ：获取节拍程序
