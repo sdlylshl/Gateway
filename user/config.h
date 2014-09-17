@@ -1,5 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
+
+#include "config.h"
+
 #include "stm32f10x.h"
 #include ".\System\Usart\usart.h"
 #include ".\System\GPIO\led.h"
@@ -8,7 +11,11 @@
 
 #include ".\Net\net.h"
 #include ".\Zigbee\zigbee.h"
+#include ".\Device\device.h"
 #include ".\Policy\policy.h"
 
 #include ".\ERR\err.h"
+
+#define BIGENDIAN 1
+
 #endif	/* CONFIG_H */

@@ -72,6 +72,9 @@ int main(void)
     /* Infinite loop */
     TIM2_Configuration();
     START_TIME();
+
+    //1.获取设备信息 AT+NWS
+
     while (1)
     {
         //取命令 并解析
@@ -100,6 +103,7 @@ int main(void)
           Net_sendTimer();
           Net_time=0;
         }
+
 
 
         //zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_0,  0);

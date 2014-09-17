@@ -1,9 +1,9 @@
 
 #include "stm32f10x.h"
 #include "Zigbee.h"
-#include "config.h"
 #include <stdio.h>
 
+#include "config.h"
 
 
 #define Zigbee_DBG USARTx_printf
@@ -17,7 +17,9 @@ struct Zigbee_msgStu Zigbee_SendBuff[ZIGEBE_SEND_CMD_NUM];
 
 __IO uint16_t Zigbee_read = 0;
 __IO uint16_t Zigbee_write = 0;
+
 extern void zigbee_operate(struct devTable *pdevTbs);
+uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control);
 void SendCMD(uint8_t data)
 {
 
@@ -93,7 +95,7 @@ void zigbee_operate(struct devTable *pdevTbs)
             }
 
             //发送当前状态给APP
-            Net_send_device(&pdevTbs[i], 11, DEV_MAC | DEV_CURST);
+            Net_send_device(pdevTbs, 11, DEV_MAC | DEV_CURST);
             //发送完成清状态标志
             pdevTbs->ActSt = pdevTbs->ActSt & 0x3FFF;
         }//end (pdevTbs->ActSt & 0x8000)

@@ -121,7 +121,7 @@
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
           <Simulator>
-            <UseSimulator>1</UseSimulator>
+            <UseSimulator>0</UseSimulator>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
             <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
@@ -133,7 +133,7 @@
             <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
-            <UseTarget>0</UseTarget>
+            <UseTarget>1</UseTarget>
             <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
             <RunToMain>1</RunToMain>
             <RestoreBreakpoints>1</RestoreBreakpoints>
@@ -146,7 +146,7 @@
             <UsePdscDebugDescription>1</UsePdscDebugDescription>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>4</TargetSelection>
+          <TargetSelection>6</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -452,6 +452,16 @@
               <FileType>1</FileType>
               <FilePath>.\user\System\Timer\timer.c</FilePath>
             </File>
+            <File>
+              <FileName>SysTick.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\System\Delay\SysTick.c</FilePath>
+            </File>
+            <File>
+              <FileName>device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\Device\device.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -515,6 +525,11 @@
               <FileType>1</FileType>
               <FilePath>D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\StdPeriph_Driver\src\stm32f10x_crc.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32f10x_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>D:\Program Files\Keil_v5\ARM\PACK\Keil\STM32F1xx_DFP\1.0.5\Device\StdPeriph_Driver\src\stm32f10x_rtc.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
@@ -561,6 +576,12 @@
         </targetInfos>
       </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="RCC" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1 STDPERIPH">
+        <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
+        <targetInfos>
+          <targetInfo name="Gateway"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="RTC" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1 STDPERIPH">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.0.5"/>
         <targetInfos>
           <targetInfo name="Gateway"/>

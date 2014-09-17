@@ -16,123 +16,9 @@
 // 接收缓冲区大小
 #define NET_BUFFSIZE 512
 
-// 设备 最大条数
-#define  MAX_DEVTABLE_NUM  20
-// 策略表 最大条数
-#define  MAX_DESTABLE_NUM  10
-
 #define NET_CMD_HEAD 0xE0
 #define NET_CMD_END 0x18
 
-
-#define DEVTAB_REQUEST 0x10
-#define DEVTAB_UPDATE  0x11
-
-#define DEV_STATE 0x01
-#define DEV_PROTOCOL 0x02
-#define DEV_NETID 0x04
-#define DEV_MAC 0x08
-#define DEV_ACTST 0x10
-#define DEV_CURST 0x20
-#define DEV_TYPE 0x40
-#define DEV_NAME 0x80
-
-
-enum devTbCV
-{
-    STATE = 1,      //设备状态 0
-    PROTOCOL = 2, //接口类型 1
-    NETID = 0x04,   //网络号     2
-    MAC = 0x08,         //唯一设备MAC 3
-    ACTST = 0x10,   //执行状态
-    CURST = 0x20,   //当前状态
-    TYPE = 0x40,        //设备类型
-    NAME = 0x80         //设备名称
-};
-
-
-/*
-  1、与服务端通信的数据格式
-    1[1]           2[1]      3[2]     4 [8]             5[4]       6 [1]      7[10+1]
- 设备状态    接口类型     网络号   唯一设备MAC  执行状态 当前状态 设备类型  “名称”
- 在线0x01    zigbee--0x01 0x8232   0x12345678   4字节状态值     烟感0x81 “烟雾传感器”
- 离线0x00    wifi--0x02   0x0233   0x12312354   2字节    2字节  灯--0x01 “卧室灯2”
- 休眠0x02    蓝牙-0x03    0x0234   0x32132122   2字节    2字节  开关0x02 “客厅开关”
-*/
-//28字节
-struct  devTable
-{
-    uint8_t     devstate;
-    uint8_t     protocol;
-    uint16_t    netId;
-    uint8_t     mac[8];
-    uint16_t    ActSt;
-    uint16_t    curSt;
-    uint8_t     type;
-    uint8_t     name[11];
-};
-/*
-struct  devTable
-{
-    uint8_t     state;
-    uint8_t     protocol;
-    uint16_t    netId;
-    uint64_t    mac;
-          union
-    {
-        uint32_t Sensor_State;
-        struct
-        {
-                    uint16_t  Actuator_ActSt;
-                    uint16_t  Actuator_curSt;
-        } st;
-    }status;
-
-    uint8_t   type;
-    uint8_t   name[10];
-};
-*/
-
-struct sensorInfo
-{
-
-    uint8_t sensorId[8];  //设备ID 可选 网络号|MAC
-    uint32_t sensorTrigger;
-
-};
-
-struct actuatorInfo
-{
-
-    uint8_t actuatorId[8];    //设备ID 可选 网络号|MAC
-    uint8_t actuatorTrigger;
-
-};
-/**
-  * @brief 全局策略结构体:
-                        序号  1               2           3                   4                   5                   6                       7
-                                    优先级       id      触发数量        触发类型    传感器*N         控制器*M         名称
-                        字节  1字节     1字节 1字节         1字节     2字节+4字节 2字节+1字节 10字节
-                                    0为禁用  最大255   高2位传感器（4个）  低6位 控制器数量（64个）  两位(2bit)标识一个传感器       传感器标识 触发条件    控制器标识 控制状态    设备名称
-
-    * @pram  usable  0 未使用 1正在填充 2可用 >=3 定时自加
-                     type 无效    0b00 开关 0b01 小触发  0b10 大触发  0b11
-    * @writer liuzhishan
-    * @modify
-  */
-struct strgytable
-{
-    uint8_t usable; //操作状态
-
-    uint8_t first;  //优先级
-    uint8_t id;         //
-    uint8_t num;
-    uint8_t type;
-    struct sensorInfo sensor[4];
-    struct actuatorInfo actuator[10];
-    uint8_t name[10];
-
-};
 
 
 /**
@@ -165,9 +51,9 @@ struct msgStu
 
 };
 
-extern struct devTable  devTbs[MAX_DEVTABLE_NUM];
-extern uint8_t NET_buf[NET_BUFFSIZE];
-extern uint8_t buf[NET_BUFFSIZE];
+
+extern uint8_t NET_buf[];
+extern uint8_t buf[];
 extern __IO uint16_t NET_write ;
 extern __IO uint16_t NET_read ;
 
@@ -199,10 +85,8 @@ extern uint8_t Net_send(struct msgStu *pNmsgS);
 
 extern void print_CMDS(void);
 extern void print_DEVS(void);
-extern uint8_t Net_send_device(struct  devTable *devTbs, uint8_t CMD, uint8_t control);
+//extern uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control);
 extern void devInit(void);
 
-extern struct devTable *getDevTbsByMac(uint8_t *mac);
-extern struct devTable *getDevTbsByNetId(uint16_t id);
 extern void Net_PutChar(uint8_t ch);
 #endif

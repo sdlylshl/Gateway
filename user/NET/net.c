@@ -6,25 +6,18 @@
 #include "config.h"
 
 #define BIGENDIAN 1
-//发送缓冲器 最大条数30x单条指令长度50
-uint8_t sendBuf[SEND_CMDS_NUM][CMD_DATA_LEN];
 
 //接收缓冲器 512
 uint8_t NET_buf[NET_BUFFSIZE];
 //读写指针
 __IO uint16_t NET_write ;
 __IO uint16_t NET_read ;
-//全局设备表
-struct devTable  devTbs[MAX_DEVTABLE_NUM];
-
-//最大全局策略表大小
-struct strgytable strategytable[MAX_DESTABLE_NUM];
 
 //最大 指令表 发送到服务器指令
 struct msgStu netSendDataCMDS[SEND_CMDS_NUM];
 //最大 指令表 接收到服务器指令
 struct msgStu netRecvDataCMDS[RECV_CMDS_NUM];
-
+//全局设备表
 
 //extern uint32_t Net_cmd[20];
 //uint8_t data[200];
@@ -63,7 +56,7 @@ void Net_sendTimer(void)
         if(netSendDataCMDS[i].usable){
 
             netSendDataCMDS[i].usable++;
-					
+
 					 // 重发条件
 					switch(netSendDataCMDS[i].usable)
 					{
@@ -80,24 +73,15 @@ void Net_sendTimer(void)
 
             Net_send(&netSendDataCMDS[i]);
 						netSendDataCMDS[i].usable=0;
-        }	
-					
         }
-       
+
+        }
+
     }
 
 }
 
 
-
-
-
-
-void loadDevMsg()
-{
-
-
-}
 /**
   * @brief  获取可用的发送缓冲
   * @retval 返回发送结构体指针
@@ -114,28 +98,6 @@ struct msgStu *getSendBuf(void)
             return &netSendDataCMDS[i];
         }
 
-        i++;
-    }
-    return NULL;
-}
-
-uint8_t *getOneSendBuf()
-{
-    uint32_t i = 1;
-    while (i < SEND_CMDS_NUM)
-    {
-
-        if (sendBuf[i][0] == 0)
-        {
-            sendBuf[i][0] = 1;
-            sendBuf[i][1] = 0xE0;
-            msgSN += 2;
-            if (msgSN >= 65533)
-                msgSN = 1;
-            sendBuf[i][2] = (msgSN >> 8) & 0xFF;
-            sendBuf[i][3] = msgSN & 0xFF;
-            return &sendBuf[i][0];
-        }
         i++;
     }
     return NULL;
@@ -311,7 +273,7 @@ int8_t Net_send_data(uint8_t len, uint8_t data[])
   * @writer lishoulei
   * @modify
   */
-uint8_t Net_send_device(struct  devTable *pdevTbs, uint8_t CMD, uint8_t control)
+uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control)
 {
     uint8_t len = 0;
     uint8_t data[CMD_DATA_LEN];
@@ -420,71 +382,6 @@ uint8_t Net_send_device(struct  devTable *pdevTbs, uint8_t CMD, uint8_t control)
     return OK;
 }
 
-// Net_send_device(11,MAC|CURST);
-/**
-  * @brief  发送celue
-  * @param  CMD:
-  * @param  control:
-  * @retval 发送成功返回 OK
-  * @writer
-  * @modify
-  */
-
-/*******************************parse******************************************/
-
-/**
-  * @brief  通过MAC地址表获取设备表
-  * @param  None
-  * @retval None
-    * @writer liuzhishan
-    *   @modify
-  */
-
-struct devTable *getDevTbsByMac(uint8_t *mac)
-{
-    uint32_t i = 0;
-    uint32_t j = 0;
-    uint8_t flag = 0;
-
-    while (i < MAX_DEVTABLE_NUM)
-    {
-
-        flag = 1;
-
-        for (j = 0; j < 8; j++)
-        {
-            if (devTbs[i].mac[i] != mac[i])
-                flag = 0;
-        }
-
-        if ( flag)
-        {
-            return &devTbs[i];
-        }
-        i++;
-    }
-    return NULL;
-}
-/**
-  * @brief  通过NetId地址表获取设备表
-  * @param  None
-  * @retval struct devTable *
-  * @writer liuzhishan
-  *   @modify
-  */
-struct devTable *getDevTbsByNetId(uint16_t id)
-{
-    uint32_t i = 0;
-    while (i < MAX_DEVTABLE_NUM)
-    {
-        if (devTbs[i].netId == id)
-        {
-            return &devTbs[i];
-        }
-        i++;
-    }
-    return NULL;
-}
 
 /**
   * @brief  从头获取可用指令列表
@@ -543,32 +440,7 @@ void print_CMDS()
 
 }
 
-void print_DEVS()
-{
-    uint16_t i = 0;
-    uint16_t j = 0;
-    //uint8_t *pcmd;
 
-    while (i < MAX_DEVTABLE_NUM)
-    {
-
-        if (devTbs[i].devstate )
-        {
-
-            //pcmd = (uint8_t *)&devTbs[i];
-
-            j++;
-
-        }
-        i++;
-    }
-
-    SendCMD(j);
-    SendCMD(0x5B);
-
-
-}
-//DEBUG END
 void NET_read_backward(uint8_t dec)
 {
     while (dec--)
@@ -942,207 +814,3 @@ void parseAllCmd()
     }
 }
 
-/**********************************policy**************************************/
-/**
-  * @brief  从策略表中获取可填充策略位置
-  * @param  None
-  * @retval None
-    * @writer liuzhishan
-    *   @modify
-  */
-struct strgytable *getANewDES()
-{
-    uint32_t i = 0;
-    while (i < MAX_DESTABLE_NUM)
-    {
-        if (strategytable[i].usable == 0)
-        {
-            return &strategytable[i];
-        }
-        i++;
-    }
-    return NULL;
-}
-
-//策略解析
-void  policydecisions()
-{
-    uint32_t i = 0;
-    DEBUG(USARTn, "\r\n policydecisions \r\n");
-    while (i < MAX_DESTABLE_NUM)
-    {
-        if (strategytable[i].usable)
-        {
-            if (strategytable[i].num == 0) //只有一个传感设备、一个执行设备
-            {
-                struct devTable *staDev = getDevTbsByMac(strategytable[i].sensor[0].sensorId);
-                if (staDev->curSt == strategytable[i].sensor[0].sensorTrigger & 0xffffffff)
-                {
-                    struct devTable *actDev = getDevTbsByMac(strategytable[i].actuator[0].actuatorId);
-                    actDev->ActSt = strategytable[i].actuator[0].actuatorTrigger && 0xffffffff;
-                }
-            }
-            else
-            {
-                uint8_t numSta = (strategytable[i].num >> 6) & 0x03;
-                uint8_t type;
-                uint8_t flagTrue = 0;
-                uint8_t j = 0;
-                uint32_t statusValue;
-                //传感器解析
-                while (j < numSta)
-                {
-
-                    //获取对应的设备
-                    struct devTable *staDev = getDevTbsByMac(strategytable[i].sensor[j].sensorId);
-                    if (staDev == NULL)
-                    {
-                        //TODO ERROR
-                        return;
-                    }
-
-                    flagTrue = 1;
-                    //触发类型type
-                    type = strategytable[i].type >> (j << 1);
-
-                    statusValue = ((staDev->ActSt & 0x7FFF) << 16) | staDev->curSt;
-                    //开关型触发
-                    if (1 == type)
-                    {
-                        if (statusValue ^ strategytable[i].sensor[j].sensorTrigger)
-                        {
-                            //不相等
-                            flagTrue = 0;
-                            break;
-                        }
-                    }
-                    //小触发   0b10
-                    else if (2 == type)
-                    {
-                        if (statusValue > strategytable[i].sensor[j].sensorTrigger)
-                        {
-                            flagTrue = 0;
-                            break;
-                        }
-                    }
-                    // 大触发 0b11
-                    else if (3 == type)
-                    {
-                        if (statusValue < strategytable[i].sensor[j].sensorTrigger)
-                        {
-                            flagTrue = 0;
-                            break;
-                        }
-                    }
-
-                    j++;
-                }
-                // 执行器解析
-                if (flagTrue == 1)
-                {
-                    uint8_t numAct = strategytable[i].num & 0x3f;
-                    uint32_t j = 0;
-                    while (j < numAct)
-                    {
-                        struct devTable *actDev = getDevTbsByMac(strategytable[i].actuator[j].actuatorId);
-                        if (actDev == NULL)
-                        {
-                            //TODO ERROR
-                            return;
-                        }
-                        actDev->ActSt = strategytable[i].actuator[j].actuatorTrigger  & 0x1f;//最多设置5个IO
-                        j++;
-                    }
-                }
-
-            }
-        }
-
-        i++;
-    }
-}
-
-void devInit(void)
-{
-    //pwNr = 0;
-
-    devTbs[1].mac[0] = 0x01;
-    devTbs[1].netId = 0x3600;
-    devTbs[1].protocol = 3;
-    devTbs[1].devstate = 1;
-
-    devTbs[2].mac[0] = 0x02;
-    devTbs[2].netId = 0x3600;
-    devTbs[2].protocol = 4;
-    devTbs[2].devstate = 2;
-
-    devTbs[3].mac[0] = 0x03;
-    devTbs[3].netId = 0x3603;
-    devTbs[3].protocol = 3;
-    devTbs[3].devstate = 1;
-
-    devTbs[4].mac[0] = 0x04;
-    devTbs[4].netId = 0x3604;
-    devTbs[4].protocol = 3;
-    devTbs[4].devstate = 1;
-
-    devTbs[5].mac[0] = 0x05;
-    devTbs[5].netId = 0x3605;
-    devTbs[5].protocol = 3;
-    devTbs[5].devstate = 1;
-
-    devTbs[6].mac[0] = 0x06;
-    devTbs[6].netId = 0x3606;
-    devTbs[6].protocol = 3;
-    devTbs[6].devstate = 1;
-
-    devTbs[7].mac[0] = 0x07;
-    devTbs[7].netId = 0x3607;
-    devTbs[7].protocol = 3;
-    devTbs[7].devstate = 1;
-
-    devTbs[8].mac[0] = 0x08;
-    devTbs[8].netId = 0x3608;
-    devTbs[8].protocol = 3;
-    devTbs[8].devstate = 1;
-
-    devTbs[9].mac[0] = 0x09;
-    devTbs[9].netId = 0x3609;
-    devTbs[9].protocol = 3;
-    devTbs[9].devstate = 1;
-
-    devTbs[0].mac[0] = 0x10;
-    devTbs[0].netId = 0x3610;
-    devTbs[0].protocol = 3;
-    devTbs[0].devstate = 1;
-
-}
-uint32_t writeFlag = 0;
-uint8_t numTick = 0;
-uint32_t net(void)
-{
-    //  uint32_t curRdNr = 0;
-    //RCC_Configuration();
-    //NVIC_Configuration();
-    //USART1_Configuration();
-    USARTx_Init(USART1);
-    loadDevMsg();
-
-
-    while (1)
-    {
-
-        //将指令从缓冲池中解析出来，放入指令表中
-
-        //从指令表中取出所有指令 解析 完成 心跳、应答、指令处理
-        parseAllCmd();
-        //策略解析，修改对应 设备表
-        policydecisions();
-        //重发机制
-        Net_sendTimer();
-        Delay(60);
-        Net_PutChar(0xaa);
-
-    }
-
-}
