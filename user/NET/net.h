@@ -14,7 +14,7 @@
 #define CMD_DATA_LEN (CMD_LEN-10)
 
 // 接收缓冲区大小
-#define NET_DATA_LEN 512
+#define NET_BUFFSIZE 512
 
 // 设备 最大条数
 #define  MAX_DEVTABLE_NUM  20
@@ -166,8 +166,8 @@ struct msgStu
 };
 
 extern struct devTable  devTbs[MAX_DEVTABLE_NUM];
-extern uint8_t NET_buf[NET_DATA_LEN];
-extern uint8_t buf[NET_DATA_LEN];
+extern uint8_t NET_buf[NET_BUFFSIZE];
+extern uint8_t buf[NET_BUFFSIZE];
 extern volatile uint16_t NET_write ;
 extern volatile uint16_t NET_read ;
 

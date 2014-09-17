@@ -25,8 +25,11 @@
 #include "stm32f10x_it.h"
 #include <stdio.h>
 #include "config.h"
+void none(USART_TypeDef* USARTx, int8_t *Data,...){
 
-#define Interrupt_DBG USARTx_printf
+
+}
+#define Interrupt_DBG none
 #define Interrupt_DBG_USARTx USART3
 
 /** @addtogroup STM32F10x_StdPeriph_Template
@@ -352,27 +355,32 @@ void SPI2_IRQHandler()
 //在中断服务程序中，由于主机响应中断时并不知道是哪个中断源发出中断请求，
 //因此必须在中断服务程序中对中断源进行判别，然后分别进行处理。
 //当然，如果只涉及到一个中断请求，是不用做上述判别的。但是无论什么情况，做上述判别是个好习惯
-void USART1_IRQHandler(void)           
+
+//usart1 === net
+void USART1_IRQHandler(void)
 {
-    uint8_t dat;
+    uint8_t c;
     if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
     {
-        dat = USART1->DR;
-        NET_buf[NET_write] = dat;
-        if (NET_write == NET_DATA_LEN - 1)
+        c = USART1->DR;
+        NET_buf[NET_write] = c;
+        if (NET_write == NET_BUFFSIZE - 1)
             NET_write = 0;
         else
             NET_write++;
+        //TO TEST print usart1 == net out
+        //Net_PutChar(c);
     }
-    //SendCMD(dat);
+
 
 }
+//usart2 === zigbee
 void USART2_IRQHandler(void)
 {
     uint8_t c;
 
-		Interrupt_DBG(Interrupt_DBG_USARTx, "USART2_IRQHandler");
-	
+    Interrupt_DBG(Interrupt_DBG_USARTx, "USART2_IRQHandler");
+
     if (USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)
     {
         c = USART2->DR;
@@ -382,23 +390,23 @@ void USART2_IRQHandler(void)
             Zigbee_write = 0;
         else
             Zigbee_write++;
-        //TODO TEST
+
+        //TO TEST print usart1 == net out
         Net_PutChar(c);
-        //printf("%c",c);    //将接受到的数据直接返回打印
     }
 
 }
 
 void USART3_IRQHandler(void)
-{    
-		//int8_t c;
-	  Interrupt_DBG(Interrupt_DBG_USARTx, "USART3_IRQHandler");
-	
-//    if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
-//    {
-//        c = USART3->DR;
+{
+    int8_t c;
+    Interrupt_DBG(Interrupt_DBG_USARTx, "USART3_IRQHandler");
+    //clear IT flag
+    if (USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
+        {
+            c = USART3->DR;
 
-//    }
+        }
 
 }
 
@@ -426,7 +434,7 @@ void USBWakeUp_IRQHandler()
   */
 void PPP_IRQHandler(void)
 {
-	 Interrupt_DBG(Interrupt_DBG_USARTx, "PPP_IRQHandler");
+    Interrupt_DBG(Interrupt_DBG_USARTx, "PPP_IRQHandler");
 }
 
 

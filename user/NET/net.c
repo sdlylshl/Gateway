@@ -10,7 +10,7 @@
 uint8_t sendBuf[SEND_CMDS_NUM][CMD_DATA_LEN];
 
 //接收缓冲器 512
-uint8_t NET_buf[NET_DATA_LEN];
+uint8_t NET_buf[NET_BUFFSIZE];
 //读写指针
 volatile uint16_t NET_write ;
 volatile uint16_t NET_read ;
@@ -227,7 +227,7 @@ int8_t Net_send_data(uint8_t len, uint8_t data[])
     uint32_t crc = 0;
     uint8_t *psndat;
     struct msgStu *pNmsgS;
-    if (len > NET_DATA_LEN)
+    if (len > NET_BUFFSIZE)
     {
         return DATAFLOW;
     }
@@ -555,7 +555,7 @@ void NET_read_backward(uint8_t dec)
     while (dec--)
     {
         if (NET_read == 0)
-            NET_read = (NET_DATA_LEN - 1);
+            NET_read = (NET_BUFFSIZE - 1);
         else
             NET_read--;
     }
@@ -566,7 +566,7 @@ void NET_read_forward()
 {
 
 
-    if (NET_read == (NET_DATA_LEN - 1))
+    if (NET_read == (NET_BUFFSIZE - 1))
         NET_read = 0;
     else
     {
@@ -583,7 +583,7 @@ void NET_fetchParseInstruction()
     // SendCMD(NET_read);
     //包头检测 若接收到的数据长度小于最小心跳包长度 则不再检测包头
     DEBUG(USARTn, "\r\n net parseRcvBufToLst2 \r\n");
-    while ((NET_write + NET_DATA_LEN - NET_read) % NET_DATA_LEN > 2)
+    while ((NET_write + NET_BUFFSIZE - NET_read) % NET_BUFFSIZE > 2)
     {
 
 
@@ -598,7 +598,7 @@ void NET_fetchParseInstruction()
             {
                 break;
             }
-            else if ((NET_write + NET_DATA_LEN - NET_read) % NET_DATA_LEN > len_tmp + 7)
+            else if ((NET_write + NET_BUFFSIZE - NET_read) % NET_BUFFSIZE > len_tmp + 7)
             {
                 //接收到完整指令 NET_read+3 代表len 位置  len1+sn2+crc4 =7字节 endl 可忽略
 
