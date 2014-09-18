@@ -49,7 +49,7 @@ void Delay(__IO u32 nCount)
   */
 int main(void)
 {
-    //uint8_t i;
+    uint8_t i;
     //uint8_t buffer[10];
     LED_GPIO_Config();
 
@@ -65,9 +65,9 @@ int main(void)
     //USARTx_printf(USART1, "\r\n ("__DATE__ " - " __TIME__ ") \r\n");
 
     //设备模拟初始化
-		devInit();
+    devInit();
 
-		// CRC启动
+    // CRC启动
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE);
     /* Infinite loop */
     TIM2_Configuration();
@@ -89,19 +89,55 @@ int main(void)
 
         //定时执行 对执行来说 不关心是否执行成功 所以 要定时执行
         //2.5S 执行一次
-        if (Zigbee_time>2500)
+        if (Zigbee_time > 2500)
         {
-          zigbee_operate_ALL();
-          Zigbee_time=0;
+            zigbee_operate_ALL();
+            Zigbee_time = 0;
         }
         //
         //定时查询状态设备状态
 
-        //重发机制 1S重发一次 清理一次
-        if (Net_time>100)
+        if (timer_Zigbee_getStatus > 2500)
         {
-          Net_sendTimer();
-          Net_time=0;
+
+            for (i = 0; i < MAX_DEVTABLE_NUM; i++)
+            {
+                if (devTbs[i].devstate)
+                {
+                    //判断要查询的IO
+                    if (devTbs[i].ActSt & 0x1F)
+                    {
+                        uint8_t j;
+                        for (j = 0; j < 5; j++)
+                        {
+                            if ((devTbs[i].ActSt >> j) & 0x01)
+                            {
+                                zigbee_remote_req_net_io(devTbs[i].netId, j );
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //执行默认IO查询
+                        zigbee_remote_req_net_io(devTbs[i].netId, IO_D2 );
+
+                    }
+                }
+
+            }
+            timer_Zigbee_getStatus = 0;
+        }
+        //定时获取设备信息
+        if (timer_Device_update > 10050)
+        {
+            zigbee_updateAllDevice();
+            timer_Device_update = 0;
+        }
+        //重发机制 1S重发一次 清理一次
+        if (Net_time > 100)
+        {
+            Net_sendTimer();
+            Net_time = 0;
         }
 
 

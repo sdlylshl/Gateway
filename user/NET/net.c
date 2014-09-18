@@ -489,7 +489,7 @@ void NET_fetchParseInstruction()
             {
                 continue;
             }
-            else if ((NET_write + NET_BUFFSIZE - NET_read) % NET_BUFFSIZE > len_tmp + 7)
+            else if ((NET_write + NET_BUFFSIZE - NET_read) % NET_BUFFSIZE >= len_tmp + 7)
             {
                 //接收到完整指令 NET_read+3 代表len 位置  len1+sn2+crc4 =7字节 endl 可忽略
 

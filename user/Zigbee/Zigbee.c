@@ -220,7 +220,7 @@ uint8_t Zigbee_fetchParseInstruction (void)
             {
                 continue;
             }
-            else if ((Zigbee_write + ZIGBEE_BUFFSIZE - Zigbee_read) % ZIGBEE_BUFFSIZE > len_tmp + 4)
+            else if ((Zigbee_write + ZIGBEE_BUFFSIZE - Zigbee_read) % ZIGBEE_BUFFSIZE >= len_tmp + 4)
             {
                 //接收到完整指令   len1+cmd2+chk1 =4字节
 
