@@ -125,7 +125,7 @@ void zigbee_operate(struct devTable *pdevTbs)
             else
             {
                 //为0执行默认IO查询
-                zigbee_remote_req_net_io(pdevTbs->netId, IO_D2 );
+                zigbee_remote_set_net_io(pdevTbs->netId, IO_D2,IOmod,0 );
 
             }
         }
@@ -136,7 +136,7 @@ void zigbee_operate(struct devTable *pdevTbs)
 
 void zigbee_operate_ALL(void)
 {
-		uint8_t i=0;
+    uint8_t i = 0;
     Zigbee_DBG(Zigbee_DBG_USARTx, "\r\n zigbee_operate \r\n");
     while (i < MAX_DEVTABLE_NUM) //MAX_DEVTABLE_NUM defined in net.h
     {
@@ -316,8 +316,8 @@ void Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
                 //更新标志 通过NET发送到服务器
                 //pdevTbs->ActSt = pdevTbs->ActSt | 0x4000;
 
-								//NET立即发送更新设备状态 MAC ActSt curSt
-								 Net_send_device(pdevTbs, DEVTAB_UPDATE, 0x38);
+                //NET立即发送更新设备状态 MAC ActSt curSt
+                Net_send_device(pdevTbs, DEVTAB_UPDATE, 0x38);
 
 
             }
@@ -343,11 +343,11 @@ void Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
             //更新curSt
             pdevTbs->curSt = *pvalue;
             //更新 zigbee IOn
-            pdevTbs->ActSt =(1 << pZmsgS->data[2]);
-						//更新标志 通过NET发送到服务器
-						//pdevTbs->ActSt = pdevTbs->ActSt | 0x4000;
-					//NET立即发送更新设备状态 MAC ActSt curSt
-					  Net_send_device(pdevTbs, DEVTAB_UPDATE, 0x38);
+            pdevTbs->ActSt = (1 << pZmsgS->data[2]);
+            //更新标志 通过NET发送到服务器
+            //pdevTbs->ActSt = pdevTbs->ActSt | 0x4000;
+            //NET立即发送更新设备状态 MAC ActSt curSt
+            Net_send_device(pdevTbs, DEVTAB_UPDATE, 0x38);
 
         }
         else
@@ -384,7 +384,7 @@ void zigbee_cmd(uint8_t len, uint16_t cmd, uint8_t buf[])
 
     ret = calcfcs(snd_buf + 1, len + 3);
     snd_buf[len + 4] = ret;
-		snd_buf[len + 5] = 0x00;
+    snd_buf[len + 5] = 0x00;
     //命令输出 head1+len1+cmd2+chk1=5字节
     for (i = 0; i < len + 6; i++)
         SendCMD(snd_buf[i]);
@@ -553,26 +553,3 @@ int zigbee_switch_mode(uint8_t mode)
 }
 
 
-int snd()
-{
-#if 0
-    uint8_t buf[9];
-
-    buf[0] = 0x41;
-    buf[1] = 0x41;
-    buf[2] = 0x41;
-    buf[3] = 0x41;
-    buf[4] = 0;
-
-    //printf("%s", buf);
-    zigbee_snd_data(6, 0x5f24, 0x00, buf);
-#endif
-
-    //zigbee_req_net_io(4, 0x0e10, 2);
-    //zigbee_set_net_io(7, 0xe10, 2, 1, 0);
-    //zigbee_req_all_net_stat(1);
-    //zigbee_req_net_mac(3, 0xe10);
-    //zigbee_req_net_addr(9, 0x00124B000228CFAA);
-    //zigbee_switch_mode(ZIGBEE_MODE_API);
-    return OK;
-}
