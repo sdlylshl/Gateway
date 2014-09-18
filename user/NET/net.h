@@ -67,7 +67,7 @@ unsigned char calcfcs(unsigned char *pmsg, unsigned char len);
   * @writer lishoulei
   * @modify
   */
-extern struct msgStu *getSendBuf(void);
+extern struct msgStu *get_NetSendBuf(void);
 
 //将指令从缓冲池中解析出来，放入指令表中
 extern void NET_fetchParseInstruction(void);

@@ -128,7 +128,7 @@ int main(void)
             timer_Zigbee_getStatus = 0;
         }
         //定时获取设备信息
-        if (timer_Device_update > 10050)
+        if (timer_Device_update > 1050)
         {
             zigbee_updateAllDevice();
             timer_Device_update = 0;

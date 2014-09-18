@@ -88,7 +88,7 @@ void Net_sendTimer(void)
   * @writer lishoulei
   * @modify
   */
-struct msgStu *getSendBuf(void)
+struct msgStu *get_NetSendBuf(void)
 {
     uint8_t i = 0;
     while (i < SEND_CMDS_NUM)
@@ -213,7 +213,7 @@ int8_t Net_send_data(uint8_t len, uint8_t data[])
         return ERROR_DATAFLOW;
     }
     //从缓冲区中获取获取
-    pNmsgS = getSendBuf();
+    pNmsgS = get_NetSendBuf();
     if (NULL == pNmsgS)
     {
         return ERROR_NOSENDBUFF;

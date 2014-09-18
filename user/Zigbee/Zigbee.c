@@ -38,8 +38,42 @@ unsigned char calcfcs(unsigned char *pmsg, unsigned char len)
     }
     return result;
 }
+uint8_t Zigbee_send(struct Zigbee_msgStu *pZmsgS)
+{
+    // 填充完成
+    if (pZmsgS->usable > 1)
+    {
+        uint8_t i;
+        SendCMD(pZmsgS->head);
+        SendCMD(pZmsgS->len);
+        SendCMD(pZmsgS->cmd[0]);
+        SendCMD(pZmsgS->cmd[1]);
 
+        for (i = 0; i < pZmsgS->len; i++)
+        {
+            SendCMD(pZmsgS->data[i]);
+        }
+        SendCMD(pZmsgS->chk);
+        SendCMD(pZmsgS->endl);
+    }
+    pZmsgS->usable++;
+    return OK;
+}
 
+struct Zigbee_msgStu *get_ZigbeeSendBuf(void)
+{
+    uint8_t i = 0;
+    while (i < ZIGEBE_SEND_CMD_NUM)
+    {
+        if (Zigbee_SendBuff[i].usable == 0)
+        {
+            return &Zigbee_SendBuff[i];
+        }
+
+        i++;
+    }
+    return NULL;
+}
 /**
   * @brief  设备执行    循环检测标志位
                 若状态标志为1 1.发送NET当前状态 2.发送 Zigbee查询指令  3. 将网路查询标志位清零
@@ -484,8 +518,10 @@ void zigbee_cmd(uint8_t len, uint16_t cmd, uint8_t buf[])
     snd_buf[len + 4] = ret;
     snd_buf[len + 5] = 0x00;
     //命令输出 head1+len1+cmd2+chk1=5字节
-    for (i = 0; i < len + 6; i++)
+    //放入发送缓冲表中
+		for (i = 0; i < len + 6; i++)
         SendCMD(snd_buf[i]);
+
 
 }
 
@@ -500,10 +536,14 @@ void zigbee_cmd(uint8_t len, uint16_t cmd, uint8_t buf[])
   */
 int8_t zigbee_send_data(uint8_t len, uint16_t netid, uint8_t buf[])
 {
+
     uint8_t snd_buf[CMDSIZE];
     uint8_t i;
     if (len > CMDSIZE - 7)
         return ERROR;
+
+    get_ZigbeeSendBuf();
+
     //低位先发送
     snd_buf[0] = (uint8_t) netid & 0xff;
     snd_buf[1] = (uint8_t) (netid >> 8) & 0xff;
@@ -548,6 +588,7 @@ uint8_t Zigebee_sendData_Ans(uint8_t len, uint16_t netid, uint8_t buf[], uint8_t
 void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn )
 {
     uint8_t data[4];
+
     //低位先发送
     data[0] = (uint8_t) netid & 0xff;
     data[1] = (uint8_t) (netid >> 8) & 0xff;
