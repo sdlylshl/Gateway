@@ -21,31 +21,32 @@
 //数据发送指令
 #define ZIGBEE_SND_DATA					0x5F24
 //发送回应指令
-#define ZIGBEE_SND_DATA_RSP 			0x8044
+// #define ZIGBEE_SND_DATA_RSP 			0x8044
 //数据接收指令
 #define ZIGBEE_RECV_DATA 					0x5f44
 
 //远程查询IO 状态接收
 #define ZIGBEE_REMOTE_REQ_IO 			0x5e24
-#define ZIGBEE_REMOTE_REQ_IO_RSP 	0x8044
+// #define ZIGBEE_REMOTE_REQ_IO_RSP 	0x8044
 #define ZIGBEE_REMOTE_REQ_RECV_DATA 	0x5e44
 
 //远程设置IO 状态接收
 #define ZIGBEE_REMOTE_SET_IO 			0x6024
-#define ZIGBEE_REMOTE_SET_IO_RSP 	0x8044
+// #define ZIGBEE_REMOTE_SET_IO_RSP 	0x8044
 #define ZIGBEE_REMOTE_SET_RECV_DATA		0x6044
 
 //Zigbee 网络查询操作
 //Zigbee 查询网内所有设备
-#define ZIGBEE_ALL_REQ 						0x5b24
+#define ZIGBEE_GET_ALL 						0x5b24
 //通过MAC地址查询网络地址
-#define ZIGBEE_NETID_REQ_ADDR 		0x5c24
+#define ZIGBEE_GET_NETID_ADDR 		0x5c24
 //通过网络号查询MAC地址
-#define ZIGBEE_MAC_REQ_ADDR 			0x5d24
+#define ZIGBEE_GET_MAC_ADDR 			0x5d24
 
 //网络操作回应
-#define ZIGBEE_NET_REQ_RSP 				0x8044
-#define ZIGBEE_NET_RECV_DATA      0x5d44
+// #define ZIGBEE_NET_REQ_RSP 				0x8044
+// 网络设备状态数据接收
+#define ZIGBEE_NET_RECV_DEVID      0x5d44
 
 //Zigbee 模式切换
 #define ZIGBEE_MODE_SWITCH 				0x2a21
@@ -200,10 +201,12 @@ extern void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn );
 extern void zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn,uint8_t IOmode, uint8_t IOvalue);
 
 extern void zigbee_operate_ALL(void);
-
+extern void zigbee_updateAllDevice(void);
+extern void zigbee_updateMacByNetId(uint16_t netid);
+extern void zigbee_updateNetIdByMac(uint8_t *mac);
 
 //从数据缓冲池中将指令提取出来 放入Zigbee_msgStu[]
-extern void Zigbee_fetchParseInstruction (void);
-extern void Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS);
+extern uint8_t Zigbee_fetchParseInstruction (void);
+extern uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS);
 
 #endif

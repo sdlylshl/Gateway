@@ -210,13 +210,13 @@ int8_t Net_send_data(uint8_t len, uint8_t data[])
     struct msgStu *pNmsgS;
     if (len > NET_BUFFSIZE)
     {
-        return DATAFLOW;
+        return ERROR_DATAFLOW;
     }
     //从缓冲区中获取获取
     pNmsgS = getSendBuf();
     if (NULL == pNmsgS)
     {
-        return NOSPACE;
+        return ERROR_NOSENDBUFF;
     }
 
     pNmsgS->usable = 1; //正在填充数据
@@ -661,6 +661,8 @@ void NET_parseData(struct msgStu *pNmsgR)
                 }
                 i++;
             }
+
+            zigbee_updateAllDevice();
 
         }
 

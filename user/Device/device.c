@@ -12,20 +12,39 @@ void loadDevMsg()
 
 
 }
+/**
+  * @brief  获取空设备
+  * @param  None
+  * @retval None
+    * @writer
+    *   @modify
+  */
 
+struct devTable *getNewDevTbs(void)
+{
+    uint8_t i;
+    for (i = 0; i < MAX_DEVTABLE_NUM; i++)
+    {
+        if (devTbs[i].devstate == 0)
+        {
+            return &devTbs[i];
+        }
+    }
+    return NULL;
+}
 
 /**
   * @brief  通过MAC地址表获取设备表
   * @param  None
   * @retval None
-    * @writer liuzhishan
+    * @writer
     *   @modify
   */
 
 struct devTable *getDevTbsByMac(uint8_t *mac)
 {
-    uint32_t i = 0;
-    uint32_t j = 0;
+    uint8_t i = 0;
+    uint8_t j = 0;
     uint8_t flag = 0;
 
     while (i < MAX_DEVTABLE_NUM)
@@ -51,12 +70,12 @@ struct devTable *getDevTbsByMac(uint8_t *mac)
   * @brief  通过NetId地址表获取设备表
   * @param  None
   * @retval struct devTable *
-  * @writer liuzhishan
+  * @writer
   *   @modify
   */
 struct devTable *getDevTbsByNetId(uint16_t id)
 {
-    uint32_t i = 0;
+    uint8_t i = 0;
     while (i < MAX_DEVTABLE_NUM)
     {
         if (devTbs[i].netId == id)
@@ -72,8 +91,8 @@ struct devTable *getDevTbsByNetId(uint16_t id)
 
 void print_DEVS()
 {
-    uint16_t i = 0;
-    uint16_t j = 0;
+    uint8_t i = 0;
+    uint8_t j = 0;
     //uint8_t *pcmd;
 
     while (i < MAX_DEVTABLE_NUM)

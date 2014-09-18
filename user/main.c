@@ -95,7 +95,7 @@ int main(void)
           Zigbee_time=0;
         }
         //
-        //定时查询状态
+        //定时查询状态设备状态
 
         //重发机制 1S重发一次 清理一次
         if (Net_time>100)

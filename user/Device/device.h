@@ -59,6 +59,7 @@ extern struct devTable devTbs[MAX_DEVTABLE_NUM];
 
 extern struct devTable *getDevTbsByMac(uint8_t *mac);
 extern struct devTable *getDevTbsByNetId(uint16_t id);
+extern struct devTable *getNewDevTbs(void);
 
 extern void devInit(void);
 
