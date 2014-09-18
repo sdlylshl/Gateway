@@ -18,8 +18,8 @@ struct Zigbee_msgStu Zigbee_SendBuff[ZIGEBE_SEND_CMD_NUM];
 __IO uint16_t Zigbee_read = 0;
 __IO uint16_t Zigbee_write = 0;
 
-extern void zigbee_operate(struct devTable *pdevTbs);
-uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control);
+//extern void zigbee_operate(struct devTable *pdevTbs);
+extern uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control);
 void SendCMD(uint8_t data)
 {
 
@@ -53,7 +53,6 @@ unsigned char calcfcs(unsigned char *pmsg, unsigned char len)
 void zigbee_operate(struct devTable *pdevTbs)
 {
 
-    uint8_t i = 0;
     uint8_t j = 0;
     uint8_t IOmod;
     if (pdevTbs == NULL)

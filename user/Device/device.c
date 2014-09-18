@@ -35,7 +35,7 @@ struct devTable *getDevTbsByMac(uint8_t *mac)
 
         for (j = 0; j < 8; j++)
         {
-            if (devTbs[i].mac[i] != mac[i])
+            if (devTbs[i].mac[j] != mac[j])
                 flag = 0;
         }
 
