@@ -302,7 +302,6 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
     uint16_t *pcmd;
     uint16_t *pnetId;
     uint8_t *mac;
-    uint16_t *pvalue;
     if (pZmsgS == NULL)
     {
         //TODO ERROR
@@ -370,12 +369,11 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
     case ZIGBEE_REMOTE_REQ_RECV_DATA:
 
         pnetId = (uint16_t *)(&pZmsgS->data[0]);
-        pvalue = (uint16_t *)(&pZmsgS->data[4]);
         pdevTbs = getDevTbsByNetId(*pnetId);
         if (pdevTbs != NULL)
         {
             //更新curSt
-            pdevTbs->curSt = *pvalue;
+            pdevTbs->curSt = (uint16_t)(pZmsgS->data[4]<<8)|pZmsgS->data[5];
             //更新 zigbee IOn
             pdevTbs->ActSt = (1 << pZmsgS->data[2]);
             //更新标志 通过NET发送到服务器
@@ -395,17 +393,29 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
     //查询网络设备 通过mac地址查询 通过网络号查询
     //网络设备状态数据接收 CMD= 44 5D
     case ZIGBEE_NET_RECV_DEVID:
-        pnetId = (uint16_t *)(&pZmsgS->data[0]);
-
+				if(pZmsgS->len == 0x0C){
+				pnetId = (uint16_t *)(&pZmsgS->data[1]);
+        mac = &pZmsgS->data[3];
+				}else{
+				pnetId = (uint16_t *)(&pZmsgS->data[0]);
         mac = &pZmsgS->data[2];
+				}
         //FE 0B 44 5D 10 0E AACF2802004B1200 01 1B
         // MAC 地址：0x00124B000228CFAA
         //查找设备
         // pdevTbs = getDevTbsByNetId(*pnetId);
         pdevTbs = getDevTbsByMac(mac);
+				//移除同网络号的设备
 
         if (pdevTbs != NULL)
         {
+						struct devTable *pdevTbs1 = getDevTbsByNetId(*pnetId);
+						if(pdevTbs1!=pdevTbs){
+                pdevTbs->devstate = 0;
+                pdevTbs->protocol = 0;
+								pdevTbs->netId =0 ;
+
+						}
             //找到设备 网络号发生变更 则更新设备
             //1.判断网络号是否一致 如果不一致 1.更新此设备 3.通知服务器
             if ( *pnetId != pdevTbs->netId )
@@ -420,6 +430,7 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
 
             }
 
+
         }
         else
         {
@@ -428,10 +439,12 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
             pdevTbs = getNewDevTbs();
             if (pdevTbs != NULL)
             {
+								uint8_t i;
                 pdevTbs->netId = *pnetId;
                 pdevTbs->devstate = 1;
                 pdevTbs->protocol = 1;
-
+								for(i=0;i<8;i++)
+									pdevTbs->mac[i]=*mac++;
                 //更新当前设备到服务器
                 Net_send_device(pdevTbs, DEVTAB_UPDATE, 0xFF);
             }

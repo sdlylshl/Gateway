@@ -126,15 +126,15 @@ void devInit(void)
     devTbs[0].devstate = 1;
     //pwNr = 0;
     //C1 3A D7 02 00 4B 12 00
-    devTbs[1].mac[0] = 0xC1;
-    devTbs[1].mac[1] = 0x3A;
+    // devTbs[1].mac[0] = 0xC1;
+    // devTbs[1].mac[1] = 0x3A;
     devTbs[1].mac[2] = 0xD7;
     devTbs[1].mac[3] = 0x02;
     devTbs[1].mac[4] = 0x00;
     devTbs[1].mac[5] = 0x4B;
     devTbs[1].mac[6] = 0x12;
     devTbs[1].mac[7] = 0x00;
-    devTbs[1].netId = 3600;
+    devTbs[1].netId = 360;
     devTbs[1].protocol = 1;
     devTbs[1].devstate = 1;
 

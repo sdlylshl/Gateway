@@ -97,7 +97,7 @@ int main(void)
         //
         //定时查询状态设备状态
 
-        if (timer_Zigbee_getStatus > 2500)
+        if (timer_Zigbee_getStatus > 12500)
         {
 
             for (i = 0; i < MAX_DEVTABLE_NUM; i++)
