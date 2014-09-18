@@ -134,21 +134,17 @@
 #define ZIGBEE_MODE_TRANSPARENT 	0
 #define ZIGBEE_MODE_AT 				1
 #define ZIGBEE_MODE_API 			2
-//中断接收缓冲区大小
-#define BUFFSIZE 512
-//单条指令大小
-#define CMDSIZE 32
-
-//中断接收缓冲区大小
-#define ZIGEBEE_DATA_LEN 17
 
 //中断接收缓冲区大小
 #define ZIGBEE_BUFFSIZE 512
-//单条指令大小
-#define CMDSIZE 32
+//中断接收缓冲区数据区大小
+#define ZIGEBEE_DATA_LEN 17
+
+
 //定义最大发送指令条数
 #define ZIGEBE_SEND_CMD_NUM 30
 #define ZIGEBE_RECV_CMD_NUM 2
+
 struct Zigbee_msgStu
 {
     uint8_t    usable;
@@ -161,8 +157,7 @@ struct Zigbee_msgStu
 
 };
 
-extern uint8_t Zigbee_buf[BUFFSIZE] ;
-extern uint8_t Zigbee_cmd[CMDSIZE];
+extern uint8_t Zigbee_buf[ZIGBEE_BUFFSIZE] ;
 
 extern __IO uint16_t Zigbee_read;
 extern __IO uint16_t Zigbee_write;

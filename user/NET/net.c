@@ -166,7 +166,7 @@ void Net_Ans(struct msgStu *pansmsgS)
 #else
     sn = (uint16_t)(((pansmsgS->sn[1] << 8 | pansmsgS->sn[0])) );
 #endif
-    //TODO 无效判断
+    //TOTE: 无效判断
     if (0 == sn)
     {
         sn = 2;
@@ -175,7 +175,6 @@ void Net_Ans(struct msgStu *pansmsgS)
     Net_PutChar(0);
     Net_PutChar((uint8_t)(sn >> 8) & 0xff);
     Net_PutChar((uint8_t)sn & 0xff);
-    //TODO
     //生成CRC校验码
 
     CRC_ResetDR();
@@ -595,7 +594,7 @@ void Ans_parse(struct msgStu *pNmsgR)
 }
 
 
-//指令包解析
+//NOTE: NET_parseData指令包解析
 void NET_parseData(struct msgStu *pNmsgR)
 {
     uint8_t i = 0;

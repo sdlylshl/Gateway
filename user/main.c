@@ -41,7 +41,7 @@ void Delay(__IO u32 nCount)
 {
     for (; nCount != 0; nCount--);
 }
-
+// NOTE: note
 /**
   * @brief  Main program.
   * @param  None
@@ -49,6 +49,7 @@ void Delay(__IO u32 nCount)
   */
 int main(void)
 {
+
     uint8_t i;
     //uint8_t buffer[10];
     LED_GPIO_Config();
@@ -142,6 +143,10 @@ int main(void)
 
 
 
+        if (timer_Zigbee_sendBuff>50)
+        {
+            //TODO: 定时执行Zigbee发送缓冲区指令
+        }
         //zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_0,  0);
 
 
