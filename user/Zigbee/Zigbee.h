@@ -142,12 +142,12 @@
 
 
 //定义最大发送指令条数
-#define ZIGEBE_SEND_CMD_NUM 30
+#define ZIGEBE_SEND_CMD_NUM 0x100
 #define ZIGEBE_RECV_CMD_NUM 2
 
 struct Zigbee_msgStu
 {
-    uint8_t    usable;
+    __IO uint8_t    usable;
     uint8_t    head  ;    //0xFE
     uint8_t    len;       //data 的长度
     uint8_t    cmd[2]  ;  //命令cmd[0]存放低字节
@@ -156,12 +156,20 @@ struct Zigbee_msgStu
     uint8_t    endl;      //0x00
 
 };
-
+// 中断接收 缓冲区
 extern uint8_t Zigbee_buf[ZIGBEE_BUFFSIZE] ;
+// 数据发送缓冲区
+extern struct Zigbee_msgStu Zigbee_SendBuff[ZIGEBE_SEND_CMD_NUM];
 
 extern __IO uint16_t Zigbee_read;
 extern __IO uint16_t Zigbee_write;
+
+extern __IO uint16_t Zigbee_send_add;
+extern __IO uint16_t Zigbee_send_rm;
+
 void SendCMD(uint8_t data);
+
+extern uint8_t Zigbee_send(struct Zigbee_msgStu *pZmsgS);
 
 /**
   * @brief  发送数据
@@ -169,7 +177,7 @@ void SendCMD(uint8_t data);
   * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
   * @retval None
   */
-extern int8_t zigbee_send_data(uint8_t len,uint16_t netid, uint8_t buf[]);
+extern int8_t zigbee_send_data(uint8_t len, uint16_t netid, uint8_t buf[],uint8_t immediate);
 /**
   * @brief  通过网络号远程查询对应IO状态
   * @param  NETID:
@@ -193,7 +201,7 @@ extern void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn );
 
   * @retval None
   */
-extern void zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn,uint8_t IOmode, uint8_t IOvalue);
+extern uint8_t zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOmode, uint8_t IOvalue,uint8_t immediate);
 
 extern void zigbee_operate_ALL(void);
 extern void zigbee_updateAllDevice(void);

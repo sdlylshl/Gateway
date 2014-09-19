@@ -181,7 +181,7 @@ void strategy_implementation(void)
                 IOmode = IO_MODE_GPIO_OUTPUT_0;
             }
 
-            zigbee_remote_set_net_io(devTbs[i].netId, IO_D2, IOmode , 0);
+            zigbee_remote_set_net_io(devTbs[i].netId, IO_D2, IOmode , 0,0);
 
 
         }

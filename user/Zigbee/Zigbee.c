@@ -17,6 +17,9 @@ struct Zigbee_msgStu Zigbee_SendBuff[ZIGEBE_SEND_CMD_NUM];
 __IO uint16_t Zigbee_read = 0;
 __IO uint16_t Zigbee_write = 0;
 
+__IO uint16_t Zigbee_send_add = 0;
+__IO uint16_t Zigbee_send_rm = 0;
+
 //extern void zigbee_operate(struct devTable *pdevTbs);
 extern uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control);
 void SendCMD(uint8_t data)
@@ -28,6 +31,40 @@ void SendCMD(uint8_t data)
 }
 
 
+// BUG修复 一次只能移动一个字节
+void Zigbee_read_forward()
+{
+
+    if (Zigbee_read == (ZIGBEE_BUFFSIZE - 1))
+        Zigbee_read = 0;
+    else
+    {
+        Zigbee_read++;
+    }
+
+}
+void Zigbee_send_add_forward()
+{
+
+    if (Zigbee_send_add == (ZIGEBE_SEND_CMD_NUM - 1))
+        Zigbee_send_add = 0;
+    else
+    {
+        Zigbee_send_add++;
+    }
+
+}
+void Zigbee_send_rm_forward()
+{
+
+    if (Zigbee_send_rm == (ZIGEBE_SEND_CMD_NUM - 1))
+        Zigbee_send_rm = 0;
+    else
+    {
+        Zigbee_send_rm++;
+    }
+
+}
 unsigned char calcfcs(unsigned char *pmsg, unsigned char len)
 {
     unsigned char result = 0;
@@ -39,8 +76,10 @@ unsigned char calcfcs(unsigned char *pmsg, unsigned char len)
 }
 uint8_t Zigbee_send(struct Zigbee_msgStu *pZmsgS)
 {
-    // 填充完成发送
-    if (pZmsgS->usable > 1)
+    // 立即发送 则跳过
+			if (pZmsgS->usable == 3)
+				Zigbee_send_rm_forward();
+		else if (pZmsgS->usable > 1)
     {
         uint8_t i;
         SendCMD(pZmsgS->head);
@@ -54,15 +93,16 @@ uint8_t Zigbee_send(struct Zigbee_msgStu *pZmsgS)
         }
         SendCMD(pZmsgS->chk);
         SendCMD(pZmsgS->endl);
+        Zigbee_send_rm_forward();
+				pZmsgS->usable=0;
     }
-    pZmsgS->usable=0;
     return OK;
 }
 
 struct Zigbee_msgStu *get_ZigbeeSendBuf(void)
 {
-    uint8_t i = 0;
-    while (i < ZIGEBE_SEND_CMD_NUM)
+ /*  uint8_t i = 0;
+     while (i < ZIGEBE_SEND_CMD_NUM)
     {
         if (Zigbee_SendBuff[i].usable == 0)
         {
@@ -71,7 +111,10 @@ struct Zigbee_msgStu *get_ZigbeeSendBuf(void)
 
         i++;
     }
-    return NULL;
+    return NULL;*/
+    // Zigbee_send_add++;
+   Zigbee_send_add_forward();
+   return (&Zigbee_SendBuff[Zigbee_send_add]);
 }
 /**
   * @brief  设备执行    循环检测标志位
@@ -151,7 +194,7 @@ void zigbee_operate(struct devTable *pdevTbs)
                 {
                     if ((pdevTbs->ActSt >> j) & 0x01)
                     {
-                        zigbee_remote_set_net_io(pdevTbs->netId, j, IOmod, 0);
+                        zigbee_remote_set_net_io(pdevTbs->netId, j, IOmod, 0,0);
                         pdevTbs->curSt = pdevTbs->ActSt & 0x100;
                     }
                 }
@@ -159,7 +202,7 @@ void zigbee_operate(struct devTable *pdevTbs)
             else
             {
                 //为0执行默认IO查询
-                zigbee_remote_set_net_io(pdevTbs->netId, IO_D2, IOmod, 0 );
+                zigbee_remote_set_net_io(pdevTbs->netId, IO_D2, IOmod, 0 ,0);
                 pdevTbs->curSt = pdevTbs->ActSt & 0x100;
 
             }
@@ -193,18 +236,6 @@ void Zigbee_read_backward(uint8_t dec)
 }
 
 
-// BUG修复 一次只能移动一个字节
-void Zigbee_read_forward()
-{
-
-    if (Zigbee_read == (ZIGBEE_BUFFSIZE - 1))
-        Zigbee_read = 0;
-    else
-    {
-        Zigbee_read++;
-    }
-
-}
 /**
   * @brief  从头获取可用指令列表
   * @param  None
@@ -408,11 +439,11 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
             //更新curSt
             pdevTbs->curSt = (uint16_t)(pZmsgS->data[4]<<8)|pZmsgS->data[5];
             //更新 zigbee IOn
-            pdevTbs->ActSt = (1 << pZmsgS->data[2]);
+            pdevTbs->ActSt = (pdevTbs->ActSt&0xFFE0)|	(1 << pZmsgS->data[2]);
             //更新标志 通过NET发送到服务器
             //pdevTbs->ActSt = pdevTbs->ActSt | 0x4000;
             //NET立即发送更新设备状态 MAC ActSt curSt 0x38
-            Net_send_device(pdevTbs, DEVTAB_UPDATE, 0x38);
+            Net_send_device(pdevTbs, DEVTAB_UPDATE, 0xFF);
 
         }
         else
@@ -502,8 +533,11 @@ uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[],uint8_t immediate)
     uint8_t i;
     struct Zigbee_msgStu *pZmsgSbuf;
 
-    pZmsgSbuf = get_ZigbeeSendBuf();
-    // ERROR:
+		Net_PutChar(0xFF);
+		Net_PutChar(timer_Zigbee_sendBuff);
+    pZmsgSbuf = &Zigbee_SendBuff[Zigbee_send_add];
+		Zigbee_send_add_forward();
+
     if (pZmsgSbuf == NULL)
     {
        return ERROR_NOSENDBUFF;
@@ -526,11 +560,14 @@ uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[],uint8_t immediate)
     //立即发送
     if (immediate)
     {
-        //NOTE: 清定时器时钟 最少延迟20ms 让下条指令延时发送
-        while(timer_Zigbee_sendBuff<20);
+        pZmsgSbuf->usable = 3;
+        //NOTE: 立即发送 清定时器时钟 最少延迟20ms 让下条指令延时发送
+        while(timer_Zigbee_sendBuff<9);
         timer_Zigbee_sendBuff=0;
         Zigbee_send(pZmsgSbuf);
     }
+
+		return OK;
 
 }
 
@@ -572,7 +609,7 @@ int8_t zigbee_send_data(uint8_t len, uint16_t netid, uint8_t buf[],uint8_t immed
 uint8_t Zigebee_sendData_Ans(uint8_t len, uint16_t netid, uint8_t buf[], uint8_t timeoutms)
 {
     uint8_t erflag;
-    zigbee_send_data(len, netid, buf);
+    zigbee_send_data(len, netid, buf,0);
     //
     erflag = ERROR_TIMEOUT;
     //超时响应
@@ -624,7 +661,7 @@ void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn )
     * @writer lishoulei
     *   @modify
   */
-void zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOmode, uint8_t IOvalue, immediate)
+uint8_t zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOmode, uint8_t IOvalue,uint8_t immediate)
 {
     uint8_t data[7];
     //低位先发送
@@ -638,6 +675,7 @@ void zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOmode, uint8
     data[6] = (uint8_t) (IOvalue >> 8) & 0xff;
     zigbee_push(7, ZIGBEE_REMOTE_SET_IO, data,immediate);
 
+	return OK;
 }
 
 void zigbee_updateAllDevice(void)
@@ -677,31 +715,5 @@ void zigbee_updateNetIdByMac(uint8_t *mac)
     zigbee_push(9, ZIGBEE_GET_NETID_ADDR, data,0);
 }
 
-
-//
-int zigbee_switch_mode(uint8_t mode)
-{
-    uint8_t snd_buf[CMDSIZE];
-    uint8_t dst_buf[CMDSIZE];
-    uint8_t ret;
-    uint8_t i;
-
-    snd_buf[0] = 0xfe;
-    snd_buf[1] = 0x01;
-    snd_buf[2] = 0x21;
-    snd_buf[3] = 0x2a;
-    snd_buf[4] = mode;
-
-    ret = calcfcs(snd_buf + 1, 4);
-    snd_buf[5] = ret;
-    //for(i=0; i<len+5; i++)
-    //  printf("%02x", snd_buf[i]);
-    for (i = 0; i < 6; i++)
-        sprintf((char *)dst_buf + i * 2, "%02x", snd_buf[i]);
-
-    printf("%s", dst_buf);
-
-    return OK;
-}
 
 

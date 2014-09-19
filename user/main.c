@@ -41,7 +41,6 @@ void Delay(__IO u32 nCount)
 {
     for (; nCount != 0; nCount--);
 }
-// NOTE: note
 /**
   * @brief  Main program.
   * @param  None
@@ -66,7 +65,7 @@ int main(void)
     //USARTx_printf(USART1, "\r\n ("__DATE__ " - " __TIME__ ") \r\n");
 
     //设备模拟初始化
-    devInit();
+    //devInit();
 
     // CRC启动
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_CRC, ENABLE);
@@ -98,7 +97,7 @@ int main(void)
         //
         //定时查询状态设备状态
 
-        if (timer_Zigbee_getStatus > 12500)
+        if (timer_Zigbee_getStatus > 500)
         {
 
             for (i = 0; i < MAX_DEVTABLE_NUM; i++)
@@ -129,7 +128,7 @@ int main(void)
             timer_Zigbee_getStatus = 0;
         }
         //定时获取设备信息
-        if (timer_Device_update > 1050)
+        if (timer_Device_update > 50)
         {
             zigbee_updateAllDevice();
             timer_Device_update = 0;
@@ -141,11 +140,16 @@ int main(void)
             Net_time = 0;
         }
 
+				if(Zigbee_send_add){
+				
+				}
 
-
-        if (timer_Zigbee_sendBuff>50)
-        {
+        if (timer_Zigbee_sendBuff>10)
+        {		Net_PutChar(Zigbee_send_add);
+						Net_PutChar(Zigbee_send_rm);
             //TODO: 定时执行Zigbee发送缓冲区指令
+           Zigbee_send(&Zigbee_SendBuff[Zigbee_send_rm]);
+						timer_Zigbee_sendBuff=0;
         }
         //zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_0,  0);
 
