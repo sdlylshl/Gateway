@@ -26,11 +26,11 @@ struct strgytable *getANewDES(void)
     return NULL;
 }
 
-//策略解析
-void  policydecisions(void)
+//策略执行
+void  strategy_implementation(void)
 {
-    uint32_t i = 0;
-    DEBUG(USARTn, "\r\n policydecisions \r\n");
+    uint8_t i = 0;
+    DEBUG(USARTn, "\r\n strategy_implementation \r\n");
     while (i < MAX_DESTABLE_NUM)
     {
         if (strategytable[i].usable)
@@ -50,11 +50,10 @@ void  policydecisions(void)
                 uint8_t type;
                 uint8_t flagTrue = 0;
                 uint8_t j = 0;
-                uint32_t statusValue;
-                //传感器解析
-                while (j < numSta)
-                {
-
+                uint16_t statusValue;
+                //传感器解析,必须所有的条件全部满足，flagTrue才置1
+                for (j = 0; j < numSta; i++)
+                 {
                     //获取对应的设备
                     struct devTable *staDev = getDevTbsByMac(strategytable[i].sensor[j].sensorId);
                     if (staDev == NULL)
@@ -64,12 +63,18 @@ void  policydecisions(void)
                     }
 
                     flagTrue = 1;
-                    //触发类型type
+                    //触发类型type 两位表示一个设备 共表示4个设备
+
                     type = strategytable[i].type >> (j << 1);
 
-                    statusValue = ((staDev->ActSt & 0x7FFF) << 16) | staDev->curSt;
-                    //开关型触发
-                    if (1 == type)
+                    statusValue = staDev->curSt;
+                    // 翻转触发  0b00
+                    if (0 == type)
+                    {
+                        //上次执行的状态，
+                    }
+                    //开关型触发 0b01
+                    else if (1 == type)
                     {
                         if (statusValue ^ strategytable[i].sensor[j].sensorTrigger)
                         {
@@ -97,7 +102,6 @@ void  policydecisions(void)
                         }
                     }
 
-                    j++;
                 }
                 // 执行器解析
                 if (flagTrue == 1)
@@ -109,7 +113,7 @@ void  policydecisions(void)
                         struct devTable *actDev = getDevTbsByMac(strategytable[i].actuator[j].actuatorId);
                         if (actDev == NULL)
                         {
-                            //TODO ERROR
+                            //TODO: ERROR
                             return;
                         }
                         actDev->ActSt = strategytable[i].actuator[j].actuatorTrigger  & 0x1f;//最多设置5个IO
@@ -122,32 +126,4 @@ void  policydecisions(void)
 
         i++;
     }
-}
-
-/**
-  * @brief  控制策略执行 循环检测 设备状态表
-  * @param  NETID:
-  * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
-  * @retval 发送成功返回 OK
-    * @writer lishoulei
-    *   @modify
-  */
-void strategy_implementation(void)
-{
-    uint8_t i;
-    uint16_t status;
-    uint8_t IOmode;
-
-    for (i = 0; i < MAX_DEVTABLE_NUM; i++)
-    {
-        status = (devTbs[i].ActSt ^ devTbs[i].ActSt);
-        //查询状态指令
-        if (status & 0x8000)
-        {
-
-        }
-        //检测是否有需要执行的设备
-
-    }
-
 }

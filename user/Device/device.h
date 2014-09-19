@@ -41,6 +41,7 @@ enum devTbCV
  休眠0x02    蓝牙-0x03    0x0234   0x32132122   2字节    2字节  开关0x02 “客厅开关”
 */
 //28字节
+//UPDATE: 更改设备类型为 暂态类型，字节数更改为uint16_t
 struct  devTable
 {
     uint8_t     devstate;
@@ -49,8 +50,8 @@ struct  devTable
     uint8_t     mac[8];
     uint16_t    ActSt;
     uint16_t    curSt;
-    uint8_t     type;
-    uint8_t     name[11];
+    uint16_t    type; //暂态就是处理之前的上一个状态 针对开关型变量
+    uint8_t     name[10];
 };
 
 

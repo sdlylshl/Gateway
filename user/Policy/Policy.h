@@ -10,7 +10,7 @@ struct sensorInfo
 {
 
     uint8_t sensorId[8];  //设备ID 可选 网络号|MAC
-    uint32_t sensorTrigger;
+    uint16_t sensorTrigger;
 
 };
 
@@ -37,8 +37,8 @@ struct strgytable
 {
     uint8_t usable; //操作状态
 
-    uint8_t first;  //优先级
     uint8_t id;         //
+    uint8_t first;  //优先级
     uint8_t num;
     uint8_t type;
     struct sensorInfo sensor[4];
@@ -60,8 +60,7 @@ struct strgytable
 extern struct strgytable strategytable[];
 
 
-extern struct strgytable *getANewDES(void);
+// extern struct strgytable *getANewDES(void);
 //策略解析
-extern void  policydecisions(void);
 extern void strategy_implementation(void);
 #endif
