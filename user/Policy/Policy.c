@@ -147,44 +147,7 @@ void strategy_implementation(void)
 
         }
         //检测是否有需要执行的设备
-        if (status & 0x7FFF)
-        {
 
-
-            /*/检测要控制的IO
-            for (j = 0; j < 5; j++)
-            {
-
-            if (status & (1 << j))
-            {
-
-            if (devTbs[i].ActSt & (1 << j))
-            {
-                IOmode = IO_MODE_GPIO_OUTPUT_1;
-            }
-            else
-            {
-                IOmode = IO_MODE_GPIO_OUTPUT_0;
-            }
-
-            zigbee_remote_set_net_io(devTbs[i].netId, j, IOmode , 0);
-
-            }
-            }
-                */
-            if (devTbs[i].ActSt & 1 )
-            {
-                IOmode = IO_MODE_GPIO_OUTPUT_1;
-            }
-            else
-            {
-                IOmode = IO_MODE_GPIO_OUTPUT_0;
-            }
-
-            zigbee_remote_set_net_io(devTbs[i].netId, IO_D2, IOmode , 0,0);
-
-
-        }
     }
 
 }

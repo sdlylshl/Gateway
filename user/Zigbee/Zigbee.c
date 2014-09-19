@@ -77,9 +77,9 @@ unsigned char calcfcs(unsigned char *pmsg, unsigned char len)
 uint8_t Zigbee_send(struct Zigbee_msgStu *pZmsgS)
 {
     // 立即发送 则跳过
-			if (pZmsgS->usable == 3)
-				Zigbee_send_rm_forward();
-		else if (pZmsgS->usable > 1)
+    if (pZmsgS->usable == 3)
+        Zigbee_send_rm_forward();
+    else if (pZmsgS->usable > 1)
     {
         uint8_t i;
         SendCMD(pZmsgS->head);
@@ -94,27 +94,27 @@ uint8_t Zigbee_send(struct Zigbee_msgStu *pZmsgS)
         SendCMD(pZmsgS->chk);
         SendCMD(pZmsgS->endl);
         Zigbee_send_rm_forward();
-				pZmsgS->usable=0;
+        pZmsgS->usable = 0;
     }
     return OK;
 }
 
 struct Zigbee_msgStu *get_ZigbeeSendBuf(void)
 {
- /*  uint8_t i = 0;
-     while (i < ZIGEBE_SEND_CMD_NUM)
-    {
-        if (Zigbee_SendBuff[i].usable == 0)
-        {
-            return &Zigbee_SendBuff[i];
-        }
+    /*  uint8_t i = 0;
+        while (i < ZIGEBE_SEND_CMD_NUM)
+       {
+           if (Zigbee_SendBuff[i].usable == 0)
+           {
+               return &Zigbee_SendBuff[i];
+           }
 
-        i++;
-    }
-    return NULL;*/
+           i++;
+       }
+       return NULL;*/
     // Zigbee_send_add++;
-   Zigbee_send_add_forward();
-   return (&Zigbee_SendBuff[Zigbee_send_add]);
+    Zigbee_send_add_forward();
+    return (&Zigbee_SendBuff[Zigbee_send_add]);
 }
 /**
   * @brief  设备执行    循环检测标志位
@@ -176,38 +176,42 @@ void zigbee_operate(struct devTable *pdevTbs)
         }//end (pdevTbs->ActSt & 0x8000)
 
         //控制执行
-        if ((pdevTbs->ActSt & 0x100) ^ (pdevTbs->curSt & 0x100) )
+        //增加传感器检测 网络ID最高位为1
+        if (!pdevTbs->netId & 0x8000)
         {
-            if (pdevTbs->ActSt & 0x100)
-            {
-                IOmod = IO_MODE_GPIO_OUTPUT_1;
-            }
-            else
-            {
-                IOmod = IO_MODE_GPIO_OUTPUT_0;
-            }
 
-            //判断要设置的IO
-            if (pdevTbs->ActSt & 0x1F)
+            if ((pdevTbs->ActSt & 0x100) ^ (pdevTbs->curSt & 0x100) )
             {
-                for (j = 0; j < 5; j++)
+                if (pdevTbs->ActSt & 0x100)
                 {
-                    if ((pdevTbs->ActSt >> j) & 0x01)
+                    IOmod = IO_MODE_GPIO_OUTPUT_1;
+                }
+                else
+                {
+                    IOmod = IO_MODE_GPIO_OUTPUT_0;
+                }
+
+                //判断要设置的IO
+                if (pdevTbs->ActSt & 0x1F)
+                {
+                    for (j = 0; j < 5; j++)
                     {
-                        zigbee_remote_set_net_io(pdevTbs->netId, j, IOmod, 0,0);
-                        pdevTbs->curSt = pdevTbs->ActSt & 0x100;
+                        if ((pdevTbs->ActSt >> j) & 0x01)
+                        {
+                            zigbee_remote_set_net_io(pdevTbs->netId, j, IOmod, 0, 0);
+                            pdevTbs->curSt = pdevTbs->ActSt & 0x100;
+                        }
                     }
                 }
-            }
-            else
-            {
-                //为0执行默认IO查询
-                zigbee_remote_set_net_io(pdevTbs->netId, IO_D2, IOmod, 0 ,0);
-                pdevTbs->curSt = pdevTbs->ActSt & 0x100;
+                else
+                {
+                    //为0执行默认IO查询
+                    zigbee_remote_set_net_io(pdevTbs->netId, IO_D2, IOmod, 0 , 0);
+                    pdevTbs->curSt = pdevTbs->ActSt & 0x100;
 
+                }
             }
         }
-
     }//end devstate
 }
 
@@ -414,7 +418,7 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
                 //NET立即发送更新设备状态 MAC ActSt curSt
                 //Net_send_device(pdevTbs, DEVTAB_UPDATE, 0x38);
                 //获取状态
-            zigbee_remote_req_net_io(*pnetId, pZmsgS->data[2] );
+                zigbee_remote_req_net_io(*pnetId, pZmsgS->data[2] );
 
             }
             else
@@ -437,9 +441,9 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
         if (pdevTbs != NULL)
         {
             //更新curSt
-            pdevTbs->curSt = (uint16_t)(pZmsgS->data[4]<<8)|pZmsgS->data[5];
+            pdevTbs->curSt = (uint16_t)(pZmsgS->data[4] << 8) | pZmsgS->data[5];
             //更新 zigbee IOn
-            pdevTbs->ActSt = (pdevTbs->ActSt&0xFFE0)|	(1 << pZmsgS->data[2]);
+            pdevTbs->ActSt = (pdevTbs->ActSt & 0xFFE0) |   (1 << pZmsgS->data[2]);
             //更新标志 通过NET发送到服务器
             //pdevTbs->ActSt = pdevTbs->ActSt | 0x4000;
             //NET立即发送更新设备状态 MAC ActSt curSt 0x38
@@ -457,29 +461,33 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
     //查询网络设备 通过mac地址查询 通过网络号查询
     //网络设备状态数据接收 CMD= 44 5D
     case ZIGBEE_NET_RECV_DEVID:
-				if(pZmsgS->len == 0x0C){
-				pnetId = (uint16_t *)(&pZmsgS->data[1]);
-        mac = &pZmsgS->data[3];
-				}else{
-				pnetId = (uint16_t *)(&pZmsgS->data[0]);
-        mac = &pZmsgS->data[2];
-				}
+        if (pZmsgS->len == 0x0C)
+        {
+            pnetId = (uint16_t *)(&pZmsgS->data[1]);
+            mac = &pZmsgS->data[3];
+        }
+        else
+        {
+            pnetId = (uint16_t *)(&pZmsgS->data[0]);
+            mac = &pZmsgS->data[2];
+        }
         //FE 0B 44 5D 10 0E AACF2802004B1200 01 1B
         // MAC 地址：0x00124B000228CFAA
         //查找设备
         // pdevTbs = getDevTbsByNetId(*pnetId);
         pdevTbs = getDevTbsByMac(mac);
-				//移除同网络号的设备
+        //移除同网络号的设备
 
         if (pdevTbs != NULL)
         {
-						struct devTable *pdevTbs1 = getDevTbsByNetId(*pnetId);
-						if(pdevTbs1!=pdevTbs){
+            struct devTable *pdevTbs1 = getDevTbsByNetId(*pnetId);
+            if (pdevTbs1 != pdevTbs)
+            {
                 pdevTbs->devstate = 0;
                 pdevTbs->protocol = 0;
-								pdevTbs->netId =0 ;
+                pdevTbs->netId = 0 ;
 
-						}
+            }
             //找到设备 网络号发生变更 则更新设备
             //1.判断网络号是否一致 如果不一致 1.更新此设备 3.通知服务器
             if ( *pnetId != pdevTbs->netId )
@@ -503,12 +511,12 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
             pdevTbs = getNewDevTbs();
             if (pdevTbs != NULL)
             {
-								uint8_t i;
+                uint8_t i;
                 pdevTbs->netId = *pnetId;
                 pdevTbs->devstate = 1;
                 pdevTbs->protocol = 1;
-								for(i=0;i<8;i++)
-									pdevTbs->mac[i]=*mac++;
+                for (i = 0; i < 8; i++)
+                    pdevTbs->mac[i] = *mac++;
                 //更新当前设备到服务器
                 Net_send_device(pdevTbs, DEVTAB_UPDATE, 0xFF);
             }
@@ -527,20 +535,20 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
 }
 
 //
-uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[],uint8_t immediate)
+uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[], uint8_t immediate)
 {
 
     uint8_t i;
     struct Zigbee_msgStu *pZmsgSbuf;
 
-		Net_PutChar(0xFF);
-		Net_PutChar(timer_Zigbee_sendBuff);
+    Net_PutChar(0xFF);
+    Net_PutChar(timer_Zigbee_sendBuff);
     pZmsgSbuf = &Zigbee_SendBuff[Zigbee_send_add];
-		Zigbee_send_add_forward();
+    Zigbee_send_add_forward();
 
     if (pZmsgSbuf == NULL)
     {
-       return ERROR_NOSENDBUFF;
+        return ERROR_NOSENDBUFF;
     }
     //开始填充数据
     pZmsgSbuf->usable = 1;
@@ -562,12 +570,12 @@ uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[],uint8_t immediate)
     {
         pZmsgSbuf->usable = 3;
         //NOTE: 立即发送 清定时器时钟 最少延迟20ms 让下条指令延时发送
-        while(timer_Zigbee_sendBuff<9);
-        timer_Zigbee_sendBuff=0;
+        while (timer_Zigbee_sendBuff < 9);
+        timer_Zigbee_sendBuff = 0;
         Zigbee_send(pZmsgSbuf);
     }
 
-		return OK;
+    return OK;
 
 }
 
@@ -580,13 +588,13 @@ uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[],uint8_t immediate)
   * @writer lishoulei
   * @modify
   */
-int8_t zigbee_send_data(uint8_t len, uint16_t netid, uint8_t buf[],uint8_t immediate)
+int8_t zigbee_send_data(uint8_t len, uint16_t netid, uint8_t buf[], uint8_t immediate)
 {
 
     uint8_t i;
     uint8_t data[ZIGEBEE_DATA_LEN];
-     if (len > ZIGEBEE_DATA_LEN )
-         return ERROR;
+    if (len > ZIGEBEE_DATA_LEN )
+        return ERROR;
 
     //低位先发送
     data[0] = (uint8_t) netid & 0xff;
@@ -609,7 +617,7 @@ int8_t zigbee_send_data(uint8_t len, uint16_t netid, uint8_t buf[],uint8_t immed
 uint8_t Zigebee_sendData_Ans(uint8_t len, uint16_t netid, uint8_t buf[], uint8_t timeoutms)
 {
     uint8_t erflag;
-    zigbee_send_data(len, netid, buf,0);
+    zigbee_send_data(len, netid, buf, 0);
     //
     erflag = ERROR_TIMEOUT;
     //超时响应
@@ -641,7 +649,7 @@ void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn )
     data[2] = 0;
     data[3] = IOn;
 
-    zigbee_push(4, ZIGBEE_REMOTE_REQ_IO, data,0);
+    zigbee_push(4, ZIGBEE_REMOTE_REQ_IO, data, 0);
 
 }
 /**
@@ -661,7 +669,7 @@ void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn )
     * @writer lishoulei
     *   @modify
   */
-uint8_t zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOmode, uint8_t IOvalue,uint8_t immediate)
+uint8_t zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOmode, uint8_t IOvalue, uint8_t immediate)
 {
     uint8_t data[7];
     //低位先发送
@@ -673,9 +681,9 @@ uint8_t zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOmode, ui
     data[4] = IOmode;
     data[5] = (uint8_t) IOvalue & 0xff;
     data[6] = (uint8_t) (IOvalue >> 8) & 0xff;
-    zigbee_push(7, ZIGBEE_REMOTE_SET_IO, data,immediate);
+    zigbee_push(7, ZIGBEE_REMOTE_SET_IO, data, immediate);
 
-	return OK;
+    return OK;
 }
 
 void zigbee_updateAllDevice(void)
@@ -683,7 +691,7 @@ void zigbee_updateAllDevice(void)
     uint8_t data[1];
     //写查询网络内所有设备网络状态 命令
     data[0] = 0x01;
-    zigbee_push(1, ZIGBEE_GET_ALL, data,0);
+    zigbee_push(1, ZIGBEE_GET_ALL, data, 0);
 }
 void zigbee_updateMacByNetId(uint16_t netid)
 {
@@ -693,7 +701,7 @@ void zigbee_updateMacByNetId(uint16_t netid)
     data[1] = (uint8_t) (netid >> 8) & 0xff;
     //写命令
     data[2] = 0x02;
-    zigbee_push(3, ZIGBEE_GET_MAC_ADDR, data,0);
+    zigbee_push(3, ZIGBEE_GET_MAC_ADDR, data, 0);
 }
 
 void zigbee_updateNetIdByMac(uint8_t *mac)
@@ -712,7 +720,7 @@ void zigbee_updateNetIdByMac(uint8_t *mac)
         data[i] = *mac++;
     }
 
-    zigbee_push(9, ZIGBEE_GET_NETID_ADDR, data,0);
+    zigbee_push(9, ZIGBEE_GET_NETID_ADDR, data, 0);
 }
 
 

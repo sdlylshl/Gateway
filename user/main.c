@@ -141,7 +141,7 @@ int main(void)
         }
 
 				if(Zigbee_send_add){
-				
+
 				}
 
         if (timer_Zigbee_sendBuff>10)
@@ -151,16 +151,6 @@ int main(void)
            Zigbee_send(&Zigbee_SendBuff[Zigbee_send_rm]);
 						timer_Zigbee_sendBuff=0;
         }
-        //zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_0,  0);
-
-
-        //zigbee_remote_set_net_io(3600, IO_D2, IO_MODE_GPIO_OUTPUT_1,  0);
-        // strategy_implementation();
-
-        // zigbee_send_data(1, 3600, buffer);
-        // zigbee_send_data(1, 3601, buffer);
-        // zigbee_remote_set_net_io(3600, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
-        // zigbee_remote_set_net_io(3601, IO_D2 , IO_MODE_GPIO_OUTPUT_1, 0);
 
 
     }
