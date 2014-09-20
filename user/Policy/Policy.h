@@ -6,21 +6,15 @@
 // 策略表 最大条数
 #define  MAX_DESTABLE_NUM  10
 
-struct sensorInfo
+struct deviceInfo
 {
 
-    uint8_t sensorId[8];  //设备ID 可选 网络号|MAC
-    uint16_t sensorTrigger;
+    uint8_t deviceId[8];  //设备ID 可选 网络号|MAC
+    uint16_t deviceTrigger;
 
 };
 
-struct actuatorInfo
-{
 
-    uint8_t actuatorId[8];    //设备ID 可选 网络号|MAC
-    uint8_t actuatorTrigger;
-
-};
 /**
   * @brief 全局策略结构体:
                         序号  1               2           3                   4                   5                   6                       7
@@ -41,9 +35,19 @@ struct strgytable
     uint8_t first;  //优先级
     uint8_t num;
     uint8_t type;
-    struct sensorInfo sensor[4];
-    struct actuatorInfo actuator[10];
+    struct deviceInfo sensor[4];
+    struct deviceInfo actuators[10];
     uint8_t name[10];
+
+};
+struct strgy_swtable
+{
+    uint8_t usable; //操作状态
+
+    uint8_t id;         //
+    uint8_t first;  //优先级
+    struct deviceInfo  button;
+    struct deviceInfo  actuator;
 
 };
 

@@ -53,27 +53,29 @@ void Net_sendTimer(void)
 
     for (i = 0; i < SEND_CMDS_NUM; i++)
     {
-        if(netSendDataCMDS[i].usable){
+        if (netSendDataCMDS[i].usable)
+        {
 
             netSendDataCMDS[i].usable++;
 
-					 // 重发条件
-					switch(netSendDataCMDS[i].usable)
-					{
-						case 10:
-						case 20:
-						case 30:
-						case 40:
-						case 50:
-							Net_send(&netSendDataCMDS[i]);
-						break;
-					}
-					// 死指令 丢弃
-				if( netSendDataCMDS[i].usable>50){
+            // 重发条件
+            switch (netSendDataCMDS[i].usable)
+            {
+            case 10:
+            case 20:
+            case 30:
+            case 40:
+            case 50:
+                Net_send(&netSendDataCMDS[i]);
+                break;
+            }
+            // 死指令 丢弃
+            if ( netSendDataCMDS[i].usable > 50)
+            {
 
-            Net_send(&netSendDataCMDS[i]);
-						netSendDataCMDS[i].usable=0;
-        }
+                Net_send(&netSendDataCMDS[i]);
+                netSendDataCMDS[i].usable = 0;
+            }
 
         }
 
@@ -346,8 +348,17 @@ uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control)
     }
     if (control & DEV_TYPE)
     {
-        data[len++] = pdevTbs->type;
+#if BIGENDIAN
+
+        data[len++] = (uint8_t)((pdevTbs->tranSt >> 8) & 0xff);
+        data[len++] = (uint8_t)((pdevTbs->tranSt >> 0) & 0xff);
+#else
+        data[len++] = (uint8_t)((pdevTbs->tranSt >> 0) & 0xff);
+        data[len++] = (uint8_t)((pdevTbs->tranSt >> 8) & 0xff);
+#endif
     }
+
+
     if (control & DEV_NAME)
     {
 #if BIGENDIAN
@@ -361,9 +372,7 @@ uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control)
         data[len++] = pdevTbs->name[7];
         data[len++] = pdevTbs->name[8];
         data[len++] = pdevTbs->name[9];
-        data[len++] = pdevTbs->name[10];
 #else
-        data[len++] = pdevTbs->name[10];
         data[len++] = pdevTbs->name[9];
         data[len++] = pdevTbs->name[8];
         data[len++] = pdevTbs->name[7];
@@ -724,12 +733,8 @@ void NET_parseData(struct msgStu *pNmsgR)
         if (pNmsgR->data[1] & 0x40)
         {
 
-            if (pdevTbs != NULL)
-            {
-                //设置对应的状态
-                pdevTbs->type = pNmsgR->data[index];
-            }
-            index++;
+
+            index += 2;
         }
         //设备名称
         if (pNmsgR->data[1] & 0x80)

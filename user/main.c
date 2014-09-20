@@ -82,7 +82,7 @@ int main(void)
         NET_fetchParseInstruction();
 
         //策略解析，修改对应 设备表
-        policydecisions();
+        //policydecisions();
 
         // print_CMDS();
         // print_DEVS();

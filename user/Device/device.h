@@ -50,7 +50,7 @@ struct  devTable
     uint8_t     mac[8];
     uint16_t    ActSt;
     uint16_t    curSt;
-    uint16_t    type; //暂态就是处理之前的上一个状态 针对开关型变量
+    uint16_t    tranSt; //暂态就是处理之前的上一个状态 针对开关型变量
     uint8_t     name[10];
 };
 

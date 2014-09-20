@@ -3,7 +3,7 @@
 
 //最大全局策略表大小
 struct strgytable strategytable[MAX_DESTABLE_NUM];
-
+struct strgy_swtable strategy_swtable[MAX_DESTABLE_NUM];
 /**********************************policy**************************************/
 /**
   * @brief  从策略表中获取可填充策略位置
@@ -25,7 +25,7 @@ struct strgytable *getANewDES(void)
     }
     return NULL;
 }
-
+/*
 //策略执行
 void  strategy_implementation(void)
 {
@@ -127,3 +127,4 @@ void  strategy_implementation(void)
         i++;
     }
 }
+*/
