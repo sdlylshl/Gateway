@@ -609,6 +609,7 @@ void NET_parseData(struct msgStu *pNmsgR)
     uint8_t i = 0;
     uint8_t index;
     uint8_t *mac;
+    uint8_t mac_tmp[8];
     uint16_t netId;
     struct devTable *pdevTbs = NULL;
     //uint8_t ctr;
@@ -616,7 +617,7 @@ void NET_parseData(struct msgStu *pNmsgR)
     switch (pNmsgR->data[0])
     {
     case 0x10://设备查询
-        //检测控制字
+        //检测 控制字
         if (pNmsgR->data[1])
         {
             index = 2;
@@ -680,6 +681,7 @@ void NET_parseData(struct msgStu *pNmsgR)
 
 
         index = 2;
+        //设备结构体头
         if (pNmsgR->data[1] & 0x01)
         {
             index++;
@@ -692,7 +694,11 @@ void NET_parseData(struct msgStu *pNmsgR)
         if (pNmsgR->data[1] & 0x04)
         {
             //通过网络号获取设备netId
+            #if BIGENDIAN
             netId = (uint16_t)((pNmsgR->data[index] << 8) | pNmsgR->data[index + 1]);
+            #else
+            netId = (uint16_t)( pNmsgR->data[index] | (pNmsgR->data[index+1] << 8) );
+            #endif
             //查找netId所在的字节
             pdevTbs = getDevTbsByNetId(netId);
 
@@ -704,6 +710,7 @@ void NET_parseData(struct msgStu *pNmsgR)
 
             //查找MAC所在的字节
             mac = &pNmsgR->data[index];
+
             pdevTbs = getDevTbsByMac(mac);
 
             index += 8;
@@ -714,8 +721,11 @@ void NET_parseData(struct msgStu *pNmsgR)
             if (pdevTbs != NULL)
             {
                 //设置对应的状态
-                pdevTbs->ActSt = (pNmsgR->data[index] << 8 | pNmsgR->data[index + 1]);
-
+                #if BIGENDIAN
+                pdevTbs->ActSt = (uint16_t) ((pNmsgR->data[index] << 8 | pNmsgR->data[index + 1]));
+                #else
+                pdevTbs->ActSt = (uint16_t) ((pNmsgR->data[index + 1] << 8 | pNmsgR->data[index]));
+                #endif
                 //下发Zigbee设置指令
                 zigbee_operate(pdevTbs);
 
@@ -729,7 +739,7 @@ void NET_parseData(struct msgStu *pNmsgR)
 
             index += 2;
         }
-        //设备类型
+        //暂态
         if (pNmsgR->data[1] & 0x40)
         {
 
@@ -744,7 +754,7 @@ void NET_parseData(struct msgStu *pNmsgR)
             {
 
                 //设置对应的状态
-                for (i = 0; i < 11; i++)
+                for (i = 0; i < 10; i++)
                 {
                     pdevTbs->name[i] = pNmsgR->data[index++];
                 }

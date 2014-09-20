@@ -16,6 +16,5 @@
 
 #include ".\ERR\err.h"
 
-#define BIGENDIAN 1
 
 #endif	/* CONFIG_H */

@@ -2,6 +2,7 @@
 
 #include "config.h"
 
+#define BIGENDIAN 1
 
 //全局设备表
 struct devTable  devTbs[MAX_DEVTABLE_NUM];
@@ -78,7 +79,11 @@ struct devTable *getDevTbsByNetId(uint16_t id)
     uint8_t i = 0;
     while (i < MAX_DEVTABLE_NUM)
     {
+        #if BIGENDIAN
         if (devTbs[i].netId == id)
+        #else
+        if (Tranverse16(devTbs[i].netId) == id)
+        #endif
         {
             return &devTbs[i];
         }

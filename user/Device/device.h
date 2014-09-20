@@ -18,6 +18,9 @@
 #define DEV_TYPE 0x40
 #define DEV_NAME 0x80
 
+// 每个设备 IO个数
+#define DEV_IO_NUM 0x05
+
 
 enum devTbCV
 {
