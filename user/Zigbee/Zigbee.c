@@ -126,7 +126,7 @@ struct Zigbee_msgStu *get_ZigbeeSendBuf(void)
     * @writer lishoulei
     *   @modify
   */
-void zigbee_operate(struct devTable *pdevTbs,uint8_t immediate)
+void zigbee_operate(struct devTable *pdevTbs, uint8_t immediate)
 {
     uint8_t i;
     uint8_t ionum = 0;
@@ -153,7 +153,7 @@ void zigbee_operate(struct devTable *pdevTbs,uint8_t immediate)
                 //判断要查询的IO,一次只能查询一个IO
                 if (ionum < DEV_IO_NUM)
                 {
-                    zigbee_remote_req_net_io(pdevTbs->netId, ionum,immediate);
+                    zigbee_remote_req_net_io(pdevTbs->netId, ionum, immediate);
                 }
                 // if (pdevTbs->ActSt & 0x1F)
                 // {
@@ -181,29 +181,54 @@ void zigbee_operate(struct devTable *pdevTbs,uint8_t immediate)
         //IO2 默认开关IO采集 /开关控制1
         //IO3 默认开关控制2 / 开关IO采集
         //IO4 指示灯
-        switch (pdevTbs->netId & 0xFF00)
+
+        if (pdevTbs->netId & 0x8000)
         {
-            if (ionum == 0)
+                //传感器 仅能控制指示灯开关 IO4
+
+             if (((pdevTbs->ActSt & (0x0100<<4)) >> 0x08) ^ (pdevTbs->ActSt & (0x0001<<4)) )
+                    {
+
+                        if (pdevTbs->ActSt & (0x0100 << 4))
+                        {
+                            IOmod = IO_MODE_GPIO_OUTPUT_1;
+                        }
+                        else
+                        {
+                            IOmod = IO_MODE_GPIO_OUTPUT_0;
+                        }
+
+                        // 立即执行
+                        zigbee_remote_set_net_io(pdevTbs->netId, 4, IOmod, 0, immediate);
+                        // 更新状态 忽略掉IO0
+                        pdevTbs->curSt = ((pdevTbs->ActSt & (0x0100 << 4)) >> 4) & 0x0100;
+                        // 更新 对应IO及状态
+                        pdevTbs->ActSt = (pdevTbs->ActSt & 0xFF1F) | (4 << DEV_IO_NUM);
+
+                        if ((pdevTbs->ActSt & (0x0100 << 4)))
+                        {
+                            pdevTbs->ActSt = pdevTbs->ActSt | (0x0001 << 4);
+                        }
+                        else
+                        {
+                            pdevTbs->ActSt = pdevTbs->ActSt & (~(0x0001 << 4));
+                        }
+                    }
+
+        }
+        else
+        {
+            //执行器
+            //除了作为电量采集的IO0 其他IO都可控制
+            // 设置位和当前状态是否一致？忽略掉做为电压采集的IO0
+            if (((pdevTbs->ActSt & 0x1E00) >> 0x08) ^ (pdevTbs->ActSt & 0x001E) )
             {
-                /* code */
-            }
-        //  执行器
-        //单输出设备
-        case 0x0100:
-        case 0x0200:
-        case 0x0300:
-        case 0x0400:
-        //多输出设备
-        case 0x7000
-                //除了作为电量采集的IO0 其他IO都可控制
                 for ( i = 1; i < DEV_IO_NUM; i++)
                 {
-                    // 设置位和当前状态是否一致？
-                    if (((pdevTbs->ActSt&0x1F00)>>0x1F) ^ (pdevTbs->ActSt&0x1F00) )
+                    if (((pdevTbs->ActSt & (0x0100<<i)) >> 0x08) ^ (pdevTbs->ActSt & (0x0001<<i)) )
                     {
-                        /* code */
 
-                        if ((pdevTbs->ActSt & 0x1F00) >> i)
+                        if (pdevTbs->ActSt & (0x0100 << i))
                         {
                             IOmod = IO_MODE_GPIO_OUTPUT_1;
                         }
@@ -215,66 +240,21 @@ void zigbee_operate(struct devTable *pdevTbs,uint8_t immediate)
                         // 立即执行
                         zigbee_remote_set_net_io(pdevTbs->netId, i, IOmod, 0, immediate);
                         // 更新状态 忽略掉IO0
-                        pdevTbs->curSt = ((pdevTbs->ActSt & (0x2000 << i))>>i) & 0x100;
-                        // 更新
-                        pdevTbs->ActSt = pdevTbs->ActSt  & ((pdevTbs->ActSt & (0x2000 << i)) >> 8);
-                    }
-                }
-            break;
-        // 传感器
-        //开关
-        case 0x8000:
-            break;
-        case 0x8100:
-        case 0x8200:
-        case 0x8300:
-        case 0x8400:
-        //开关指示灯
+                        pdevTbs->curSt = ((pdevTbs->ActSt & (0x0100 << i)) >> i) & 0x0100;
+                        // 更新 对应IO及状态
+                        pdevTbs->ActSt = (pdevTbs->ActSt & 0xFF1F) | (i << DEV_IO_NUM);
 
-            break;
-
-        }
-        if (pdevTbs->netId & 0x8000)
-        {
-
-
-
-
-            if ((pdevTbs->ActSt & 0x100) ^ (pdevTbs->curSt & 0x100) )
-            {
-                if (pdevTbs->ActSt & 0x100)
-                {
-                    IOmod = IO_MODE_GPIO_OUTPUT_1;
-                }
-                else
-                {
-                    IOmod = IO_MODE_GPIO_OUTPUT_0;
-                }
-
-                //判断要设置的IO
-                if (pdevTbs->ActSt & 0x1F)
-                {
-                    for (j = 0; j < 5; j++)
-                    {
-                        if ((pdevTbs->ActSt >> j) & 0x01)
+                        if ((pdevTbs->ActSt & (0x0100 << i)))
                         {
-                            zigbee_remote_set_net_io(pdevTbs->netId, j, IOmod, 0, 0);
-                            pdevTbs->curSt = pdevTbs->ActSt & 0x100;
+                            pdevTbs->ActSt = pdevTbs->ActSt | (0x0001 << i);
+                        }
+                        else
+                        {
+                            pdevTbs->ActSt = pdevTbs->ActSt & (~(0x0001 << i));
                         }
                     }
                 }
-                else
-                {
-                    //为0执行默认IO查询
-                    zigbee_remote_set_net_io(pdevTbs->netId, IO_D2, IOmod, 0 , 0);
-                    pdevTbs->curSt = pdevTbs->ActSt & 0x100;
-
-                }
             }
-        }
-        else
-        {
-            //执行器,
 
         }
     }//end devstate
@@ -287,7 +267,7 @@ void zigbee_operate_ALL(void)
     Zigbee_DBG(Zigbee_DBG_USARTx, "\r\n zigbee_operate \r\n");
     while (i < MAX_DEVTABLE_NUM) //MAX_DEVTABLE_NUM defined in net.h
     {
-        zigbee_operate(&devTbs[i]);
+        zigbee_operate(&devTbs[i], 0);
         i++;
     }
 
@@ -483,7 +463,7 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
                 //NET立即发送更新设备状态 MAC ActSt curSt
                 //Net_send_device(pdevTbs, DEVTAB_UPDATE, 0x38);
                 //获取状态
-                zigbee_remote_req_net_io(*pnetId, pZmsgS->data[2] );
+                zigbee_remote_req_net_io(*pnetId, pZmsgS->data[2], 0 );
 
             }
             else
@@ -709,7 +689,7 @@ uint8_t Zigebee_sendData_Ans(uint8_t len, uint16_t netid, uint8_t buf[], uint8_t
     * @writer lishoulei
     *   @modify
   */
-void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn,uint8_t immediate )
+void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn, uint8_t immediate )
 {
     uint8_t data[4];
 
@@ -720,7 +700,7 @@ void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn,uint8_t immediate )
     data[2] = 0;
     data[3] = IOn;
 
-    zigbee_push(4, ZIGBEE_REMOTE_REQ_IO, data, 0);
+    zigbee_push(4, ZIGBEE_REMOTE_REQ_IO, data, immediate);
 
 }
 /**

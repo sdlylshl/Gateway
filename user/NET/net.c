@@ -609,7 +609,7 @@ void NET_parseData(struct msgStu *pNmsgR)
     uint8_t i = 0;
     uint8_t index;
     uint8_t *mac;
-    uint8_t mac_tmp[8];
+//    uint8_t mac_tmp[8];
     uint16_t netId;
     struct devTable *pdevTbs = NULL;
     //uint8_t ctr;

@@ -112,14 +112,14 @@ int main(void)
                         {
                             if ((devTbs[i].ActSt >> j) & 0x01)
                             {
-                                zigbee_remote_req_net_io(devTbs[i].netId, j );
+                                zigbee_remote_req_net_io(devTbs[i].netId, j,0 );
                             }
                         }
                     }
                     else
                     {
                         //执行默认IO查询
-                        zigbee_remote_req_net_io(devTbs[i].netId, IO_D2 );
+                        zigbee_remote_req_net_io(devTbs[i].netId, IO_D2,0 );
 
                     }
                 }

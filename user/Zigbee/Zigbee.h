@@ -184,7 +184,7 @@ extern int8_t zigbee_send_data(uint8_t len, uint16_t netid, uint8_t buf[],uint8_
   * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
   * @retval None
   */
-extern void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn );
+extern void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn,uint8_t immediate );
 
 /**
   * @brief  通过网络号远程查询对应IO状态
