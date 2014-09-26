@@ -22,6 +22,7 @@ __IO uint32_t Net_time; // ms 计时变量
 __IO uint32_t time_out;
 __IO uint32_t timer_Device_update;
 __IO uint32_t timer_Zigbee_getStatus;
+__IO uint32_t timer_Zigbee_getBattery;
 __IO uint32_t timer_Zigbee_sendBuff;
 
 void TIM2_test()
@@ -205,6 +206,7 @@ void TIM2_IRQHandle(void)
         time_out++;
         timer_Device_update++;
         timer_Zigbee_getStatus++;
+        timer_Zigbee_getBattery++;
         timer_Zigbee_sendBuff++;
 
         if (time > 500)

@@ -26,12 +26,27 @@ struct strgytable *getNewStrategy(void)
     }
     return NULL;
 }
+struct strgytable *getHighPriorityStrategy(void)
+{
+    uint8_t i = 0;
+    uint8_t j = 0;
+
+    for (i = 0; i < MAX_DESTABLE_NUM; i++)
+    {
+        if (strategytable[i].usable == 0)
+
+        }
+
+
+    return NULL;
+}
+
 // 开关策略执行
 
 // 普通策略执行
 void  strategy_implementation(void)
 {
- /*   uint8_t i = 0;
+    uint8_t i = 0;
     DEBUG(USARTn, "\r\n strategy_implementation \r\n");
     for (i = 0; i < MAX_DESTABLE_NUM; i++)
     {
@@ -47,15 +62,15 @@ void  strategy_implementation(void)
             for (j = 0; j < numSta; i++)
             {
                 //获取对应的设备
-                struct devTable *staDev = getDevTbsByMac(strategytable[i].sensor[j].deviceId);
-                if (staDev == NULL)
+                struct devTable *pstaDev = getDevTbsByNetId(strategytable[i].sensor[j].deviceId);
+                if (pstaDev == NULL)
                 {
                     //TODO ERROR
                     break;
                 }
 
 
-                statusValue = staDev->curSt;
+                statusValue = pstaDev->curSt;
                 //触发类型type 两位表示一个设备 共表示4个设备 每次移2位
                 type = (strategytable[i].type >> (j << 1)) & 0x03;
 
@@ -63,7 +78,7 @@ void  strategy_implementation(void)
                 if (0 == type)
                 {
                     //上次执行的状态
-                     flagTrue = 0;
+                    flagTrue = 0;
                 }
                 //开关型触发 0b01
                 else if (1 == type)
@@ -103,10 +118,10 @@ void  strategy_implementation(void)
                 uint8_t j = 0;
                 for (j = 0; i < numAct; i++)
                 {
-                    struct devTable *actDev = getDevTbsByMac(strategytable[i].actuators[j].deviceId);
-                    if (actDev != NULL)
+                    struct devTable *pactDev = getDevTbsByMac(strategytable[i].actuators[j].deviceId);
+                    if (pactDev != NULL)
                     {
-                        actDev->ActSt = strategytable[i].actuators[j].deviceSta  & 0x1fFF;//最多设置5个IO
+                        pactDev->ActSt = strategytable[i].actuators[j].deviceSta  & 0x1fFF;//最多设置5个IO
                     }
 
                 }
@@ -114,6 +129,6 @@ void  strategy_implementation(void)
 
 
         }
-    }// end for*/
+    }// end for
 }
 

@@ -49,7 +49,7 @@ void Delay(__IO u32 nCount)
 int main(void)
 {
 
-    //uint8_t i;
+    
     //uint8_t buffer[10];
     LED_GPIO_Config();
 
@@ -95,9 +95,10 @@ int main(void)
             Zigbee_time = 0;
         }
         //
-        //定时查询状态设备状态
-
-      Zigebee_getSta_timer( 500);
+        //定时查询默认状态设备状态
+				Zigbee_getstate_timer( 1000*5);
+				//定时更新设备电量
+				Zigbee_getBattery(1000*60*60);
         //定时获取设备信息
         if (timer_Device_update > 50)
         {

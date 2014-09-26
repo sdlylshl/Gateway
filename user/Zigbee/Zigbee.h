@@ -171,38 +171,15 @@ void SendCMD(uint8_t data);
 
 extern uint8_t Zigbee_send(struct Zigbee_msgStu *pZmsgS);
 
-/**
-  * @brief  发送数据
-  * @param  NETID:
-  * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
-  * @retval None
-  */
 extern int8_t zigbee_send_data(uint8_t len, uint16_t netid, uint8_t buf[],uint8_t immediate);
-/**
-  * @brief  通过网络号远程查询对应IO状态
-  * @param  NETID:
-  * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
-  * @retval None
-  */
+
 extern void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn,uint8_t immediate );
 
-/**
-  * @brief  通过网络号远程查询对应IO状态
-  * @param  NETID:
-  * @param  IOn: IO_D0 IO_D1 IO_D2 IO_D3 IO_D4
-  * @param  IOmode:
-									IO_MODE_NOUSE
-									IO_MODE_ANALOG_INPUT
-									IO_MODE_GPIO_INPUT
-									IO_MODE_GPIO_OUTPUT_1
-									IO_MODE_GPIO_OUTPUT_0
-									IO_MODE_PULSE_COUNT
-  * @param  IOvalue:
-
-  * @retval None
-  */
 extern uint8_t zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOmode, uint8_t IOvalue,uint8_t immediate);
-extern void Zigebee_getSta_timer(uint32_t timeout);
+
+extern void Zigbee_getstate_timer(uint32_t timeout);
+extern void Zigbee_getBattery(uint32_t timeout);
+
 extern void zigbee_operate_ALL(void);
 extern void zigbee_updateAllDevice(void);
 extern void zigbee_updateMacByNetId(uint16_t netid);

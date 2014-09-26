@@ -31,9 +31,7 @@ uint16_t  msgSN = 1;
 
 extern void zigbee_operate(struct devTable *pdevTbs, uint8_t immediate);
 
-extern void Device_operateSetting(struct devTable *pdevTbs);
-
-extern uint8_t Net_send_device(struct devTable *pdevTbs);
+//extern uint8_t Net_send_device(struct devTable *pdevTbs);
 void Net_PutChar(uint8_t ch)
 {
     USART_SendData(USART1, (uint8_t) ch);
@@ -652,8 +650,8 @@ uint8_t NET_parseData(struct msgStu *pNmsgR)
         if (pdevTbs != NULL)
         {
             pdevTbs->ion = *pion;
-						for(i=0;i<DEV_NAME_SIZE;i++)
-						pdevTbs->statetables[pdevTbs->ion].name[i] = *pname;
+            for (i = 0; i < DEV_NAME_SIZE; i++)
+                pdevTbs->statetables[pdevTbs->ion].name[i] = *pname;
         }
         else
         {
@@ -675,21 +673,8 @@ uint8_t NET_parseData(struct msgStu *pNmsgR)
         {
             pdevTbs->ion = *pion;
             pdevTbs->statetables[pdevTbs->ion].iomode = *piomode;
-            //TODO: 1.状态操作允许 设置函数，主要功能是是设置允许操作标志
-                //  2. 判断Iomode 设置是否有效
-             Device_operateSetting(pdevTbs);
-            if ( pdevTbs->operate)
-            {
-                zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, 1);
-            }
-            else
-            {
-
-                //操作失败
-                return ERR_OPERATE;
-            }
-
-
+            // 立即执行
+            zigbee_operate(pdevTbs, 1);
         }
         else
         {
@@ -702,7 +687,7 @@ uint8_t NET_parseData(struct msgStu *pNmsgR)
     }
 
 
-	return OK;
+    return OK;
 }
 
 

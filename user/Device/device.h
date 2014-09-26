@@ -63,6 +63,11 @@ struct stateTable
 
 
 // 更改设备类型为 暂态类型，字节数更改为uint16_t
+// i= sizeof(struct devTable);//0x6A =106
+// i= sizeof(devTbs);//2120 =106*20
+// i= sizeof(devTbs[0]);//106
+// i= sizeof(devTbs[0].statetables);//90=18*5
+// i= sizeof(devTbs[0].statetables[0]);//18
 struct  devTable
 {
     uint8_t     devstate;
@@ -71,7 +76,7 @@ struct  devTable
     uint8_t     mac[8];
     uint8_t    ion;
     uint8_t    operate;//允许操作
-    uint8_t    nouse0;
+    uint8_t    priority; //当前设备 被哪个优先级的任务执行了
     uint8_t    nouse1;
     struct stateTable  statetables[DEV_IO_NUM];
 
@@ -80,6 +85,8 @@ struct  devTable
 
 //全局设备表
 extern struct devTable devTbs[MAX_DEVTABLE_NUM];
+
+extern void Device_operateSetting(struct devTable *pdevTbs);
 
 extern struct devTable *getDevTbsByMac(uint8_t *mac);
 extern struct devTable *getDevTbsByNetId(uint16_t id);

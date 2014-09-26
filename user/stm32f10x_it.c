@@ -388,7 +388,7 @@ void USART2_IRQHandler(void)
             Zigbee_write++;
 
         //TO TEST print usart1 == net out
-        Net_PutChar(c);
+        // Net_PutChar(c);
     }
 
 }

@@ -9,7 +9,7 @@
 struct deviceInfo
 {
 
-    uint8_t deviceId[8];  //设备ID 可选 网络号|MAC
+    uint8_t deviceId[2];  //设备ID 可选 网络号|MAC
     uint16_t deviceSta;
 
 };
@@ -30,9 +30,8 @@ struct deviceInfo
 struct strgytable
 {
     uint8_t usable; //操作状态
-
-    uint8_t id;         //
-    uint8_t first;  //优先级
+    uint8_t priority; //优先级 不允许相同
+    uint8_t id;
     uint8_t num;
     uint8_t type;
     struct deviceInfo sensor[4];
@@ -42,10 +41,9 @@ struct strgytable
 };
 struct strgy_swtable
 {
-    uint8_t usable; //操作状态
-
+    uint8_t usable; //操作状态 启用/禁用
+    uint8_t priority; //优先级 不允许相同
     uint8_t id;         //
-    uint8_t first;  //优先级
     struct deviceInfo  button;
     struct deviceInfo  actuator;
 
