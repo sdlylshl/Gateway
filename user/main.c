@@ -49,7 +49,7 @@ void Delay(__IO u32 nCount)
 int main(void)
 {
 
-    uint8_t i;
+    //uint8_t i;
     //uint8_t buffer[10];
     LED_GPIO_Config();
 
@@ -107,7 +107,7 @@ int main(void)
         //重发机制 1S重发一次 清理一次
         if (Net_time > 100)
         {
-            Net_sendTimer();
+            Net_send_Timer();
             Net_time = 0;
         }
 

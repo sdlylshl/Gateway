@@ -29,6 +29,7 @@
 //**4.**系统相关
 #define ERROR_TIMEOUT 0x40
 
+#define ERR_OPERATE 0x50
 
 #define SUCCESS 0
 #define FAIL 1

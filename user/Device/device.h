@@ -20,6 +20,24 @@
 
 // 每个设备 IO个数
 #define DEV_IO_NUM 0x05
+#define DEV_NAME_SIZE 12
+
+// 设备类型 netId高字节
+// 灯
+#define DEV_ACT_LIGHT         0x0100
+// 插座
+#define DEV_ACT_JACK         0x0200
+// 窗帘
+#define DEV_ACT_CURTAIN      0x7000
+// 开关
+#define DEV_SENSOR_SW          0x8000
+// 人体红外感应
+#define DEV_SENSOR_IR          0x8100
+// 烟雾
+#define DEV_SENSOR_SMOKE       0x8200
+// 燃气
+#define DEV_SENSOR_GAS       0x8300
+
 
 
 enum devTbCV
@@ -35,26 +53,28 @@ enum devTbCV
 };
 
 
-/*
-  1、与服务端通信的数据格式
-    1[1]           2[1]      3[2]     4 [8]             5[4]       6 [1]      7[10+1]
- 设备状态    接口类型     网络号   唯一设备MAC  执行状态 当前状态 设备类型  “名称”
- 在线0x01    zigbee--0x01 0x8232   0x12345678   4字节状态值     烟感0x81 “烟雾传感器”
- 离线0x00    wifi--0x02   0x0233   0x12312354   2字节    2字节  灯--0x01 “卧室灯2”
- 休眠0x02    蓝牙-0x03    0x0234   0x32132122   2字节    2字节  开关0x02 “客厅开关”
-*/
-//28字节
-//UPDATE: 更改设备类型为 暂态类型，字节数更改为uint16_t
+struct stateTable
+{
+    uint8_t     iomode; //执行状态
+    uint16_t    curstat;//当前状态
+    uint8_t     tranSt; //暂存状态
+    uint8_t     name[DEV_NAME_SIZE];
+};
+
+
+// 更改设备类型为 暂态类型，字节数更改为uint16_t
 struct  devTable
 {
     uint8_t     devstate;
     uint8_t     protocol;
     uint16_t    netId;
     uint8_t     mac[8];
-    uint16_t    ActSt;
-    uint16_t    curSt;
-    uint16_t    tranSt; //暂态就是处理之前的上一个状态 针对开关型变量
-    uint8_t     name[10];
+    uint8_t    ion;
+    uint8_t    operate;//允许操作
+    uint8_t    nouse0;
+    uint8_t    nouse1;
+    struct stateTable  statetables[DEV_IO_NUM];
+
 };
 
 

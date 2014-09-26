@@ -7,12 +7,6 @@
 //全局设备表
 struct devTable  devTbs[MAX_DEVTABLE_NUM];
 
-
-void loadDevMsg()
-{
-
-
-}
 /**
   * @brief  获取空设备
   * @param  None
@@ -92,6 +86,69 @@ struct devTable *getDevTbsByNetId(uint16_t id)
     return NULL;
 }
 
+// 通过网络号设置操作位 --仅对设置有效
+void Device_operateSetting(struct devTable *pdevTbs)
+{
+    if (pdevTbs)
+    {
+        if (pdevTbs->devstate)
+        {
+            pdevTbs->operate = 0;
+            switch (pdevTbs->netId & 0xFF00)
+            {
+            //增加传感器检测 网络ID最高位为1
+            //IO0 电池电量检测
+            //IO1 默认模拟IO采集
+            //IO2 默认开关IO采集 /开关控制1
+            //IO3 默认开关控制2  /开关IO采集
+            //IO4 指示灯
+
+            // 灯
+            case DEV_ACT_LIGHT   :
+
+            // break;
+            // 插座
+            case DEV_ACT_JACK    :
+
+            // break;
+            // 窗帘执行器
+            case DEV_ACT_CURTAIN :
+                if (pdevTbs->ion)
+                {
+                    if (pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_0 || pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_1 )
+                    {
+                        pdevTbs->operate = 1;
+                    }
+
+                }
+                break;
+            //
+            case DEV_SENSOR_SW   :
+
+            // break;
+            //
+            case DEV_SENSOR_IR   :
+
+            // break;
+            //
+            case DEV_SENSOR_SMOKE:
+
+            // break;
+            //
+            case DEV_SENSOR_GAS  :
+                if (pdevTbs->ion == IO_D4)
+                {
+                    if (pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_0 || pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_1 )
+                    {
+                        pdevTbs->operate = 1;
+                    }
+
+                }
+                break;
+            }
+        }
+    }
+}
 
 
 void print_DEVS()

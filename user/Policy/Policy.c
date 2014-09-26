@@ -31,7 +31,7 @@ struct strgytable *getNewStrategy(void)
 // 普通策略执行
 void  strategy_implementation(void)
 {
-    uint8_t i = 0;
+ /*   uint8_t i = 0;
     DEBUG(USARTn, "\r\n strategy_implementation \r\n");
     for (i = 0; i < MAX_DESTABLE_NUM; i++)
     {
@@ -114,6 +114,6 @@ void  strategy_implementation(void)
 
 
         }
-    }// end for
+    }// end for*/
 }
 

@@ -16,8 +16,27 @@
 // 接收缓冲区大小
 #define NET_BUFFSIZE 1512
 
+
 #define NET_CMD_HEAD 0xE0
 #define NET_CMD_END 0x18
+
+// 服务器下发指令
+// 查询所有设备
+#define NET_CMD_REQ_ALL_DEV   0x00
+// 查询单个设备信息
+#define NET_CMD_REQ_ONE_DEV   0x02
+// 设置设备名称
+#define NET_CMD_SET_DEV_NAME  0x04
+// 控制设备开关
+#define NET_CMD_SET_ON_OFF    0x08
+
+// 网关回应服务器指令
+// 更新设备信息
+#define NET_CMD_DEV_UPDATE    0x01
+
+#define NET_CMD_PROCY_UPDATE    0x20
+
+
 #define Tranverse16(X)                 ((((uint16_t)(X) & 0xff00) >> 8) |(((uint16_t)(X) & 0x00ff) << 8))
 #define Tranverse32(X)                 ((((uint32_t)(X) & 0xff000000) >> 24) | (((uint32_t)(X) & 0x00ff0000) >> 8) |  (((uint32_t)(X) & 0x0000ff00) << 8) | (((uint32_t)(X) & 0x000000ff) << 24))
 
@@ -81,9 +100,8 @@ extern void parseAllCmd(void);
 //策略解析，修改对应 设备表
 extern void policydecisions(void);
 //重发机制
-extern void Net_sendTimer(void);
-extern uint8_t Net_send(struct msgStu *pNmsgS);
-
+extern void Net_send_Timer(void);
+extern uint8_t Net_send_data(struct msgStu *pNmsgS);
 extern void print_CMDS(void);
 extern void print_DEVS(void);
 //extern uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control);

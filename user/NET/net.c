@@ -31,6 +31,9 @@ uint16_t  msgSN = 1;
 
 extern void zigbee_operate(struct devTable *pdevTbs, uint8_t immediate);
 
+extern void Device_operateSetting(struct devTable *pdevTbs);
+
+extern uint8_t Net_send_device(struct devTable *pdevTbs);
 void Net_PutChar(uint8_t ch)
 {
     USART_SendData(USART1, (uint8_t) ch);
@@ -49,7 +52,7 @@ void uart_print( uint8_t len, uint8_t *data)
 }
 
 //完成指令的未相应重发
-void Net_sendTimer(void)
+void Net_send_Timer(void)
 {
     uint8_t i;
 
@@ -68,14 +71,14 @@ void Net_sendTimer(void)
             case 30:
             case 40:
             case 50:
-                Net_send(&netSendDataCMDS[i]);
+                Net_send_data(&netSendDataCMDS[i]);
                 break;
             }
             // 死指令 丢弃
             if ( netSendDataCMDS[i].usable > 50)
             {
 
-                Net_send(&netSendDataCMDS[i]);
+                Net_send_data(&netSendDataCMDS[i]);
                 netSendDataCMDS[i].usable = 0;
             }
 
@@ -107,26 +110,6 @@ struct msgStu *get_NetSendBuf(void)
     return NULL;
 }
 
-/**
-  * @brief  获取msgSN
-  * @retval 返回msgSN
-  * @writer lishoulei
-  * @modify
-  */
-uint16_t getmsgSN()
-{
-
-    if (msgSN % 2)
-    {
-        // 奇数
-        msgSN += 2;
-    }
-    else
-    {
-        msgSN++;
-    }
-    return msgSN;
-}
 
 /**
   * @brief  发送数据，最大25字符
@@ -136,7 +119,7 @@ uint16_t getmsgSN()
   * @writer lishoulei
   *   @modify
   */
-uint8_t Net_send(struct msgStu *pNmsgS)
+uint8_t Net_send_data(struct msgStu *pNmsgS)
 {
     // 填充完成
     if (pNmsgS->usable > 1)
@@ -161,41 +144,26 @@ uint8_t Net_send(struct msgStu *pNmsgS)
     return OK;
 }
 
-void Net_Ans(struct msgStu *pansmsgS)
+/**
+  * @brief  获取msgSN
+  * @retval 返回msgSN
+  * @writer lishoulei
+  * @modify
+  */
+uint16_t get_NetSendSN()
 {
-    uint16_t sn;
-    uint32_t crc = 0;
-#if BIGENDIAN
-    sn = (uint16_t)(((pansmsgS->sn[0] << 8 | pansmsgS->sn[1])) );
-#else
-    sn = (uint16_t)(((pansmsgS->sn[1] << 8 | pansmsgS->sn[0])) );
-#endif
-    //TOTE: 无效判断
-    if (0 == sn)
+
+    if (msgSN % 2)
     {
-        sn = 2;
+        // 奇数
+        msgSN += 2;
     }
-    Net_PutChar(pansmsgS->head);
-    Net_PutChar(0);
-    Net_PutChar((uint8_t)(sn >> 8) & 0xff);
-    Net_PutChar((uint8_t)sn & 0xff);
-    //生成CRC校验码
-
-    CRC_ResetDR();
-
-    CRC_CalcCRC((uint32_t)0);
-    CRC_CalcCRC((uint32_t)((sn >> 8) & 0xff));
-    CRC_CalcCRC((uint32_t)(sn & 0xff));
-    crc = CRC_GetCRC();
-    Net_PutChar((uint8_t)(crc >> 24) & 0xFF);
-    Net_PutChar((uint8_t)(crc >> 16) & 0xFF);
-    Net_PutChar((uint8_t)(crc >> 8) & 0xff);
-    Net_PutChar((uint8_t)(crc & 0xff));
-    Net_PutChar(pansmsgS->endl);
-
+    else
+    {
+        msgSN++;
+    }
+    return msgSN;
 }
-
-
 
 /**
   * @brief  发送数据，最大25字符
@@ -205,13 +173,14 @@ void Net_Ans(struct msgStu *pansmsgS)
   * @writer lishoulei
   *   @modify
   */
-int8_t Net_send_data(uint8_t len, uint8_t data[])
+//TAG: NET 发送数据Net_push_data
+int8_t Net_push_data(uint8_t len, uint8_t data[])
 {
     uint8_t i;
     uint32_t crc = 0;
     uint8_t *psndat;
     struct msgStu *pNmsgS;
-    if (len > NET_BUFFSIZE)
+    if (len > CMD_DATA_LEN)
     {
         return ERROR_DATAFLOW;
     }
@@ -226,7 +195,7 @@ int8_t Net_send_data(uint8_t len, uint8_t data[])
     pNmsgS->head = NET_CMD_HEAD;
     pNmsgS->len = len;
     //获取新的发送Sn
-    getmsgSN();
+    get_NetSendSN();
 
 #if BIGENDIAN
     pNmsgS->sn[0] = (uint8_t)((msgSN >> 8) & 0xff);
@@ -263,7 +232,7 @@ int8_t Net_send_data(uint8_t len, uint8_t data[])
     pNmsgS->usable = 2;//填充完成
 
     //数据发送
-    Net_send(pNmsgS);
+    Net_send_data(pNmsgS);
     return OK;
 
 }
@@ -276,121 +245,129 @@ int8_t Net_send_data(uint8_t len, uint8_t data[])
   * @writer lishoulei
   * @modify
   */
-uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control)
+uint8_t Net_send_device(struct devTable *pdevTbs)
 {
     uint8_t len = 0;
     uint8_t data[CMD_DATA_LEN];
-    data[len++] = CMD;
-    data[len++] = control;
-
-    //control为0全部更新
-    if (control & DEV_STATE)
-    {
-        data[len++] = pdevTbs->devstate;
-
-    }
-    if (control & DEV_PROTOCOL)
-    {
-        data[len++] = pdevTbs->protocol;
-
-    }
-    if (control & DEV_NETID)
-    {
-
+    // 1.指令
+    data[len++] = NET_CMD_DEV_UPDATE;
+    // 2.设备状态
+    data[len++] = pdevTbs->devstate;
+    // 3.接口类型
+    data[len++] = pdevTbs->protocol;
+    // 4.网络号
 #if BIGENDIAN
-        data[len++] = (uint8_t)((pdevTbs->netId >> 8) & 0xff);
-        data[len++] = (uint8_t)((pdevTbs->netId >> 0) & 0xff);
+    data[len++] = (uint8_t)((pdevTbs->netId >> 8) & 0xff);
+    data[len++] = (uint8_t)((pdevTbs->netId >> 0) & 0xff);
 #else
-        data[len++] = (uint8_t)((pdevTbs->netId >> 0) & 0xff);
-        data[len++] = (uint8_t)((pdevTbs->netId >> 8) & 0xff);
+    data[len++] = (uint8_t)((pdevTbs->netId >> 0) & 0xff);
+    data[len++] = (uint8_t)((pdevTbs->netId >> 8) & 0xff);
+#endif
+    // 5.MAC地址
+#if BIGENDIAN
+    data[len++] = pdevTbs->mac[0];
+    data[len++] = pdevTbs->mac[1];
+    data[len++] = pdevTbs->mac[2];
+    data[len++] = pdevTbs->mac[3];
+    data[len++] = pdevTbs->mac[4];
+    data[len++] = pdevTbs->mac[5];
+    data[len++] = pdevTbs->mac[6];
+    data[len++] = pdevTbs->mac[7];
+#else
+    data[len++] = pdevTbs->mac[7];
+    data[len++] = pdevTbs->mac[6];
+    data[len++] = pdevTbs->mac[5];
+    data[len++] = pdevTbs->mac[4];
+    data[len++] = pdevTbs->mac[3];
+    data[len++] = pdevTbs->mac[2];
+    data[len++] = pdevTbs->mac[1];
+    data[len++] = pdevTbs->mac[0];
+#endif
+    // 6.IOn
+    data[len++] = pdevTbs->ion;
+    // 7.IOmode
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].iomode;
+    // 8.当前状态
+#if BIGENDIAN
+    data[len++] = (uint8_t)((pdevTbs->statetables[pdevTbs->ion].curstat >> 8) & 0xff);
+    data[len++] = (uint8_t)((pdevTbs->statetables[pdevTbs->ion].curstat >> 0) & 0xff);
+#else
+    data[len++] = (uint8_t)((pdevTbs->statetables[pdevTbs->ion].curstat >> 0) & 0xff);
+    data[len++] = (uint8_t)((pdevTbs->statetables[pdevTbs->ion].curstat >> 8) & 0xff);
+#endif
+    // 9.设备名称
+#if BIGENDIAN
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[0];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[1];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[2];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[3];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[4];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[5];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[6];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[7];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[8];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[9];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[10];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[11];
+#else
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[11];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[10];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[9];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[8];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[7];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[6];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[5];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[4];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[3];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[2];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[1];
+    data[len++] = pdevTbs->statetables[pdevTbs->ion].name[0];
 #endif
 
-    }
-    if (control & DEV_MAC)
-    {
-#if BIGENDIAN
-        data[len++] = pdevTbs->mac[0];
-        data[len++] = pdevTbs->mac[1];
-        data[len++] = pdevTbs->mac[2];
-        data[len++] = pdevTbs->mac[3];
-        data[len++] = pdevTbs->mac[4];
-        data[len++] = pdevTbs->mac[5];
-        data[len++] = pdevTbs->mac[6];
-        data[len++] = pdevTbs->mac[7];
-#else
-        data[len++] = pdevTbs->mac[7];
-        data[len++] = pdevTbs->mac[6];
-        data[len++] = pdevTbs->mac[5];
-        data[len++] = pdevTbs->mac[4];
-        data[len++] = pdevTbs->mac[3];
-        data[len++] = pdevTbs->mac[2];
-        data[len++] = pdevTbs->mac[1];
-        data[len++] = pdevTbs->mac[0];
-#endif
-
-    }
-    if (control & DEV_ACTST)
-    {
-#if BIGENDIAN
-        data[len++] = (uint8_t)((pdevTbs->ActSt >> 8) & 0xff);
-        data[len++] = (uint8_t)((pdevTbs->ActSt >> 0) & 0xff);
-#else
-        data[len++] = (uint8_t)((pdevTbs->ActSt >> 0) & 0xff);
-        data[len++] = (uint8_t)((pdevTbs->ActSt >> 8) & 0xff);
-#endif
-    }
-    if (control & DEV_CURST)
-    {
-#if BIGENDIAN
-        data[len++] = (uint8_t)((pdevTbs->curSt >> 8) & 0xff);
-        data[len++] = (uint8_t)((pdevTbs->curSt >> 0) & 0xff);
-#else
-        data[len++] = (uint8_t)((pdevTbs->curSt >> 0) & 0xff);
-        data[len++] = (uint8_t)((pdevTbs->curSt >> 8) & 0xff);
-#endif
-    }
-    if (control & DEV_TYPE)
-    {
-#if BIGENDIAN
-
-        data[len++] = (uint8_t)((pdevTbs->tranSt >> 8) & 0xff);
-        data[len++] = (uint8_t)((pdevTbs->tranSt >> 0) & 0xff);
-#else
-        data[len++] = (uint8_t)((pdevTbs->tranSt >> 0) & 0xff);
-        data[len++] = (uint8_t)((pdevTbs->tranSt >> 8) & 0xff);
-#endif
-    }
-
-
-    if (control & DEV_NAME)
-    {
-#if BIGENDIAN
-        data[len++] = pdevTbs->name[0];
-        data[len++] = pdevTbs->name[1];
-        data[len++] = pdevTbs->name[2];
-        data[len++] = pdevTbs->name[3];
-        data[len++] = pdevTbs->name[4];
-        data[len++] = pdevTbs->name[5];
-        data[len++] = pdevTbs->name[6];
-        data[len++] = pdevTbs->name[7];
-        data[len++] = pdevTbs->name[8];
-        data[len++] = pdevTbs->name[9];
-#else
-        data[len++] = pdevTbs->name[9];
-        data[len++] = pdevTbs->name[8];
-        data[len++] = pdevTbs->name[7];
-        data[len++] = pdevTbs->name[6];
-        data[len++] = pdevTbs->name[5];
-        data[len++] = pdevTbs->name[4];
-        data[len++] = pdevTbs->name[3];
-        data[len++] = pdevTbs->name[2];
-        data[len++] = pdevTbs->name[1];
-        data[len++] = pdevTbs->name[0];
-#endif
-    }
-
-    Net_send_data(len, data);
+    Net_push_data(len, data);
     return OK;
+}
+
+
+void Net_Ans(struct msgStu *pansmsgS)
+{
+    uint16_t sn;
+    uint32_t crc = 0;
+#if BIGENDIAN
+    sn = (uint16_t)(((pansmsgS->sn[0] << 8 | pansmsgS->sn[1])) );
+#else
+    sn = (uint16_t)(((pansmsgS->sn[1] << 8 | pansmsgS->sn[0])) );
+#endif
+    //TOTE: 无效判断
+    if (0 == sn)
+    {
+        sn = 2;
+    }
+    Net_PutChar(pansmsgS->head);
+    Net_PutChar(0);
+    Net_PutChar((uint8_t)(sn >> 8) & 0xff);
+    Net_PutChar((uint8_t)sn & 0xff);
+    //生成CRC校验码
+
+    CRC_ResetDR();
+
+    CRC_CalcCRC((uint32_t)0);
+    CRC_CalcCRC((uint32_t)((sn >> 8) & 0xff));
+    CRC_CalcCRC((uint32_t)(sn & 0xff));
+    crc = CRC_GetCRC();
+#if BIGENDIAN
+    pansmsgS->crc[0] = (uint8_t)((crc >> 24) & 0xff);
+    pansmsgS->crc[1] = (uint8_t)((crc >> 16) & 0xff);
+    pansmsgS->crc[2] = (uint8_t)((crc >> 8) & 0xff);
+    pansmsgS->crc[3] = (uint8_t)((crc >> 0) & 0xff);
+#else
+    pansmsgS->crc[3] = (uint8_t)((crc >> 24) & 0xff);
+    pansmsgS->crc[2] = (uint8_t)((crc >> 16) & 0xff);
+    pansmsgS->crc[1] = (uint8_t)((crc >> 8) & 0xff);
+    pansmsgS->crc[0] = (uint8_t)((crc >> 0) & 0xff);
+#endif
+    Net_PutChar(pansmsgS->endl);
+
 }
 
 
@@ -401,7 +378,7 @@ uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control)
   * @writer liuzhishan
   *   @modify
   */
-struct msgStu *getACmdS()
+struct msgStu *get_NetRecvDataCMDS()
 {
     uint32_t i = 0;
     while (i < RECV_CMDS_NUM)
@@ -484,7 +461,8 @@ void NET_fetchParseInstruction()
     // SendCMD(NET_write);
     // SendCMD(NET_read);
     //包头检测 若接收到的数据长度小于最小心跳包长度 则不再检测包头
-    DEBUG(USARTn, "\r\n net parseRcvBufToLst2 \r\n");
+    // DEBUG: NET_fetchParseInstruction
+    // DEBUG(USARTn, "\r\n net parseRcvBufToLst2 \r\n");
     while ((NET_write + NET_BUFFSIZE - NET_read) % NET_BUFFSIZE > 2)
     {
 
@@ -508,7 +486,7 @@ void NET_fetchParseInstruction()
                 uint8_t *psndat;
                 uint32_t crc;
                 //获取可用指令表
-                pNmsgR = getACmdS();
+                pNmsgR = get_NetRecvDataCMDS();
                 if (pNmsgR == NULL)
                 {
                     return;
@@ -607,172 +585,126 @@ void Ans_parse(struct msgStu *pNmsgR)
 
 
 //NOTE: NET_parseData指令包解析
-void NET_parseData(struct msgStu *pNmsgR)
+uint8_t NET_parseData(struct msgStu *pNmsgR)
 {
     uint8_t i = 0;
-    uint8_t index;
-    uint8_t *mac;
-//    uint8_t mac_tmp[8];
-    uint16_t netId;
+    uint8_t instr;
+    uint8_t *pmac;
+    uint8_t *pion;
+    uint8_t *piomode;
+    uint8_t *pname;
     struct devTable *pdevTbs = NULL;
     //uint8_t ctr;
     // uint8_t *msgStu = (uint8_t *) & (pNmsgR->data[0]);
-    switch (pNmsgR->data[0])
+    //释放当前指令
+    pNmsgR->usable = 0;
+    // 获取指令类型
+    instr = pNmsgR->data[0];
+    switch (instr)
     {
-    case 0x10://设备查询
-        //检测 控制字
-        if (pNmsgR->data[1])
+    //查询所有设备
+    case NET_CMD_REQ_ALL_DEV:
+
+        for (i = 0; i < MAX_DEVTABLE_NUM; i++)
         {
-            index = 2;
-            if (pNmsgR->data[1] & 0x01)
+            if (devTbs[i].devstate)
             {
-                index++;
+                Net_send_device(&devTbs[i]);
             }
-            if (pNmsgR->data[1] & 0x02)
+        }
+
+        zigbee_updateAllDevice();
+
+        break;
+
+    // 查询单个设备信息
+    case NET_CMD_REQ_ONE_DEV:
+        // (02 [MAC] [Ion])
+        //通过MAC获取设备 大端存储
+
+        //查找MAC所在的字节
+        pmac = &pNmsgR->data[1];
+        pion = &pNmsgR->data[9];
+
+        pdevTbs = getDevTbsByMac(pmac);
+
+        if (pdevTbs != NULL)
+        {
+            pdevTbs->ion = *pion;
+            Net_send_device(pdevTbs);
+            // 发送Zigbee查询
+            zigbee_remote_req_net_io(pdevTbs->netId, pdevTbs->ion , 0);
+        }
+        else
+        {
+            //TODO: 设备不存在，添加设备移除操作
+        }
+        break;
+    // 设置设备名称
+    case NET_CMD_SET_DEV_NAME:
+        // ([04] [MAC] [Ion] [name])
+        pmac = &pNmsgR->data[1];
+        pion = &pNmsgR->data[9];
+        pname = &pNmsgR->data[10];
+
+        pdevTbs = getDevTbsByMac(pmac);
+
+        if (pdevTbs != NULL)
+        {
+            pdevTbs->ion = *pion;
+						for(i=0;i<DEV_NAME_SIZE;i++)
+						pdevTbs->statetables[pdevTbs->ion].name[i] = *pname;
+        }
+        else
+        {
+            //TODO: 设备不存在，添加设备移除操作
+        }
+        break;
+
+    // 控制设备开关
+    case NET_CMD_SET_ON_OFF:
+        // ([08] [MAC] [Ion] [iomode])
+        pmac = &pNmsgR->data[1];
+        pion = &pNmsgR->data[9];
+        //poperate = &pNmsgR->data[10];
+        piomode = &pNmsgR->data[10];
+
+        pdevTbs = getDevTbsByMac(pmac);
+
+        if (pdevTbs != NULL)
+        {
+            pdevTbs->ion = *pion;
+            pdevTbs->statetables[pdevTbs->ion].iomode = *piomode;
+            //TODO: 1.状态操作允许 设置函数，主要功能是是设置允许操作标志
+                //  2. 判断Iomode 设置是否有效
+             Device_operateSetting(pdevTbs);
+            if ( pdevTbs->operate)
             {
-                index++;
+                zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, 1);
+            }
+            else
+            {
+
+                //操作失败
+                return ERR_OPERATE;
             }
 
-            if (pNmsgR->data[1] & 0x04)
-            {
-                //通过网络号获取设备netId
-                netId = (uint16_t)((pNmsgR->data[index] << 8) | pNmsgR->data[index + 1]);
-                //查找netId所在的字节
-                pdevTbs = getDevTbsByNetId(netId);
-                if (pdevTbs != NULL)
-                {
-                    Net_send_device(pdevTbs, DEVTAB_UPDATE, pNmsgR->data[1]);
-                }
-                index += 2;
-            }
-            if (pNmsgR->data[1] & 0x08)
-            {
-                //通过MAC获取设备
-
-                //查找MAC所在的字节
-                mac = &pNmsgR->data[index];
-
-                pdevTbs = getDevTbsByMac(mac);
-                if (pdevTbs != NULL)
-                {
-                    Net_send_device(pdevTbs, DEVTAB_UPDATE, pNmsgR->data[1]);
-                }
-                index += 8;
-            }
 
         }
         else
         {
-            i = 0;
-            //更新全部设备表
-            while (i < MAX_DEVTABLE_NUM)
-            {
-                if (devTbs[i].devstate)
-                {
-                    Net_send_device(&devTbs[i], DEVTAB_UPDATE, 0xFF);
-                }
-                i++;
-            }
-
-            zigbee_updateAllDevice();
-
+            //TODO: 设备不存在，添加设备移除操作
         }
-
         break;
-
-    case 0x11://设备更新
-
-
-        index = 2;
-        //设备结构体头
-        if (pNmsgR->data[1] & 0x01)
-        {
-            index++;
-        }
-        if (pNmsgR->data[1] & 0x02)
-        {
-            index++;
-        }
-
-        if (pNmsgR->data[1] & 0x04)
-        {
-            //通过网络号获取设备netId
-            #if BIGENDIAN
-            netId = (uint16_t)((pNmsgR->data[index] << 8) | pNmsgR->data[index + 1]);
-            #else
-            netId = (uint16_t)( pNmsgR->data[index] | (pNmsgR->data[index+1] << 8) );
-            #endif
-            //查找netId所在的字节
-            pdevTbs = getDevTbsByNetId(netId);
-
-            index += 2;
-        }
-        if (pNmsgR->data[1] & 0x08)
-        {
-            //只能通过MAC获取设备其他都是不可靠的
-
-            //查找MAC所在的字节
-            mac = &pNmsgR->data[index];
-
-            pdevTbs = getDevTbsByMac(mac);
-
-            index += 8;
-        }
-        //状态设置
-        if (pNmsgR->data[1] & 0x10)
-        {
-            if (pdevTbs != NULL)
-            {
-                //设置对应的状态
-                #if BIGENDIAN
-                pdevTbs->ActSt = (uint16_t) ((pNmsgR->data[index] << 8 | (pNmsgR->data[index + 1]&0x1F)));
-                #else
-                pdevTbs->ActSt = (uint16_t) ((pNmsgR->data[index + 1] << 8 | (pNmsgR->data[index]&0x1F)));
-                #endif
-                //下发Zigbee设置指令 立即执行
-                zigbee_operate(pdevTbs,1);
-
-            }
-
-            index += 2;
-        }
-        //当前状态
-        if (pNmsgR->data[1] & 0x20)
-        {
-
-            index += 2;
-        }
-        //暂态
-        if (pNmsgR->data[1] & 0x40)
-        {
-
-
-            index += 2;
-        }
-        //设备名称
-        if (pNmsgR->data[1] & 0x80)
-        {
-
-            if (pdevTbs != NULL)
-            {
-
-                //设置对应的状态
-                for (i = 0; i < 10; i++)
-                {
-                    pdevTbs->name[i] = pNmsgR->data[index++];
-                }
-
-            }
-
-
-        }
-
+    // 策略操作
+    case NET_CMD_PROCY_UPDATE:
         break;
     }
-    //
-    pNmsgR->usable = 0;
 
+
+	return OK;
 }
+
 
 // 解析指令cmdS[MAX_CMDS]
 /**
