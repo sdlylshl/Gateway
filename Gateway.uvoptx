@@ -163,7 +163,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGUARM</Key>
-          <Name></Name>
+          <Name>/</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -189,29 +189,13 @@
       <Breakpoint>
         <Bp>
           <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>390</LineNumber>
-          <EnabledFlag>0</EnabledFlag>
-          <Address>134224042</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\user\Zigbee\zigbee.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
           <Type>2</Type>
           <LineNumber>0</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>536881888</Address>
+          <Address>536881328</Address>
           <ByteObject>1</ByteObject>
           <HtxType>0</HtxType>
-          <ManyObjects>2</ManyObjects>
+          <ManyObjects>1</ManyObjects>
           <SizeOfObject>2</SizeOfObject>
           <BreakByAccess>2</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
@@ -294,7 +278,7 @@
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>pZmsgS</ItemText>
+          <ItemText>pnetId</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -311,12 +295,12 @@
         <Ww>
           <count>2</count>
           <WinNumber>2</WinNumber>
-          <ItemText>Zigbee_send_add</ItemText>
+          <ItemText>Zigbee_send_add,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>2</WinNumber>
-          <ItemText>Zigbee_send_rm</ItemText>
+          <ItemText>Zigbee_send_rm,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>4</count>

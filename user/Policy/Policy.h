@@ -10,7 +10,7 @@ struct deviceInfo
 {
 
     uint8_t deviceId[8];  //设备ID 可选 网络号|MAC
-    uint16_t deviceTrigger;
+    uint16_t deviceSta;
 
 };
 

@@ -97,36 +97,7 @@ int main(void)
         //
         //定时查询状态设备状态
 
-        if (timer_Zigbee_getStatus > 500)
-        {
-
-            for (i = 0; i < MAX_DEVTABLE_NUM; i++)
-            {
-                if (devTbs[i].devstate)
-                {
-                    //判断要查询的IO
-                    if (devTbs[i].ActSt & 0x1F)
-                    {
-                        uint8_t j;
-                        for (j = 0; j < 5; j++)
-                        {
-                            if ((devTbs[i].ActSt >> j) & 0x01)
-                            {
-                                zigbee_remote_req_net_io(devTbs[i].netId, j,0 );
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //执行默认IO查询
-                        zigbee_remote_req_net_io(devTbs[i].netId, IO_D2,0 );
-
-                    }
-                }
-
-            }
-            timer_Zigbee_getStatus = 0;
-        }
+      Zigebee_getSta_timer( 500);
         //定时获取设备信息
         if (timer_Device_update > 50)
         {

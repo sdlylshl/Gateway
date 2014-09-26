@@ -2,10 +2,11 @@
 #include "stm32f10x.h"
 #include "Zigbee.h"
 #include <stdio.h>
-
 #include "config.h"
 
-
+//#define BIGENDIAN 1
+#define DEFAULT_IO 2
+//#define OLDPROTOCAL 1
 #define Zigbee_DBG USARTx_printf
 #define Zigbee_DBG_USARTx USART3
 
@@ -116,6 +117,45 @@ struct Zigbee_msgStu *get_ZigbeeSendBuf(void)
     Zigbee_send_add_forward();
     return (&Zigbee_SendBuff[Zigbee_send_add]);
 }
+
+// 定时查询IO状态
+//IO0 电池电量检测
+//IO1 默认模拟IO采集
+//IO2 开关控制1 / 开关IO采集
+//IO3 默认开关控制2 / 开关IO采集
+//IO4 指示灯
+
+void Zigebee_getSta_timer(uint32_t timeout){
+        if (timer_Zigbee_getStatus > timeout)
+        {
+						uint8_t i;
+            uint8_t ionum = 0;
+
+            for (i = 0; i < MAX_DEVTABLE_NUM; i++)
+            {
+                if (devTbs[i].devstate)
+                {
+                    //判断要查询的IO
+                    switch(devTbs[i].netId&0x8000)
+                    {
+                        case 0x0000:
+                        ionum  = 0x03;
+                        break;
+                        case 0x8000:
+                        ionum = 0x01;
+                        break;
+
+                    }
+
+                    zigbee_remote_req_net_io(devTbs[i].netId, ionum, 0);
+                }
+
+            }
+
+            timer_Zigbee_getStatus = 0;
+        }
+}
+
 /**
   * @brief  设备执行    循环检测标志位
                 若状态标志为1 1.发送NET当前状态 2.发送 Zigbee查询指令  3. 将网路查询标志位清零
@@ -128,7 +168,8 @@ struct Zigbee_msgStu *get_ZigbeeSendBuf(void)
   */
 void zigbee_operate(struct devTable *pdevTbs, uint8_t immediate)
 {
-    uint8_t i;
+    // 每次只能更新一位，只根据IO值判断要更新的位置
+    //uint8_t i;
     uint8_t ionum = 0;
     uint8_t IOmod;
     if (pdevTbs == NULL)
@@ -139,8 +180,9 @@ void zigbee_operate(struct devTable *pdevTbs, uint8_t immediate)
     //判断当前设备是否可用
     if (pdevTbs->devstate)
     {
+
         ionum = (uint8_t)((pdevTbs->ActSt & 0x00E0) >> DEV_IO_NUM);
-        //状态查询检测
+        //1.状态查询检测
         if (pdevTbs->ActSt & 0xC000)
         {
             //00 x x
@@ -169,66 +211,68 @@ void zigbee_operate(struct devTable *pdevTbs, uint8_t immediate)
             }
 
             //NOTE: 发送当前状态给APP 能查询，说明客户端已经获取到了
-            Net_send_device(pdevTbs, 11, DEV_MAC | DEV_CURST);
+            Net_send_device(pdevTbs, 11, 0xFF);
             //发送完成清状态标志
             pdevTbs->ActSt = pdevTbs->ActSt & 0x3FFF;
         }//end (pdevTbs->ActSt & 0x8000)
 
-        //控制执行
+        //2.控制执行
         //增加传感器检测 网络ID最高位为1
         //IO0 电池电量检测
         //IO1 默认模拟IO采集
         //IO2 默认开关IO采集 /开关控制1
-        //IO3 默认开关控制2 / 开关IO采集
+        //IO3 默认开关控制2  /开关IO采集
         //IO4 指示灯
 
         if (pdevTbs->netId & 0x8000)
         {
-                //传感器 仅能控制指示灯开关 IO4
+            //传感器 仅能控制指示灯开关 IO4
 
-             if (((pdevTbs->ActSt & (0x0100<<4)) >> 0x08) ^ (pdevTbs->ActSt & (0x0001<<4)) )
-                    {
+            if (((pdevTbs->ActSt & (0x0100 << IO_D4)) >> 0x08) ^ (pdevTbs->ActSt & (0x0001 << IO_D4)) )
+            {
 
-                        if (pdevTbs->ActSt & (0x0100 << 4))
-                        {
-                            IOmod = IO_MODE_GPIO_OUTPUT_1;
-                        }
-                        else
-                        {
-                            IOmod = IO_MODE_GPIO_OUTPUT_0;
-                        }
+                if (pdevTbs->ActSt & (0x0100 << IO_D4))
+                {
+                    IOmod = IO_MODE_GPIO_OUTPUT_1;
+                }
+                else
+                {
+                    IOmod = IO_MODE_GPIO_OUTPUT_0;
+                }
 
-                        // 立即执行
-                        zigbee_remote_set_net_io(pdevTbs->netId, 4, IOmod, 0, immediate);
-                        // 更新状态 忽略掉IO0
-                        pdevTbs->curSt = ((pdevTbs->ActSt & (0x0100 << 4)) >> 4) & 0x0100;
-                        // 更新 对应IO及状态
-                        pdevTbs->ActSt = (pdevTbs->ActSt & 0xFF1F) | (4 << DEV_IO_NUM);
+                // 立即执行
+                zigbee_remote_set_net_io(pdevTbs->netId, IO_D4, IOmod, 0, immediate);
+                // 更新状态 忽略掉IO0
+                pdevTbs->curSt = ((pdevTbs->ActSt & (0x0100 << IO_D4)) >> IO_D4) & 0x0100;
+                // 更新 对应IO及状态
+                pdevTbs->ActSt = (pdevTbs->ActSt & 0xFF1F) | (IO_D4 << DEV_IO_NUM);
 
-                        if ((pdevTbs->ActSt & (0x0100 << 4)))
-                        {
-                            pdevTbs->ActSt = pdevTbs->ActSt | (0x0001 << 4);
-                        }
-                        else
-                        {
-                            pdevTbs->ActSt = pdevTbs->ActSt & (~(0x0001 << 4));
-                        }
-                    }
+                if ((pdevTbs->ActSt & (0x0100 << IO_D4)))
+                {
+                    pdevTbs->ActSt = pdevTbs->ActSt | (0x0001 << IO_D4);
+                }
+                else
+                {
+                    pdevTbs->ActSt = pdevTbs->ActSt & (~(0x0001 << IO_D4));
+                }
+            }
+
 
         }
         else
         {
             //执行器
+
             //除了作为电量采集的IO0 其他IO都可控制
             // 设置位和当前状态是否一致？忽略掉做为电压采集的IO0
-            if (((pdevTbs->ActSt & 0x1E00) >> 0x08) ^ (pdevTbs->ActSt & 0x001E) )
+            #if BIGENDIAN
+            if (ionum &&(((pdevTbs->ActSt & 0x0100)  ) ^ (pdevTbs->curSt & 0x0100) ))
+            #else
+            if (ionum &&(((pdevTbs->ActSt & 0x0100) >> 0x08) ^ (pdevTbs->curSt & 0x0001) ))
+            #endif
             {
-                for ( i = 1; i < DEV_IO_NUM; i++)
-                {
-                    if (((pdevTbs->ActSt & (0x0100<<i)) >> 0x08) ^ (pdevTbs->ActSt & (0x0001<<i)) )
-                    {
 
-                        if (pdevTbs->ActSt & (0x0100 << i))
+                        if (pdevTbs->ActSt & (0x0100 ))
                         {
                             IOmod = IO_MODE_GPIO_OUTPUT_1;
                         }
@@ -238,27 +282,31 @@ void zigbee_operate(struct devTable *pdevTbs, uint8_t immediate)
                         }
 
                         // 立即执行
-                        zigbee_remote_set_net_io(pdevTbs->netId, i, IOmod, 0, immediate);
-                        // 更新状态 忽略掉IO0
-                        pdevTbs->curSt = ((pdevTbs->ActSt & (0x0100 << i)) >> i) & 0x0100;
+                        zigbee_remote_set_net_io(pdevTbs->netId, ionum, IOmod, 0, immediate);
+                        // 更新curSt状态
+                        #if BIGENDIAN
+                        pdevTbs->curSt = ((pdevTbs->ActSt & (0x0100 )) ) & 0x0100;
+                        #else
+                        pdevTbs->curSt = ((pdevTbs->ActSt & (0x0100 )) >> (8)) & 0x0001;
+                        #endif
                         // 更新 对应IO及状态
-                        pdevTbs->ActSt = (pdevTbs->ActSt & 0xFF1F) | (i << DEV_IO_NUM);
+                        //pdevTbs->ActSt = (pdevTbs->ActSt & 0xFF1F) | (ionum << DEV_IO_NUM);
 
-                        if ((pdevTbs->ActSt & (0x0100 << i)))
+                        if ((pdevTbs->ActSt & (0x0100 )))
                         {
-                            pdevTbs->ActSt = pdevTbs->ActSt | (0x0001 << i);
+                            pdevTbs->ActSt = pdevTbs->ActSt | (0x0001 << ionum);
                         }
                         else
                         {
-                            pdevTbs->ActSt = pdevTbs->ActSt & (~(0x0001 << i));
+                            pdevTbs->ActSt = pdevTbs->ActSt & (~(0x0001 << ionum));
                         }
                     }
-                }
+
             }
 
-        }
-    }//end devstate
-}
+        }//end pdevTbs->devstate
+    }
+
 
 
 void zigbee_operate_ALL(void)
@@ -489,9 +537,24 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgS)
             // 2.IO检测
             // 3.状态是否改变
             // 4.如果改变 更新到服务器
-            //更新curSt
+            // 更新curSt
+#if BIGENDIAN
+            // 大端存储
             pdevTbs->curSt = (uint16_t)(pZmsgS->data[4] << 8) | pZmsgS->data[5];
+#else
+            // 小端存储
+            pdevTbs->curSt = (uint16_t)(pZmsgS->data[5] << 8) | pZmsgS->data[4];
+#endif
             //更新 zigbee IOn
+            pdevTbs->ActSt = (pdevTbs->ActSt & 0xFF1F) | (pZmsgS->data[2]<<DEV_IO_NUM);
+            // 通过IO模式 更新对应状态位
+            if (pZmsgS->data[3] == IO_MODE_GPIO_OUTPUT_1)
+            {
+               pdevTbs->ActSt = pdevTbs->ActSt |  (1 << pZmsgS->data[2]);
+            }else if (pZmsgS->data[3] == IO_MODE_GPIO_OUTPUT_0)
+            {
+               pdevTbs->ActSt = pdevTbs->ActSt &  (~(1 << pZmsgS->data[2]));
+            }
 
             // pdevTbs->ActSt = (pdevTbs->ActSt & 0xFFE0) |   (1 << pZmsgS->data[2]);
             //更新标志 通过NET发送到服务器
@@ -591,9 +654,10 @@ uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[], uint8_t immediate)
 
     uint8_t i;
     struct Zigbee_msgStu *pZmsgSbuf;
-
+#if DEBUG
     Net_PutChar(0xFF);
     Net_PutChar(timer_Zigbee_sendBuff);
+#endif
     pZmsgSbuf = &Zigbee_SendBuff[Zigbee_send_add];
     Zigbee_send_add_forward();
 
@@ -619,11 +683,12 @@ uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[], uint8_t immediate)
     //立即发送
     if (immediate)
     {
-        pZmsgSbuf->usable = 3;
         //NOTE: 立即发送 清定时器时钟 最少延迟20ms 让下条指令延时发送
         while (timer_Zigbee_sendBuff < 9);
         timer_Zigbee_sendBuff = 0;
         Zigbee_send(pZmsgSbuf);
+
+        pZmsgSbuf->usable = 3;
     }
 
     return OK;

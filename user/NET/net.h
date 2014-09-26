@@ -14,7 +14,7 @@
 #define CMD_DATA_LEN (CMD_LEN-10)
 
 // 接收缓冲区大小
-#define NET_BUFFSIZE 512
+#define NET_BUFFSIZE 1512
 
 #define NET_CMD_HEAD 0xE0
 #define NET_CMD_END 0x18

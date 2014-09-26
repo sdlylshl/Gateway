@@ -202,7 +202,7 @@ extern void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn,uint8_t immedia
   * @retval None
   */
 extern uint8_t zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOmode, uint8_t IOvalue,uint8_t immediate);
-
+extern void Zigebee_getSta_timer(uint32_t timeout);
 extern void zigbee_operate_ALL(void);
 extern void zigbee_updateAllDevice(void);
 extern void zigbee_updateMacByNetId(uint16_t netid);

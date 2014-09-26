@@ -6,6 +6,8 @@
 #include "config.h"
 
 #define BIGENDIAN 1
+//采用老通信协议V8版本
+//#define OLDPROTOCAL 1
 
 //接收缓冲器 512
 uint8_t NET_buf[NET_BUFFSIZE];
@@ -27,7 +29,7 @@ struct msgStu netRecvDataCMDS[RECV_CMDS_NUM];
 //发送数据包随机号 ：指令包为奇数 应答包为用偶数，  0 表示心跳
 uint16_t  msgSN = 1;
 
-extern void zigbee_operate(struct devTable *pdevTbs);
+extern void zigbee_operate(struct devTable *pdevTbs, uint8_t immediate);
 
 void Net_PutChar(uint8_t ch)
 {
@@ -294,6 +296,7 @@ uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control)
     }
     if (control & DEV_NETID)
     {
+
 #if BIGENDIAN
         data[len++] = (uint8_t)((pdevTbs->netId >> 8) & 0xff);
         data[len++] = (uint8_t)((pdevTbs->netId >> 0) & 0xff);
@@ -722,12 +725,12 @@ void NET_parseData(struct msgStu *pNmsgR)
             {
                 //设置对应的状态
                 #if BIGENDIAN
-                pdevTbs->ActSt = (uint16_t) ((pNmsgR->data[index] << 8 | pNmsgR->data[index + 1]));
+                pdevTbs->ActSt = (uint16_t) ((pNmsgR->data[index] << 8 | (pNmsgR->data[index + 1]&0x1F)));
                 #else
-                pdevTbs->ActSt = (uint16_t) ((pNmsgR->data[index + 1] << 8 | pNmsgR->data[index]));
+                pdevTbs->ActSt = (uint16_t) ((pNmsgR->data[index + 1] << 8 | (pNmsgR->data[index]&0x1F)));
                 #endif
-                //下发Zigbee设置指令
-                zigbee_operate(pdevTbs);
+                //下发Zigbee设置指令 立即执行
+                zigbee_operate(pdevTbs,1);
 
             }
 
