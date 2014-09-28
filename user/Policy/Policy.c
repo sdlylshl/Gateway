@@ -1,16 +1,11 @@
 
 #include "config.h"
-
 //最大全局策略表大小
 struct strgytable strategy_tables[MAX_DESTABLE_NUM];
 //开关策略
 struct strgy_swtable strategy_swtables[MAX_DESTABLE_NUM];
-
-
-extern void zigbee_operate(struct devTable *pdevTbs,uint8_t priority, uint8_t force, uint8_t immediate);
+extern void zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force, uint8_t immediate);
 extern void Zigebee_setIOBynetId(struct devTable *pdevTbs);
-
-
 /**********************************policy**************************************/
 /**
   * @brief  从策略表中获取可填充策略位置
@@ -34,10 +29,8 @@ struct strgytable *getNewStrategy(void)
 }
 struct strgytable *getHighPriorityStrategy(void)
 {
-
     return NULL;
 }
-
 void strategy_RedefinePriority(void)
 {
     uint8_t i;
@@ -53,12 +46,11 @@ void strategy_RedefinePriority(void)
     }
 }
 // 开关策略执行
-
 // 普通策略执行
 void  strategy_implementation(void)
 {
     uint8_t i = 0;
-    struct devTable *pdevTbs=NULL;
+    struct devTable *pdevTbs = NULL;
     //DEBUG(USARTn, "\r\n strategy_implementation \r\n");
     for (i = 0; i < MAX_DESTABLE_NUM; i++)
     {
@@ -80,11 +72,8 @@ void  strategy_implementation(void)
                     //TODO ERROR
                     break;
                 }
-
-
                 //触发类型type 两位表示一个设备 共表示4个设备 每次移2位
                 type = (strategy_tables[i].type >> (j << 1)) & 0x03;
-
                 // 翻转触发  0b00
                 if (0 == type)
                 {
@@ -121,7 +110,6 @@ void  strategy_implementation(void)
                         break;
                     }
                 }
-
             }
             // 执行器解析
             if (flagTrue == 1)
@@ -141,47 +129,36 @@ void  strategy_implementation(void)
                                 Device_operateFlag(pdevTbs);
                                 Zigebee_setIOBynetId(pdevTbs);
                                 pdevTbs->statetables[pdevTbs->ion].iomode = (uint8_t)strategy_tables[i].actuators[j].actuatorIO;
-
                                 //zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
                                 pdevTbs->priority = strategy_tables[i].priority;
                             }
                         }
-
                     }
-
                 }
-
             }//end act
-
-
         }
     }// end for
-    zigbee_operate_ALL();
+    // 立即执行
+    zigbee_operate_default(0);
     // 重新应用优先级
     strategy_RedefinePriority();
 }
-
 void strategy_init(void)
 {
-		strategy_tables[0].priority = 1;
-        strategy_tables[0].num =0x11;
-        strategy_tables[0].type =0x01;
-        strategy_tables[0].usable =0x01;
-        strategy_tables[0].sensors[0].sensorId =0x8102;
-        strategy_tables[0].sensors[0].sensorState =0x1;
-
-        strategy_tables[0].actuators[0].actuatorId =0x0102;
-        strategy_tables[0].actuators[0].actuatorIO =IO_MODE_GPIO_OUTPUT_1;
-
-        strategy_tables[1].priority = 2;
-        strategy_tables[1].num =0x11;
-        strategy_tables[1].type =0x01;
-        strategy_tables[1].usable =0x01;
-        strategy_tables[1].sensors[0].sensorId =0x8102;
-        strategy_tables[1].sensors[0].sensorState =0x0;
-
-        strategy_tables[1].actuators[0].actuatorId =0x0102;
-        strategy_tables[1].actuators[0].actuatorIO =IO_MODE_GPIO_OUTPUT_0;
-
-
+    strategy_tables[0].priority = 1;
+    strategy_tables[0].num = 0x11;
+    strategy_tables[0].type = 0x01;
+    strategy_tables[0].usable = 0x01;
+    strategy_tables[0].sensors[0].sensorId = 0x8102;
+    strategy_tables[0].sensors[0].sensorState = 0x1;
+    strategy_tables[0].actuators[0].actuatorId = 0x0102;
+    strategy_tables[0].actuators[0].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
+    strategy_tables[1].priority = 2;
+    strategy_tables[1].num = 0x11;
+    strategy_tables[1].type = 0x01;
+    strategy_tables[1].usable = 0x01;
+    strategy_tables[1].sensors[0].sensorId = 0x8102;
+    strategy_tables[1].sensors[0].sensorState = 0x0;
+    strategy_tables[1].actuators[0].actuatorId = 0x0102;
+    strategy_tables[1].actuators[0].actuatorIO = IO_MODE_GPIO_OUTPUT_0;
 }

@@ -1,12 +1,8 @@
 
-
 #include "config.h"
-
 #define BIGENDIAN 1
-
 //全局设备表
 struct devTable  devTbs[MAX_DEVTABLE_NUM];
-
 /**
   * @brief  获取空设备
   * @param  None
@@ -14,7 +10,6 @@ struct devTable  devTbs[MAX_DEVTABLE_NUM];
     * @writer
     *   @modify
   */
-
 struct devTable *getNewDevTbs(void)
 {
     uint8_t i;
@@ -27,7 +22,6 @@ struct devTable *getNewDevTbs(void)
     }
     return NULL;
 }
-
 /**
   * @brief  通过MAC地址表获取设备表
   * @param  None
@@ -35,24 +29,19 @@ struct devTable *getNewDevTbs(void)
     * @writer
     *   @modify
   */
-
 struct devTable *getDevTbsByMac(uint8_t *mac)
 {
     uint8_t i = 0;
     uint8_t j = 0;
     uint8_t flag = 0;
-
     while (i < MAX_DEVTABLE_NUM)
     {
-
         flag = 1;
-
         for (j = 0; j < 8; j++)
         {
             if (devTbs[i].mac[j] != mac[j])
                 flag = 0;
         }
-
         if ( flag)
         {
             return &devTbs[i];
@@ -73,11 +62,11 @@ struct devTable *getDevTbsByNetId(uint16_t id)
     uint8_t i = 0;
     while (i < MAX_DEVTABLE_NUM)
     {
-        #if BIGENDIAN
+#if BIGENDIAN
         if (devTbs[i].netId == id)
-        #else
+#else
         if (Tranverse16(devTbs[i].netId) == id)
-        #endif
+#endif
         {
             return &devTbs[i];
         }
@@ -85,7 +74,6 @@ struct devTable *getDevTbsByNetId(uint16_t id)
     }
     return NULL;
 }
-
 // 通过网络号设置操作位 --仅对设置有效
 void Device_operateFlag(struct devTable *pdevTbs)
 {
@@ -102,14 +90,11 @@ void Device_operateFlag(struct devTable *pdevTbs)
             //IO2 默认开关IO采集 /开关控制1
             //IO3 默认开关控制2  /开关IO采集
             //IO4 指示灯
-
             // 灯
             case DEV_ACT_LIGHT   :
-
             // break;
             // 插座
             case DEV_ACT_JACK    :
-
             // break;
             // 窗帘执行器
             case DEV_ACT_CURTAIN :
@@ -118,23 +103,21 @@ void Device_operateFlag(struct devTable *pdevTbs)
                     if (pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_0 || pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_1 )
                     {
                         pdevTbs->operate = 1;
-                    }else{
-										pdevTbs->operate = 0;
-										}
-
+                    }
+                    else
+                    {
+                        pdevTbs->operate = 0;
+                    }
                 }
                 break;
             //
             case DEV_SENSOR_SW   :
-
             // break;
             //
             case DEV_SENSOR_IR   :
-
             // break;
             //
             case DEV_SENSOR_SMOKE:
-
             // break;
             //
             case DEV_SENSOR_GAS  :
@@ -143,49 +126,36 @@ void Device_operateFlag(struct devTable *pdevTbs)
                     if (pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_0 || pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_1 )
                     {
                         pdevTbs->operate = 1;
-                    }else{
-										pdevTbs->operate = 0;
-										}
-
+                    }
+                    else
+                    {
+                        pdevTbs->operate = 0;
+                    }
                 }
                 break;
             }
         }
     }
 }
-
-
 void print_DEVS()
 {
     uint8_t i = 0;
     uint8_t j = 0;
     //uint8_t *pcmd;
-
     while (i < MAX_DEVTABLE_NUM)
     {
-
         if (devTbs[i].devstate )
         {
-
             //pcmd = (uint8_t *)&devTbs[i];
-
             j++;
-
         }
         i++;
     }
-
     SendCMD(j);
     SendCMD(0x5B);
-
-
 }
-
-
 void devInit(void)
 {
-
-
     devTbs[0].mac[7] = 0x00;
     devTbs[0].netId = 0x3600;
     devTbs[0].protocol = 3;
@@ -203,45 +173,36 @@ void devInit(void)
     devTbs[1].netId = 360;
     devTbs[1].protocol = 1;
     devTbs[1].devstate = 1;
-
     devTbs[2].mac[7] = 0x02;
     devTbs[2].netId = 0x3602;
     devTbs[2].protocol = 4;
     devTbs[2].devstate = 2;
-
     devTbs[3].mac[7] = 0x03;
     devTbs[3].netId = 0x3603;
     devTbs[3].protocol = 3;
     devTbs[3].devstate = 1;
-
     devTbs[4].mac[7] = 0x04;
     devTbs[4].netId = 0x3604;
     devTbs[4].protocol = 3;
     devTbs[4].devstate = 1;
-
     devTbs[5].mac[7] = 0x05;
     devTbs[5].netId = 0x3605;
     devTbs[5].protocol = 3;
     devTbs[5].devstate = 1;
-
     devTbs[6].mac[7] = 0x06;
     devTbs[6].netId = 0x3606;
     devTbs[6].protocol = 3;
     devTbs[6].devstate = 1;
-
     devTbs[7].mac[7] = 0x07;
     devTbs[7].netId = 0x3607;
     devTbs[7].protocol = 3;
     devTbs[7].devstate = 1;
-
     devTbs[8].mac[7] = 0x08;
     devTbs[8].netId = 0x3608;
     devTbs[8].protocol = 3;
     devTbs[8].devstate = 1;
-
     devTbs[9].mac[7] = 0x09;
     devTbs[9].netId = 0x3609;
     devTbs[9].protocol = 3;
     devTbs[9].devstate = 1;
-
 }

@@ -88,33 +88,23 @@ int main(void)
         // print_DEVS();
 
         //定时执行 对执行来说 不关心是否执行成功 所以 要定时执行
-        //2.5S 执行一次
-        if (Zigbee_time > 2500)
-        {
-            zigbee_operate_ALL();
-            Zigbee_time = 0;
-        }
+        //2S 执行一次
+        zigbee_operate_default(1000*2);
         //
         //定时查询默认状态设备状态
 				//Zigbee_getstate_timer( 1000*5);
 				//定时更新设备电量
 				//Zigbee_getBattery(1000*60*60);
         //定时获取设备信息
-        if (timer_Device_update > 50)
-        {
-            //zigbee_updateAllDevice();
-            timer_Device_update = 0;
-        }
+
         //重发机制 1S重发一次 清理一次
-        if (Net_time > 100)
-        {
-            Net_send_Timer();
-            Net_time = 0;
-        }
+
+        Net_send_Timer(100);
 				//Zigbee_getActstate_timer(1000*5);
 				// Zigbee 发送缓冲区 发送规则
        Zigbee_send_Timer(100);
-
+       // 隔段时间清除 查询状态标志，防止未接收到信息。
+       Zigbee_ClearRequest(1000*60*5);
 
     }
 }

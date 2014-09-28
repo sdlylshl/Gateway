@@ -24,6 +24,8 @@ __IO uint32_t timer_Device_update;
 __IO uint32_t timer_Zigbee_getStatus;
 __IO uint32_t timer_Zigbee_getBattery;
 __IO uint32_t timer_Zigbee_sendBuff;
+__IO uint32_t timer_Zigbee_ClearRequest;
+__IO uint32_t timer_Zigbee_operate_default;
 
 void TIM2_test()
 {
@@ -208,6 +210,8 @@ void TIM2_IRQHandle(void)
         timer_Zigbee_getStatus++;
         timer_Zigbee_getBattery++;
         timer_Zigbee_sendBuff++;
+        timer_Zigbee_ClearRequest++;
+        timer_Zigbee_operate_default++;
 
         if (time > 500)
         {
