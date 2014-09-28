@@ -114,7 +114,7 @@ int main(void)
 				//Zigbee_getActstate_timer(1000*5);
 				// Zigbee 发送缓冲区 发送规则
        Zigbee_send_Timer(100);
-			
+
 
     }
 }

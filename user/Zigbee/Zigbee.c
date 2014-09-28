@@ -162,11 +162,11 @@ uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[], uint8_t immediate)
     struct Zigbee_msgStu *pZmsgSndbuf;
 
     pZmsgSndbuf = &Zigbee_SendBuff[Zigbee_send_add];
+
     if (!immediate)
     {
-         Zigbee_send_add_forward();
+        Zigbee_send_add_forward();
     }
-
 
     if (pZmsgSndbuf == NULL)
     {
@@ -349,7 +349,7 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgRcv)
             pdevTbs->ion = *pion;
             // 不管是否设置成功，都更新设备状态
             // 将全局设备表维护到正确的状态上
-            zigbee_remote_req_net_io(pdevTbs->netId, pdevTbs->ion, ZIGEBE_IMMEDIATE);
+            zigbee_remote_req_net_io(pdevTbs->netId, pdevTbs->ion, ZIGEBE_NONIMMEDIATE);
 
             return OK;
         }
@@ -387,7 +387,7 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgRcv)
             Net_send_device(pdevTbs);
             // 更新完成后 切换到默认IO
             Zigebee_setIOBynetId(pdevTbs);
-						Net_send_device(pdevTbs);
+            Net_send_device(pdevTbs);
             return OK;
         }
         else
@@ -601,11 +601,12 @@ void Zigbee_getActstate_timer(uint32_t timeout)
         {
             if (devTbs[i].devstate)
             {
-								//获取控制器的默认IO状态
-								if((devTbs[i].netId & 0x8000 ) == 0x0000){
+                //获取控制器的默认IO状态
+                if ((devTbs[i].netId & 0x8000 ) == 0x0000)
+                {
 
-                zigbee_remote_req_net_io(devTbs[i].netId, devTbs[i].ion, ZIGEBE_NONIMMEDIATE);
-								}
+                    zigbee_remote_req_net_io(devTbs[i].netId, devTbs[i].ion, ZIGEBE_NONIMMEDIATE);
+                }
             }
         }
 
@@ -649,46 +650,49 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t force, uint8_t immediat
     Device_operateFlag(pdevTbs);
     if ( pdevTbs->operate)
     {
-        //强制执行
-        if (force)
+        switch (pdevTbs->statetables[pdevTbs->ion].iomode)
         {
-            zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
-        }
-        else
-        {
-            switch (pdevTbs->statetables[pdevTbs->ion].iomode)
+        case IO_MODE_NOUSE:
+
+            break;
+        case IO_MODE_ANALOG_INPUT:
+
+            break;
+        case IO_MODE_GPIO_INPUT:
+
+            break;
+        case IO_MODE_GPIO_OUTPUT_0:
+            if (force)
             {
-            case IO_MODE_NOUSE:
-
-                break;
-            case IO_MODE_ANALOG_INPUT:
-
-                break;
-            case IO_MODE_GPIO_INPUT:
-
-                break;
-            case IO_MODE_GPIO_OUTPUT_0:
-                if (pdevTbs->statetables[pdevTbs->ion].curstat)
-                {
-                    zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
-                    pdevTbs->statetables[pdevTbs->ion].curstat = 0;
-                }
-                break;
-            case IO_MODE_GPIO_OUTPUT_1:
-                if (!pdevTbs->statetables[pdevTbs->ion].curstat)
-                {
-                    zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
-                    pdevTbs->statetables[pdevTbs->ion].curstat = 1;
-                }
-                break;
-
-            case IO_MODE_PULSE_COUNT:
-
-                break;
-
+                zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
+                pdevTbs->statetables[pdevTbs->ion].curstat = 0;
             }
+            else if (pdevTbs->statetables[pdevTbs->ion].curstat)
+            {
+                zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
+                pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+            }
+            break;
+        case IO_MODE_GPIO_OUTPUT_1:
+            if (force)
+            {
+                zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+            }
+            else if (!pdevTbs->statetables[pdevTbs->ion].curstat)
+            {
+                zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
+                pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+            }
+            break;
+
+        case IO_MODE_PULSE_COUNT:
+
+            break;
 
         }
+
+
     }
     else
     {
@@ -726,7 +730,7 @@ void zigbee_operate_ALL(void)
     {
         if (devTbs[i].devstate)
         {
-            //Zigebee_setIOBynetId(&devTbs[i]);
+            Zigebee_setIOBynetId(&devTbs[i]);
             zigbee_operate(&devTbs[i], ZIGEBE_NOFORCE, ZIGEBE_NONIMMEDIATE);
         }
     }

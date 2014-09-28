@@ -29,13 +29,14 @@
 #define DEV_ACT_JACK         0x0200
 // 窗帘
 #define DEV_ACT_CURTAIN      0x7000
-// 开关
+
+// 开关  开关
 #define DEV_SENSOR_SW          0x8000
-// 人体红外感应
+// 人体红外感应 开关
 #define DEV_SENSOR_IR          0x8100
-// 烟雾
+// 烟雾 开关
 #define DEV_SENSOR_SMOKE       0x8200
-// 燃气
+// 燃气 模拟
 #define DEV_SENSOR_GAS       0x8300
 
 
