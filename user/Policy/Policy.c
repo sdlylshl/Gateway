@@ -7,7 +7,7 @@ struct strgytable strategy_tables[MAX_DESTABLE_NUM];
 struct strgy_swtable strategy_swtables[MAX_DESTABLE_NUM];
 
 
-extern void zigbee_operate(struct devTable *pdevTbs, uint8_t force, uint8_t immediate);
+extern void zigbee_operate(struct devTable *pdevTbs,uint8_t priority, uint8_t force, uint8_t immediate);
 extern void Zigebee_setIOBynetId(struct devTable *pdevTbs);
 
 
@@ -81,7 +81,7 @@ void  strategy_implementation(void)
                     break;
                 }
 
-                
+
                 //触发类型type 两位表示一个设备 共表示4个设备 每次移2位
                 type = (strategy_tables[i].type >> (j << 1)) & 0x03;
 

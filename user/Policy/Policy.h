@@ -7,6 +7,7 @@
 #define  MAX_DESTABLE_NUM  20
 
 #define PRIORITY_HIGHEST 0xFF
+#define PRIORITY_DEFAULT 0xFE
 #define PRIORITY_LOWEST 0x0
 
 struct deviceInfo
@@ -16,8 +17,6 @@ struct deviceInfo
     // pdevTbs->statetables[pdevTbs->ion].curstat
     // pdevTbs->statetables[pdevTbs->ion].iomode
     uint16_t deviceSta;
-
-
 };
 
 struct sensor

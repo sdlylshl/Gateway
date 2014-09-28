@@ -78,7 +78,7 @@ struct  devTable
     uint8_t    ion;
     uint8_t    operate;//允许操作
     uint8_t    priority; //当前设备 被哪个优先级的任务执行了
-    uint8_t    nouse1;
+    uint8_t    request; //查询标准，每个IO一位，接受到反馈清零
     struct stateTable  statetables[DEV_IO_NUM];
 
 };

@@ -672,9 +672,9 @@ uint8_t NET_parseData(struct msgStu *pNmsgR)
         {
             pdevTbs->ion = *pion;
             pdevTbs->statetables[pdevTbs->ion].iomode = *piomode;
-					  pdevTbs->priority = PRIORITY_HIGHEST; //将优先级设置为最高，禁用策略控制
+			pdevTbs->priority = PRIORITY_HIGHEST; //将优先级设置为最高，禁用策略控制
 					// 立即强制执行
-            zigbee_operate(pdevTbs, ZIGEBE_FORCE,ZIGEBE_IMMEDIATE);
+            zigbee_operate(pdevTbs, PRIORITY_HIGHEST,ZIGEBE_FORCE,ZIGEBE_IMMEDIATE);
 
         }
         else
