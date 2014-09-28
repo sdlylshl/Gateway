@@ -87,13 +87,13 @@ struct devTable *getDevTbsByNetId(uint16_t id)
 }
 
 // 通过网络号设置操作位 --仅对设置有效
-void Device_operateSetting(struct devTable *pdevTbs)
+void Device_operateFlag(struct devTable *pdevTbs)
 {
     if (pdevTbs)
     {
         if (pdevTbs->devstate)
         {
-            pdevTbs->operate = 0;
+            //pdevTbs->operate = 0;
             switch (pdevTbs->netId & 0xFF00)
             {
             //增加传感器检测 网络ID最高位为1
@@ -118,7 +118,9 @@ void Device_operateSetting(struct devTable *pdevTbs)
                     if (pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_0 || pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_1 )
                     {
                         pdevTbs->operate = 1;
-                    }
+                    }else{
+										pdevTbs->operate = 0;
+										}
 
                 }
                 break;
@@ -141,7 +143,9 @@ void Device_operateSetting(struct devTable *pdevTbs)
                     if (pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_0 || pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_1 )
                     {
                         pdevTbs->operate = 1;
-                    }
+                    }else{
+										pdevTbs->operate = 0;
+										}
 
                 }
                 break;

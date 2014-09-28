@@ -142,9 +142,14 @@
 
 
 //定义最大发送指令条数
-#define ZIGEBE_SEND_CMD_NUM 0x100
+#define ZIGEBE_SEND_CMD_NUM 0x150
 #define ZIGEBE_RECV_CMD_NUM 2
 
+#define ZIGEBE_IMMEDIATE 1
+#define ZIGEBE_NONIMMEDIATE 0
+
+#define ZIGEBE_FORCE 1
+#define ZIGEBE_NOFORCE 0
 struct Zigbee_msgStu
 {
     __IO uint8_t    usable;
@@ -177,9 +182,9 @@ extern void zigbee_remote_req_net_io(uint16_t netid, uint8_t IOn,uint8_t immedia
 
 extern uint8_t zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOmode, uint8_t IOvalue,uint8_t immediate);
 
-extern void Zigbee_getstate_timer(uint32_t timeout);
+extern void Zigbee_getActstate_timer(uint32_t timeout);
 extern void Zigbee_getBattery(uint32_t timeout);
-
+extern void Zigbee_send_Timer(uint32_t timeout);
 extern void zigbee_operate_ALL(void);
 extern void zigbee_updateAllDevice(void);
 extern void zigbee_updateMacByNetId(uint16_t netid);

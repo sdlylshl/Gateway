@@ -4,17 +4,38 @@
 #include "config.h"
 
 // 策略表 最大条数
-#define  MAX_DESTABLE_NUM  10
+#define  MAX_DESTABLE_NUM  20
+
+#define PRIORITY_HIGHEST 0xFF
+#define PRIORITY_LOWEST 0x0
 
 struct deviceInfo
 {
 
-    uint8_t deviceId[2];  //设备ID 可选 网络号|MAC
+    uint16_t deviceId;  //设备ID 可选 网络号|MAC
+    // pdevTbs->statetables[pdevTbs->ion].curstat
+    // pdevTbs->statetables[pdevTbs->ion].iomode
     uint16_t deviceSta;
+
 
 };
 
+struct sensor
+{
 
+    uint16_t sensorId;  //设备ID 可选 网络号|MAC
+    // pdevTbs->statetables[pdevTbs->ion].curstat
+    uint16_t sensorState;
+
+};
+struct actuator
+{
+
+    uint16_t actuatorId;  //设备ID 可选 网络号|MAC
+    // pdevTbs->statetables[pdevTbs->ion].iomode
+    uint8_t actuatorIO;
+
+};
 /**
   * @brief 全局策略结构体:
                         序号  1               2           3                   4                   5                   6                       7
@@ -31,22 +52,20 @@ struct strgytable
 {
     uint8_t usable; //操作状态
     uint8_t priority; //优先级 不允许相同
-    uint8_t id;
     uint8_t num;
     uint8_t type;
-    struct deviceInfo sensor[4];
-    struct deviceInfo actuators[10];
-    uint8_t name[10];
+    struct sensor sensors[4];
+    struct actuator actuators[10];
+    // uint8_t name[10];
 
 };
 struct strgy_swtable
 {
     uint8_t usable; //操作状态 启用/禁用
     uint8_t priority; //优先级 不允许相同
-    uint8_t id;         //
-    struct deviceInfo  button;
-    struct deviceInfo  actuator;
-
+    // uint8_t id;         //
+    struct sensor  button;
+    struct actuator  actuate;
 };
 
 
@@ -65,4 +84,5 @@ extern struct strgytable strategytable[];
 // extern struct strgytable *getANewDES(void);
 //策略解析
 extern void strategy_implementation(void);
+extern void strategy_init(void);
 #endif

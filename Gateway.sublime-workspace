@@ -1,0 +1,529 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"d",
+				"devTable"
+			],
+			[
+				"h",
+				"NET_CMD_HEAD"
+			],
+			[
+				"su",
+				"struct	struct"
+			],
+			[
+				"de",
+				"devTbs"
+			],
+			[
+				"a",
+				"actuatorIO"
+			],
+			[
+				"c",
+				"curSt"
+			],
+			[
+				"se",
+				"sensorId"
+			],
+			[
+				"s",
+				"sensors"
+			],
+			[
+				"t",
+				"type"
+			],
+			[
+				"num",
+				"numAct"
+			],
+			[
+				"Zigb",
+				"Zigbee"
+			],
+			[
+				"uint",
+				"uint8_t"
+			],
+			[
+				"net",
+				"netId"
+			],
+			[
+				"Zi",
+				"Zigbee"
+			],
+			[
+				"io",
+				"iomode"
+			],
+			[
+				"ne",
+				"netId"
+			],
+			[
+				"u",
+				"uint8_t"
+			],
+			[
+				"uin",
+				"uint8_t"
+			],
+			[
+				"b",
+				"BIGENDIAN"
+			],
+			[
+				"0x",
+				"0x8000"
+			],
+			[
+				"n",
+				"netId"
+			],
+			[
+				"time",
+				"timeout"
+			],
+			[
+				"B",
+				"BIGENDIAN"
+			],
+			[
+				"br",
+				"break"
+			],
+			[
+				"O",
+				"OLDPROTOCAL"
+			],
+			[
+				"end",
+				"endif"
+			],
+			[
+				"m",
+				"mac"
+			],
+			[
+				"p",
+				"pdevTbs"
+			],
+			[
+				"dev",
+				"devTbs"
+			],
+			[
+				"ER",
+				"ERROR"
+			],
+			[
+				"ERRR",
+				"ERROR_NODATA"
+			],
+			[
+				"ui",
+				"uint8_t"
+			],
+			[
+				"Z",
+				"Zigebee"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 360.0,
+		"selected_items":
+		[
+			[
+				"todo",
+				"TodoReview: Project Files"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Enable Package"
+			],
+			[
+				"pakdi",
+				"Package Control: Disable Package"
+			],
+			[
+				"",
+				"Bookmarks: Toggle"
+			],
+			[
+				"t",
+				"Bookmarks: Toggle"
+			],
+			[
+				"git",
+				"Git (SideBarGit): Reflog"
+			],
+			[
+				"pkin",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 333.0
+	},
+	"console":
+	{
+		"height": 162.0,
+		"history":
+		[
+			"pwd",
+			"pws",
+			"ls",
+			"!ls",
+			"!cd",
+			"!cd ",
+			"cd "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/Administrator/Gateway",
+		"/C/Users/Administrator/Gateway/RTE",
+		"/C/Users/Administrator/Gateway/user",
+		"/C/Users/Administrator/Gateway/user/NET"
+	],
+	"file_history":
+	[
+		"/D/Program Files/Sublime Text 3065/Data/KEEPME",
+		"/C/Users/Administrator/Gateway/user/NET/net.c",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/User/Preferences.sublime-settings",
+		"/D/Program Files/MingW/include/stm32f10x.h",
+		"/C/Users/Administrator/Gateway/user/main.c",
+		"/C/Users/Administrator/Gateway/user/Policy/Policy.c",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/SublimeClang/SublimeClang.sublime-settings",
+		"/C/Users/Administrator/Gateway/Gateway.sublime-project",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/User/SublimeClang.sublime-settings",
+		"/C/Users/Administrator/Gateway/RTE/.tags",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/SublimeClang/Default.sublime-keymap",
+		"/C/Users/Administrator/Gateway/RTE/stm32f10x.h",
+		"/C/Users/Administrator/Gateway/user/stm32f10x.h",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/User/Default (Windows).sublime-keymap",
+		"/D/Program Files/MingW/lib/gcc/mingw32/4.7.0/include/c++/MingW32/stm32f10x.h",
+		"/D/Program Files/MingW/lib/gcc/mingw32/4.7.0/include/c++/stm32f10x.h",
+		"/D/Program Files/MingW/lib/gcc/mingw32/4.7.0/include/stm32f10x.h",
+		"/C/Users/Administrator/Gateway/user/stm32f10x_it.h",
+		"/C/Users/Administrator/Gateway/output/gpio_stm32f10x.crf",
+		"/C/Users/Administrator/Gateway/startup_stm32f10x_md.lst",
+		"/C/Users/Administrator/Gateway/user/Device/device.c",
+		"/C/Users/Administrator/Gateway/user/Zigbee/Zigbee.h",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/SublimeCodeIntel/SublimeCodeIntel.sublime-settings",
+		"/C/Users/Administrator/Gateway/user/Zigbee/Zigbee.c",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/SublimeCodeIntel/Default (Windows).sublime-keymap",
+		"/C/Users/Administrator/Gateway/user/Policy/Policy.h",
+		"/C/Users/Administrator/Gateway/user/NET/net.h",
+		"/C/Users/Administrator/Gateway/user/Device/device.h",
+		"/C/Users/Administrator/Gateway/output/zigbee.crf",
+		"/C/Users/Administrator/Gateway/output/timer.crf",
+		"/C/Users/Administrator/Gateway/output/stm32f10x_it.crf",
+		"/C/Users/Administrator/Gateway/output/stm32f103.htm",
+		"/C/Users/Administrator/Gateway/output/stm32f103.axf",
+		"/C/Users/Administrator/Gateway/output/policy.crf",
+		"/C/Users/Administrator/Gateway/output/net.crf",
+		"/C/Users/Administrator/Gateway/output/main.crf",
+		"/C/Users/Administrator/Gateway/output/err.crf",
+		"/C/Users/Administrator/Gateway/output/device.crf",
+		"/C/Users/Administrator/Gateway/stm32f103.map",
+		"/C/Users/Administrator/Gateway/user/stm32f10x_it.c",
+		"/C/Users/Administrator/Gateway/user/System/Timer/timer.c",
+		"/C/Users/Administrator/Gateway/user/System/Timer/timer.h",
+		"/C/Users/Administrator/Gateway/doc/智能网关 通信协议.doc",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/User/TodoReview.sublime-settings",
+		"/C/Users/Administrator/Gateway/user/config.h",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/BracketHighlighter/bh_core.sublime-settings",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/BracketHighlighter/Example.sublime-keymap",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/User/bh_wrapping.sublime-settings",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/User/bh_swapping.sublime-settings",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/User/bh_core.sublime-settings",
+		"/C/Users/Administrator/Gateway/user/新建 文本文档 (4).txt",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/User/ConvertToUTF8.sublime-settings",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/ConvertToUTF8/ConvertToUTF8.sublime-settings",
+		"/C/Users/Administrator/Gateway/user/ERR/err.h",
+		"/C/Users/Administrator/Gateway/user/System/ADC/main.c",
+		"/C/Users/Administrator/Gateway/user/System/PWM/main.c",
+		"/C/Users/Administrator/Gateway/user/System/SPI/main.c",
+		"/C/Users/Administrator/Gateway/user/System/Other/18-野火M3-温湿度（DTH11）/main.c",
+		"/C/Users/Administrator/Gateway/user/System/Other/19-野火M3-超声波/main.c",
+		"/C/Users/Administrator/Gateway/user/System/Other/21-野火M3-重力感应（MMA7455）/main.c",
+		"/C/Users/Administrator/Gateway/user/System/Other/20-野火M3-2.4G（NRF24L01+）/野火M3-主机/main.c",
+		"/C/Users/Administrator/Gateway/user/System/Other/20-野火M3-2.4G（NRF24L01+）/野火M3-从机/main.c",
+		"/C/Users/Administrator/Gateway/user/System/Other/19-野火M3-超声波/UltrasonicWave.c",
+		"/C/Users/Administrator/Gateway/user/System/Other/19-野火M3-超声波/UltrasonicWave.h",
+		"/C/Users/Administrator/Gateway/output/device.d",
+		"/C/Users/Administrator/Gateway/user/Zigbee/Zigbee.h_big",
+		"/C/Users/Administrator/Gateway/user/System/Usart/usart.c",
+		"/C/Users/Administrator/Gateway/user/System/Usart/usart.h",
+		"/C/Users/Administrator/Gateway/user/System/SPI/spi_flash.h",
+		"/C/Users/Administrator/Gateway/user/System/RTC/rtc.h",
+		"/C/Users/Administrator/Gateway/user/System/RTC/rtc.c",
+		"/C/Users/Administrator/Gateway/user/System/RTC/date.h",
+		"/C/Users/Administrator/Gateway/user/System/RTC/date.c",
+		"/C/Users/Administrator/Gateway/user/System/RTC/calendar.h",
+		"/C/Users/Administrator/Gateway/user/System/RTC/calendar.c",
+		"/C/Users/Administrator/Gateway/user/System/PWM/pwm_output.h",
+		"/C/Users/Administrator/Gateway/user/System/PWM/pwm_output.c",
+		"/C/Users/Administrator/Gateway/user/System/IIC/i2c_ee.h",
+		"/C/Users/Administrator/Gateway/user/System/IIC/i2c_ee.c",
+		"/C/Users/Administrator/Gateway/user/System/GPIO/led.h",
+		"/C/Users/Administrator/Gateway/user/System/ADC/adc.h",
+		"/C/Users/Administrator/Gateway/user/System/ChipID/chipid.c",
+		"/C/Users/Administrator/Gateway/user/System/ChipID/chipid.h",
+		"/C/Users/Administrator/Gateway/user/System/CRC/crc.c",
+		"/C/Users/Administrator/Gateway/user/System/CRC/crc.h",
+		"/C/Users/Administrator/Gateway/user/System/GPIO/led.c",
+		"/C/Users/Administrator/Gateway/user/System/Delay/SysTick.c",
+		"/C/Users/Administrator/Gateway/user/System/ADC/adc.c",
+		"/C/Users/Administrator/Gateway/user/NET/crc.h",
+		"/C/Users/Administrator/Gateway/user/NET/crc.c",
+		"/C/Users/Administrator/Gateway/user/ERR/err.c",
+		"/C/Users/Administrator/Gateway/user/System/SPI/spi_flash.c",
+		"/C/Users/Administrator/Gateway/user/System/Delay/SysTick.h",
+		"/C/Users/Administrator/Gateway/RTE/Device/STM32F103C8/system_stm32f10x.c",
+		"/C/Users/Administrator/Gateway/user/System/Delay/delay.h",
+		"/C/Users/Administrator/Gateway/user/System/Delay/delay.c",
+		"/C/Users/Administrator/Gateway/user/System/Other/18-野火M3-温湿度（DTH11）/SysTick.c",
+		"/C/Users/Administrator/Gateway/user/System/Other/21-野火M3-重力感应（MMA7455）/I2C_MMA.c",
+		"/C/Users/Administrator/Gateway/user/System/Other/18-野火M3-温湿度（DTH11）/SysTick.h",
+		"/C/Users/Administrator/Gateway/output/system_stm32f10x.crf",
+		"/C/Users/Administrator/Gateway/output/main.d",
+		"/C/Users/Administrator/Gateway/.gitignore",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/User/Distraction Free.sublime-settings",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/User/Plain text.sublime-settings",
+		"/D/Program Files/Sublime Text 3065/Data/Packages/Alignment/Default (Windows).sublime-keymap"
+	],
+	"find":
+	{
+		"height": 28.0
+	},
+	"find_in_files":
+	{
+		"height": 98.0,
+		"where_history":
+		[
+			"-*.tag*",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"\\",
+			"\\\\",
+			"}}/**\"\n",
+			"\",\n",
+			"Device_operateSetting",
+			"zigbee_remote_set_net_io",
+			"Net_PutChar",
+			"Zigebee_getstate_timer",
+			"mac",
+			"Net_send",
+			"Net_send_data",
+			"getmsgSN",
+			"getnetRecvDataCMDS",
+			"getACmdS",
+			"IOmode",
+			"pdevTbs",
+			"getRecvBuff",
+			"mac",
+			"NOTE",
+			"netId",
+			"curSt",
+			"i",
+			"zigbee_remote_set_net_io",
+			"BIGENDIAN",
+			"UInt32",
+			"UINT16",
+			"zigbee_remote_set_net_io",
+			"Net_send_device",
+			"38",
+			"zigbee_send_data",
+			"Zigbee_send_add",
+			"pvalue",
+			"7",
+			"pdevTbs->",
+			"struct devTable *",
+			"获取状态",
+			"pdevTbs->",
+			"pdevTbs->usable",
+			"devstate",
+			"usable",
+			"0",
+			"Net_send",
+			"u32",
+			"CRC",
+			"CRC_CalcCRC",
+			"volatile",
+			"volatie",
+			"SYSTICK_1US",
+			"NET_DATA_LEN",
+			"Net_PutChar",
+			"NET_DATA_LEN",
+			"dat",
+			"TIM3",
+			"TIM2",
+			"CRC_CalcCRC",
+			"crc"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"/",
+			"Device_operateFlag",
+			"Net_send_data",
+			"Net_push_data",
+			"get_NetSendSN",
+			"get_NetRecvDataCMDS",
+			"getnetRecvDataCMDS",
+			"TAG",
+			"__IO",
+			"NET_BUFFSIZE"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 38.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 246.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "Gateway.sublime-project",
+	"replace":
+	{
+		"height": 52.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"main",
+				"user\\main.c"
+			],
+			[
+				"devi",
+				"user\\Device\\device.h"
+			],
+			[
+				"systi",
+				"user\\System\\Delay\\SysTick.h"
+			],
+			[
+				"syst",
+				"user\\System\\Other\\18-野火M3-温湿度（DTH11）\\SysTick.c"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+		"_vintageous_last_char_search_command": "vi_big_t",
+		"_vintageous_last_character_search": "A",
+		"_vintageous_reset_during_init": true,
+		"vintage":
+		{
+			"_cmdline_cd": "C:\\Users\\Administrator\\Gateway\\user\\NET"
+		}
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 213.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

@@ -86,7 +86,7 @@ struct  devTable
 //全局设备表
 extern struct devTable devTbs[MAX_DEVTABLE_NUM];
 
-extern void Device_operateSetting(struct devTable *pdevTbs);
+extern void Device_operateFlag(struct devTable *pdevTbs);
 
 extern struct devTable *getDevTbsByMac(uint8_t *mac);
 extern struct devTable *getDevTbsByNetId(uint16_t id);

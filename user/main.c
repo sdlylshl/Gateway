@@ -49,7 +49,7 @@ void Delay(__IO u32 nCount)
 int main(void)
 {
 
-    
+
     //uint8_t buffer[10];
     LED_GPIO_Config();
 
@@ -72,7 +72,7 @@ int main(void)
     /* Infinite loop */
     TIM2_Configuration();
     START_TIME();
-
+    strategy_init();
     //1.获取设备信息 AT+NWS
 
     while (1)
@@ -81,8 +81,8 @@ int main(void)
         Zigbee_fetchParseInstruction();
         NET_fetchParseInstruction();
 
-        //策略解析，修改对应 设备表
-        //policydecisions();
+        //策略实现
+        strategy_implementation();
 
         // print_CMDS();
         // print_DEVS();
@@ -96,13 +96,13 @@ int main(void)
         }
         //
         //定时查询默认状态设备状态
-				Zigbee_getstate_timer( 1000*5);
+				//Zigbee_getstate_timer( 1000*5);
 				//定时更新设备电量
-				Zigbee_getBattery(1000*60*60);
+				//Zigbee_getBattery(1000*60*60);
         //定时获取设备信息
         if (timer_Device_update > 50)
         {
-            zigbee_updateAllDevice();
+            //zigbee_updateAllDevice();
             timer_Device_update = 0;
         }
         //重发机制 1S重发一次 清理一次
@@ -111,19 +111,10 @@ int main(void)
             Net_send_Timer();
             Net_time = 0;
         }
-
-				if(Zigbee_send_add){
-
-				}
-
-        if (timer_Zigbee_sendBuff>10)
-        {		Net_PutChar(Zigbee_send_add);
-						Net_PutChar(Zigbee_send_rm);
-            //TODO: 定时执行Zigbee发送缓冲区指令
-           Zigbee_send(&Zigbee_SendBuff[Zigbee_send_rm]);
-						timer_Zigbee_sendBuff=0;
-        }
-
+				//Zigbee_getActstate_timer(1000*5);
+				// Zigbee 发送缓冲区 发送规则
+       Zigbee_send_Timer(100);
+			
 
     }
 }

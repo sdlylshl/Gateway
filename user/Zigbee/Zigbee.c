@@ -23,11 +23,8 @@ __IO uint16_t Zigbee_write = 0;
 __IO uint16_t Zigbee_send_add = 0;
 __IO uint16_t Zigbee_send_rm = 0;
 
-//extern void zigbee_operate(struct devTable *pdevTbs);
-//extern uint8_t Net_send_device(struct devTable *pdevTbs, uint8_t CMD, uint8_t control);
-
 extern uint8_t Net_send_device(struct devTable *pdevTbs);
-//extern void Device_operateSetting(struct devTable *pdevTbs);
+//extern void Device_operateFlag(struct devTable *pdevTbs);
 
 void SendCMD(uint8_t data)
 {
@@ -114,9 +111,8 @@ struct Zigbee_msgStu *get_ZigbeeSendBuf(void)
 uint8_t Zigbee_send(struct Zigbee_msgStu *pZmsgSnd)
 {
     // 立即发送 则跳过
-    if (pZmsgSnd->usable == 3)
-        Zigbee_send_rm_forward();
-    else if (pZmsgSnd->usable > 1)
+
+    if (pZmsgSnd->usable > 1)
     {
         uint8_t i;
         SendCMD(pZmsgSnd->head);
@@ -130,12 +126,34 @@ uint8_t Zigbee_send(struct Zigbee_msgStu *pZmsgSnd)
         }
         SendCMD(pZmsgSnd->chk);
         SendCMD(pZmsgSnd->endl);
-        Zigbee_send_rm_forward();
         pZmsgSnd->usable = 0;
+
+        timer_Zigbee_sendBuff = 0;
     }
     return OK;
 }
+void Zigbee_send_Timer(uint32_t timeout)
+{
 
+    if (timer_Zigbee_sendBuff > timeout)
+    {
+
+
+        //Net_PutChar(Zigbee_send_add);
+        //Net_PutChar(Zigbee_send_rm);
+        //TODO: 定时执行Zigbee发送缓冲区指令
+        if (((ZIGEBE_SEND_CMD_NUM + Zigbee_send_add - Zigbee_send_rm) % ZIGEBE_SEND_CMD_NUM))
+        {
+            Zigbee_send(&Zigbee_SendBuff[Zigbee_send_rm]);
+            Zigbee_send_rm_forward();
+            //timer_Zigbee_sendBuff = 0;
+        }
+
+
+    }
+
+
+}
 // TAG: Zigbee 将指令送入发送缓冲区
 uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[], uint8_t immediate)
 {
@@ -144,7 +162,11 @@ uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[], uint8_t immediate)
     struct Zigbee_msgStu *pZmsgSndbuf;
 
     pZmsgSndbuf = &Zigbee_SendBuff[Zigbee_send_add];
-    Zigbee_send_add_forward();
+    if (!immediate)
+    {
+         Zigbee_send_add_forward();
+    }
+
 
     if (pZmsgSndbuf == NULL)
     {
@@ -169,11 +191,8 @@ uint8_t zigbee_push(uint8_t len, uint16_t cmd, uint8_t buf[], uint8_t immediate)
     if (immediate)
     {
         //NOTE: 立即发送 清定时器时钟 最少延迟20ms 让下条指令延时发送
-        while (timer_Zigbee_sendBuff < 9);
-        timer_Zigbee_sendBuff = 0;
+        while (timer_Zigbee_sendBuff < 50);
         Zigbee_send(pZmsgSndbuf);
-
-        pZmsgSndbuf->usable = 3;
     }
 
     return OK;
@@ -225,7 +244,7 @@ void Zigebee_setIOBynetId(struct devTable *pdevTbs)
     {
         if (pdevTbs->devstate)
         {
-            pdevTbs->operate = 0;
+            //pdevTbs->operate = 0;
             switch (pdevTbs->netId & 0xFF00)
             {
             //增加传感器检测 网络ID最高位为1
@@ -258,16 +277,16 @@ void Zigebee_setIOBynetId(struct devTable *pdevTbs)
             case DEV_SENSOR_IR   :
 
             // break;
-            //
+            //开关采集 IO2
             case DEV_SENSOR_SMOKE:
                 pdevTbs->ion = IO_D2;
-                // pdevTbs->operate = 0;
+                pdevTbs->operate = 0;
                 // pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_INPUT;
                 break;
-            //
+            //模拟采集IO1
             case DEV_SENSOR_GAS  :
                 pdevTbs->ion = IO_D1;
-                // pdevTbs->operate = 0;
+                pdevTbs->operate = 0;
                 // pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_ANALOG_INPUT;
                 break;
             }
@@ -283,7 +302,7 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgRcv)
     uint16_t *pcmd;
     uint16_t *pnetId;
     uint8_t  *pion;
-    uint8_t  *piomode;
+    //uint8_t  *piomode;
     uint16_t *pvalue;
     uint8_t  *pstate;//设置成功标志
     uint8_t  *pmac;
@@ -330,7 +349,7 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgRcv)
             pdevTbs->ion = *pion;
             // 不管是否设置成功，都更新设备状态
             // 将全局设备表维护到正确的状态上
-            zigbee_remote_req_net_io(pdevTbs->netId, pdevTbs->ion, 0);
+            zigbee_remote_req_net_io(pdevTbs->netId, pdevTbs->ion, ZIGEBE_IMMEDIATE);
 
             return OK;
         }
@@ -346,7 +365,7 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgRcv)
 
         pnetId = (uint16_t *)(&pZmsgRcv->data[0]);
         pion  = (uint8_t *)(&pZmsgRcv->data[2]);
-        piomode = (uint8_t *)(&pZmsgRcv->data[3]);
+        //piomode = (uint8_t *)(&pZmsgRcv->data[3]);
         pvalue = (uint16_t *)(&pZmsgRcv->data[4]);
 
         pdevTbs = getDevTbsByNetId(*pnetId);
@@ -361,14 +380,14 @@ uint8_t Zigbee_parseInstruction(struct Zigbee_msgStu *pZmsgRcv)
             // 转为小端存储
 
             pdevTbs->ion = *pion;
-            pdevTbs->statetables[pdevTbs->ion].iomode = *piomode;
+            //pdevTbs->statetables[pdevTbs->ion].iomode = *piomode;
             pdevTbs->statetables[pdevTbs->ion].curstat = *pvalue;
 
             //此时服务器有可能还没有更新设备，所以将整个设备信息更新上去
             Net_send_device(pdevTbs);
             // 更新完成后 切换到默认IO
             Zigebee_setIOBynetId(pdevTbs);
-
+						Net_send_device(pdevTbs);
             return OK;
         }
         else
@@ -573,7 +592,7 @@ uint8_t Zigbee_fetchParseInstruction (void)
 //IO3 默认开关控制2 / 开关IO采集
 //IO4 指示灯
 
-void Zigbee_getstate_timer(uint32_t timeout)
+void Zigbee_getActstate_timer(uint32_t timeout)
 {
     if (timer_Zigbee_getStatus > timeout)
     {
@@ -582,7 +601,11 @@ void Zigbee_getstate_timer(uint32_t timeout)
         {
             if (devTbs[i].devstate)
             {
-                zigbee_remote_req_net_io(devTbs[i].netId, devTbs[i].ion, 0);
+								//获取控制器的默认IO状态
+								if((devTbs[i].netId & 0x8000 ) == 0x0000){
+
+                zigbee_remote_req_net_io(devTbs[i].netId, devTbs[i].ion, ZIGEBE_NONIMMEDIATE);
+								}
             }
         }
 
@@ -599,7 +622,7 @@ void Zigbee_getBattery(uint32_t timeout)
         {
             if (devTbs[i].devstate)
             {
-                zigbee_remote_req_net_io(devTbs[i].netId, 0, 0);
+                zigbee_remote_req_net_io(devTbs[i].netId, IO_D0, ZIGEBE_NONIMMEDIATE);
             }
         }
 
@@ -618,15 +641,54 @@ void Zigbee_getBattery(uint32_t timeout)
     *   @modify
   */
 //执行策略使用 延迟执行
-uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t immediate)
+uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t force, uint8_t immediate)
 {
     // Zigebee_setIOBynetId(pdevTbs);
     //TODO: 1.状态操作允许 设置函数，主要功能是是设置允许操作标志
     //  2. 判断Iomode 设置是否有效
-    Device_operateSetting(pdevTbs);
+    Device_operateFlag(pdevTbs);
     if ( pdevTbs->operate)
     {
-        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
+        //强制执行
+        if (force)
+        {
+            zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
+        }
+        else
+        {
+            switch (pdevTbs->statetables[pdevTbs->ion].iomode)
+            {
+            case IO_MODE_NOUSE:
+
+                break;
+            case IO_MODE_ANALOG_INPUT:
+
+                break;
+            case IO_MODE_GPIO_INPUT:
+
+                break;
+            case IO_MODE_GPIO_OUTPUT_0:
+                if (pdevTbs->statetables[pdevTbs->ion].curstat)
+                {
+                    zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
+                    pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                }
+                break;
+            case IO_MODE_GPIO_OUTPUT_1:
+                if (!pdevTbs->statetables[pdevTbs->ion].curstat)
+                {
+                    zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
+                    pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                }
+                break;
+
+            case IO_MODE_PULSE_COUNT:
+
+                break;
+
+            }
+
+        }
     }
     else
     {
@@ -634,13 +696,13 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t immediate)
         //操作禁止
         return ERR_OPERATE;
     }
-		return OK;
+    return OK;
 
 }
 
 
 // 更新 默认设备状态
-void zigbee_operate_ALL(void)
+void zigbee_operate_default(void)
 {
     uint8_t i = 0;
     //DEBUG: zigbee_operate_ALL
@@ -650,11 +712,25 @@ void zigbee_operate_ALL(void)
         if (devTbs[i].devstate)
         {
             Zigebee_setIOBynetId(&devTbs[i]);
-            zigbee_operate(&devTbs[i], 0);
+            zigbee_operate(&devTbs[i], ZIGEBE_NOFORCE, ZIGEBE_NONIMMEDIATE);
         }
     }
 }
+// 更新全部设备状态
+void zigbee_operate_ALL(void)
+{
+    uint8_t i = 0;
+    //DEBUG: zigbee_operate_ALL
 
+    for (i = 0; i < MAX_DEVTABLE_NUM; i++)
+    {
+        if (devTbs[i].devstate)
+        {
+            //Zigebee_setIOBynetId(&devTbs[i]);
+            zigbee_operate(&devTbs[i], ZIGEBE_NOFORCE, ZIGEBE_NONIMMEDIATE);
+        }
+    }
+}
 
 /**
   * @brief  通过网络号远程查询对应IO状态

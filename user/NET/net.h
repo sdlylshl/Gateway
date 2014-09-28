@@ -9,12 +9,12 @@
 #define SEND_CMDS_NUM 20
 
 // 指令最大长度
-#define CMD_LEN 50
+#define CMD_LEN 0x50
 // 指令数据区最大长度 指令长度减去头
 #define CMD_DATA_LEN (CMD_LEN-10)
 
 // 接收缓冲区大小
-#define NET_BUFFSIZE 1512
+#define NET_BUFFSIZE 512
 
 
 #define NET_CMD_HEAD 0xE0

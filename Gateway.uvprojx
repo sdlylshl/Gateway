@@ -601,6 +601,12 @@
       </component>
     </components>
     <files>
+      <file attr="config" category="source" name="CMSIS_RTX\Templates\RTX_Conf_CM.c" version="4.70">
+        <instance index="0" removed="1">RTE\CMSIS\RTX_Conf_CM.c</instance>
+        <component Cclass="CMSIS" Cgroup="RTOS" Csub="Keil RTX" Cvendor="ARM" Cversion="4.74.0" condition="CMSIS Core"/>
+        <package name="CMSIS" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="ARM" version="4.1.1"/>
+        <targetInfos/>
+      </file>
       <file attr="config" category="header" name="FileSystem\Driver\Config\NAND_MemBus_Config.h" version="1.00">
         <instance index="0" removed="1">RTE\CMSIS_Driver\NAND_MemBus_Config.h</instance>
         <component Capiversion="2.01" Cclass="CMSIS Driver" Cgroup="NAND" Csub="Memory Bus" Cvendor="Keil" Cversion="1.00" condition="CMSIS Core"/>

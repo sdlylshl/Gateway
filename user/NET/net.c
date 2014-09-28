@@ -21,6 +21,7 @@ struct msgStu netSendDataCMDS[SEND_CMDS_NUM];
 struct msgStu netRecvDataCMDS[RECV_CMDS_NUM];
 //全局设备表
 
+
 //extern uint32_t Net_cmd[20];
 //uint8_t data[200];
 //uint32_t cmdRcv = 0;
@@ -29,7 +30,7 @@ struct msgStu netRecvDataCMDS[RECV_CMDS_NUM];
 //发送数据包随机号 ：指令包为奇数 应答包为用偶数，  0 表示心跳
 uint16_t  msgSN = 1;
 
-extern void zigbee_operate(struct devTable *pdevTbs, uint8_t immediate);
+extern void zigbee_operate(struct devTable *pdevTbs,uint8_t force, uint8_t immediate);
 
 //extern uint8_t Net_send_device(struct devTable *pdevTbs);
 void Net_PutChar(uint8_t ch)
@@ -461,7 +462,7 @@ void NET_fetchParseInstruction()
     //包头检测 若接收到的数据长度小于最小心跳包长度 则不再检测包头
     // DEBUG: NET_fetchParseInstruction
     // DEBUG(USARTn, "\r\n net parseRcvBufToLst2 \r\n");
-    while ((NET_write + NET_BUFFSIZE - NET_read) % NET_BUFFSIZE > 2)
+    while (((NET_BUFFSIZE + NET_write - NET_read) % NET_BUFFSIZE) > 2)
     {
 
 
@@ -472,12 +473,10 @@ void NET_fetchParseInstruction()
             //取得接收数据长度
             len_tmp = NET_buf[NET_read];
             //当前无效帧
-            if (len_tmp > CMD_DATA_LEN)
+            if (len_tmp < CMD_DATA_LEN)
             {
-                continue;
-            }
-            else if ((NET_write + NET_BUFFSIZE - NET_read) % NET_BUFFSIZE >= len_tmp + 7)
-            {
+							if (((NET_BUFFSIZE + NET_write - NET_read) % NET_BUFFSIZE) >= len_tmp + 7)
+								{
                 //接收到完整指令 NET_read+3 代表len 位置  len1+sn2+crc4 =7字节 endl 可忽略
 
                 struct msgStu *pNmsgR;
@@ -548,13 +547,13 @@ void NET_fetchParseInstruction()
             {
                 //未接收到完整的数据帧 退回
                 NET_read_backward(1);
+								break;
             }
 
-        }
-        else
-        {
-            NET_read_forward();
-        }
+					}
+				}else{
+				NET_read_forward();
+				}
 
 
     }//end while
@@ -631,7 +630,7 @@ uint8_t NET_parseData(struct msgStu *pNmsgR)
             pdevTbs->ion = *pion;
             Net_send_device(pdevTbs);
             // 发送Zigbee查询
-            zigbee_remote_req_net_io(pdevTbs->netId, pdevTbs->ion , 0);
+            zigbee_remote_req_net_io(pdevTbs->netId, pdevTbs->ion , ZIGEBE_IMMEDIATE);
         }
         else
         {
@@ -651,7 +650,7 @@ uint8_t NET_parseData(struct msgStu *pNmsgR)
         {
             pdevTbs->ion = *pion;
             for (i = 0; i < DEV_NAME_SIZE; i++)
-                pdevTbs->statetables[pdevTbs->ion].name[i] = *pname;
+                pdevTbs->statetables[pdevTbs->ion].name[i] = *pname++;
         }
         else
         {
@@ -673,8 +672,10 @@ uint8_t NET_parseData(struct msgStu *pNmsgR)
         {
             pdevTbs->ion = *pion;
             pdevTbs->statetables[pdevTbs->ion].iomode = *piomode;
-            // 立即执行
-            zigbee_operate(pdevTbs, 1);
+					  pdevTbs->priority = PRIORITY_HIGHEST; //将优先级设置为最高，禁用策略控制
+					// 立即强制执行
+            zigbee_operate(pdevTbs, ZIGEBE_FORCE,ZIGEBE_IMMEDIATE);
+
         }
         else
         {
