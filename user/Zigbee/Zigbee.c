@@ -658,6 +658,94 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force
                 }
                 break;
             case IO_MODE_PULSE_COUNT:
+
+                break;
+            // 窗帘
+            case IO_MODE_CURTAIN_FORTH:
+                if ((pdevTbs->netId & 0xFF00) == DEV_ACT_CURTAIN)
+                {
+                    // 正转IO3 1  反转IO2 0
+                    if (force)
+                    {
+                        pdevTbs->ion  = IO_D2;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                        pdevTbs->ion  = IO_D3;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                    }
+                    else if (pdevTbs->statetables[pdevTbs->ion].curstat)
+                    {
+                        pdevTbs->ion  = IO_D2;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                        pdevTbs->ion  = IO_D3;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                    }
+                }
+
+                break;
+
+            case IO_MODE_CURTAIN_BACK:
+                if ((pdevTbs->netId & 0xFF00) == DEV_ACT_CURTAIN)
+                {
+                    // 正转IO3 0  反转IO2 1
+                    if (force)
+                    {
+                        pdevTbs->ion  = IO_D3;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                        pdevTbs->ion  = IO_D2;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                    }
+                    else if (pdevTbs->statetables[pdevTbs->ion].curstat)
+                    {
+                        pdevTbs->ion  = IO_D3;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                        pdevTbs->ion  = IO_D2;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                    }
+                }
+                break;
+            case IO_MODE_CURTAIN_STOP:
+                if ((pdevTbs->netId & 0xFF00) == DEV_ACT_CURTAIN)
+                {
+                    // 正转IO3 0  反转IO2 1
+                    if (force)
+                    {
+                        pdevTbs->ion  = IO_D3;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                        pdevTbs->ion  = IO_D2;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                    }
+                    else if (pdevTbs->statetables[pdevTbs->ion].curstat)
+                    {
+                        pdevTbs->ion  = IO_D3;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                        pdevTbs->ion  = IO_D2;
+                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                    }
+                }
                 break;
             }
         }

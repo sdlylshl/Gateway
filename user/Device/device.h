@@ -22,7 +22,11 @@
 // 插座
 #define DEV_ACT_JACK         0x0200
 // 窗帘
-#define DEV_ACT_CURTAIN      0x7000
+#define DEV_ACT_CURTAIN      0x0300
+
+#define IO_MODE_CURTAIN_FORTH 0x10
+#define IO_MODE_CURTAIN_BACK 0x11
+#define IO_MODE_CURTAIN_STOP 0x12
 // 开关  开关
 #define DEV_SENSOR_SW          0x8000
 // 人体红外感应 开关

@@ -100,14 +100,8 @@ void Device_operateFlag(struct devTable *pdevTbs)
             case DEV_ACT_CURTAIN :
                 if (pdevTbs->ion)
                 {
-                    if (pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_0 || pdevTbs->statetables[pdevTbs->ion].iomode == IO_MODE_GPIO_OUTPUT_1 )
-                    {
                         pdevTbs->operate = 1;
-                    }
-                    else
-                    {
-                        pdevTbs->operate = 0;
-                    }
+                
                 }
                 break;
             //
