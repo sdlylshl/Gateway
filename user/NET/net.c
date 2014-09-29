@@ -13,7 +13,7 @@ uint8_t NET_buf[NET_BUFFSIZE];
 __IO uint16_t NET_write ;
 __IO uint16_t NET_read ;
 //最大 指令表 发送到服务器指令
-struct msgStu netSendDataCMDS[SEND_CMDS_NUM];
+struct msgStu netSendDataCMDS[SEND_CMDS_NUM + 1];
 //最大 指令表 接收到服务器指令
 struct msgStu netRecvDataCMDS[RECV_CMDS_NUM];
 //全局设备表
@@ -23,7 +23,9 @@ struct msgStu netRecvDataCMDS[RECV_CMDS_NUM];
 //uint32_t cmdDeal = -1;
 //发送数据包随机号 ：指令包为奇数 应答包为用偶数，  0 表示心跳
 uint16_t  msgSN = 1;
-extern void zigbee_operate(struct devTable *pdevTbs,uint8_t force, uint8_t immediate);
+extern uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force, uint8_t immediate);
+extern uint8_t zigbee_inquire(struct devTable *pdevTbs, uint8_t force, uint8_t immediate);
+
 //extern uint8_t Net_send_device(struct devTable *pdevTbs);
 void Net_PutChar(uint8_t ch)
 {
@@ -385,24 +387,26 @@ void print_CMDS()
         i++;
     }
 }
-void NET_read_backward(uint8_t dec)
+void NET_read_backward()
 {
-    while (dec--)
+
+    if (NET_read == 0)
+        NET_read = (NET_BUFFSIZE - 1);
+    else
     {
-        if (NET_read == 0)
-            NET_read = (NET_BUFFSIZE - 1);
-        else
-            NET_read--;
+        NET_read--;
+        //NET_buf[NET_read] =NET_CMD_HEAD;
+
     }
+
 }
 void NET_read_forward()
 {
-    if (NET_read == (NET_BUFFSIZE - 1))
+
+    //NET_buf[NET_read] =0x00;
+    NET_read++;
+    if (NET_read == NET_BUFFSIZE )
         NET_read = 0;
-    else
-    {
-        NET_read++;
-    }
 }
 //将接收缓冲器中数据解析成单条指令 存放到cmdS[MAX_CMDS]
 void NET_fetchParseInstruction()
@@ -425,9 +429,9 @@ void NET_fetchParseInstruction()
             //当前无效帧
             if (len_tmp < CMD_DATA_LEN)
             {
-                if (((NET_BUFFSIZE + NET_write - NET_read) % NET_BUFFSIZE) >= len_tmp + 7)
+                if (((NET_BUFFSIZE + NET_write - NET_read) % NET_BUFFSIZE) > len_tmp + 7)
                 {
-                    //接收到完整指令 NET_read+3 代表len 位置  len1+sn2+crc4 =7字节 endl 可忽略
+                    //接收到完整指令 NET_read+3 代表len 位置  len1+sn2+crc4+endl =8字节 endl 可忽略
                     struct msgStu *pNmsgR;
                     uint8_t *psndat;
                     uint32_t crc;
@@ -486,7 +490,7 @@ void NET_fetchParseInstruction()
                 else
                 {
                     //未接收到完整的数据帧 退回
-                    NET_read_backward(1);
+                    NET_read_backward();
                     break;
                 }
             }

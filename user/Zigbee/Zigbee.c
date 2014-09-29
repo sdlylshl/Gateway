@@ -19,6 +19,9 @@ __IO uint16_t Zigbee_send_add = 0;
 __IO uint16_t Zigbee_send_rm = 0;
 extern uint8_t Net_send_device(struct devTable *pdevTbs);
 //extern void Device_operateFlag(struct devTable *pdevTbs);
+extern uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force, uint8_t immediate);
+extern uint8_t zigbee_inquire(struct devTable *pdevTbs, uint8_t force, uint8_t immediate);
+
 void SendCMD(uint8_t data)
 {
     while ( USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET );
@@ -431,7 +434,7 @@ uint8_t Zigbee_fetchParseInstruction (void)
             {
                 continue;
             }
-            else if ((Zigbee_write + ZIGBEE_BUFFSIZE - Zigbee_read) % ZIGBEE_BUFFSIZE >= len_tmp + 4)
+            else if ((Zigbee_write + ZIGBEE_BUFFSIZE - Zigbee_read) % ZIGBEE_BUFFSIZE > len_tmp + 3)
             {
                 //接收到完整指令   len1+cmd2+chk1 =4字节
                 //由于接收到的数据不是连续存储的，所以必须先转存 后校验
@@ -526,7 +529,7 @@ void Zigbee_getActstate_timer(uint32_t timeout)
                 //获取控制器的默认IO状态
                 if ((devTbs[i].netId & 0x8000 ) == 0x0000)
                 {
-                    Zigebee_setIOBynetId(devTbs[i].netId);
+                    Zigebee_setIOBynetId(devTbs);
                     zigbee_inquire(&devTbs[i], ZIGEBE_FORCE, ZIGEBE_NONIMMEDIATE);
                     //zigbee_remote_req_net_io(devTbs[i].netId, devTbs[i].ion, ZIGEBE_NONIMMEDIATE);
                 }
@@ -587,6 +590,7 @@ uint8_t zigbee_inquire(struct devTable *pdevTbs, uint8_t force, uint8_t immediat
         pdevTbs->request = pdevTbs->request | (1 << pdevTbs->ion);
         zigbee_remote_req_net_io(pdevTbs->netId, pdevTbs->ion, immediate);
     }
+		return OK;
 }
 /**
   * @brief  设备执行    循环检测标志位
@@ -607,7 +611,7 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force
     Device_operateFlag(pdevTbs);
     if ( pdevTbs->operate)
     {
-        if (priority > pdevTbs->priority)
+        if (priority >= pdevTbs->priority)
         {
             pdevTbs->priority = priority;
             switch (pdevTbs->statetables[pdevTbs->ion].iomode)

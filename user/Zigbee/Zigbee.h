@@ -152,7 +152,8 @@ extern uint8_t zigbee_remote_set_net_io(uint16_t netid, uint8_t IOn, uint8_t IOm
 extern void Zigbee_getActstate_timer(uint32_t timeout);
 extern void Zigbee_getBattery(uint32_t timeout);
 extern void Zigbee_send_Timer(uint32_t timeout);
-extern void zigbee_operate_ALL(void);
+extern void Zigbee_ClearRequest(uint32_t timeout);
+extern void zigbee_operate_default(uint32_t timeout);
 extern void zigbee_updateAllDevice(void);
 extern void zigbee_updateMacByNetId(uint16_t netid);
 extern void zigbee_updateNetIdByMac(uint8_t *mac);

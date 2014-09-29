@@ -10,7 +10,7 @@
 // 指令数据区最大长度 指令长度减去头
 #define CMD_DATA_LEN (CMD_LEN-10)
 // 接收缓冲区大小
-#define NET_BUFFSIZE 512
+#define NET_BUFFSIZE 256
 #define NET_CMD_HEAD 0xE0
 #define NET_CMD_END 0x18
 // 服务器下发指令
@@ -78,7 +78,7 @@ extern void parseAllCmd(void);
 //策略解析，修改对应 设备表
 extern void policydecisions(void);
 //重发机制
-extern void Net_send_Timer(void);
+extern void Net_send_Timer(uint32_t timeout);
 extern uint8_t Net_send_data(struct msgStu *pNmsgS);
 extern void print_CMDS(void);
 extern void print_DEVS(void);

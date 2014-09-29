@@ -359,11 +359,9 @@ void USART1_IRQHandler(void)
     if (USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
     {
         c = USART1->DR;
-        NET_buf[NET_write] = c;
-        if (NET_write == NET_BUFFSIZE - 1)
+        NET_buf[NET_write++] = c;
+        if (NET_write == NET_BUFFSIZE)
             NET_write = 0;
-        else
-            NET_write++;
         //TO TEST print usart1 == net out
         //Net_PutChar(c);
     }
