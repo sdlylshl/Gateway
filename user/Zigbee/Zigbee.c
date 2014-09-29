@@ -511,6 +511,17 @@ void Zigbee_ClearRequest(uint32_t timeout)
         timer_Zigbee_ClearRequest = 0;
     }
 }
+void Zigbee_ClearPriority( void)
+{
+    uint8_t i;
+    for (i = 0; i < MAX_DEVTABLE_NUM; i++)
+    {
+        if (devTbs[i].devstate)
+        {
+            devTbs[i].priority = 0;
+        }
+    }
+}
 // 定时查询IO状态
 //IO0 电池电量检测
 //IO1 默认模拟IO采集
@@ -590,7 +601,7 @@ uint8_t zigbee_inquire(struct devTable *pdevTbs, uint8_t force, uint8_t immediat
         pdevTbs->request = pdevTbs->request | (1 << pdevTbs->ion);
         zigbee_remote_req_net_io(pdevTbs->netId, pdevTbs->ion, immediate);
     }
-		return OK;
+    return OK;
 }
 /**
   * @brief  设备执行    循环检测标志位

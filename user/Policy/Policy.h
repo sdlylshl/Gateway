@@ -6,6 +6,13 @@
 #define PRIORITY_HIGHEST 0xFF
 #define PRIORITY_DEFAULT 0xFE
 #define PRIORITY_LOWEST 0x0
+// 模式设置
+#define MODE_HOME   0x01
+#define MODE_LEAVE  0x02
+#define MODE_PROTECT  0x03
+#define MODE_DEF  0x04
+
+
 struct deviceInfo
 {
     uint16_t deviceId;  //设备ID 可选 网络号|MAC
@@ -68,4 +75,5 @@ extern struct strgytable strategytable[];
 //策略解析
 extern void strategy_implementation(void);
 extern void strategy_init(void);
+extern void policy_mode_switch(uint8_t mode);
 #endif

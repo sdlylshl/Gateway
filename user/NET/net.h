@@ -26,6 +26,9 @@
 // 更新设备信息
 #define NET_CMD_DEV_UPDATE    0x01
 #define NET_CMD_PROCY_UPDATE    0x20
+
+#define NET_CMD_MODE_SWITCH    0xB2
+
 #define Tranverse16(X)                 ((((uint16_t)(X) & 0xff00) >> 8) |(((uint16_t)(X) & 0x00ff) << 8))
 #define Tranverse32(X)                 ((((uint32_t)(X) & 0xff000000) >> 24) | (((uint32_t)(X) & 0x00ff0000) >> 8) |  (((uint32_t)(X) & 0x0000ff00) << 8) | (((uint32_t)(X) & 0x000000ff) << 24))
 /**

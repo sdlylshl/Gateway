@@ -162,3 +162,24 @@ void strategy_init(void)
     strategy_tables[1].actuators[0].actuatorId = 0x0102;
     strategy_tables[1].actuators[0].actuatorIO = IO_MODE_GPIO_OUTPUT_0;
 }
+
+void policy_mode_switch(uint8_t mode)
+{
+    switch(mode)
+    {
+        // 1. 使能禁用不同的策略
+        // 2. 修改控制器优先级
+        case MODE_HOME:
+            break;
+        case MODE_LEAVE:
+            break;
+        case MODE_PROTECT:
+					
+            Zigbee_ClearPriority();
+            break;
+        case MODE_DEF:
+            break;
+
+    }
+
+}
