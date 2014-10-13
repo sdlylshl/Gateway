@@ -17,6 +17,7 @@
 #define DEV_IO_NUM 0x05
 #define DEV_NAME_SIZE 12
 // 设备类型 netId高字节
+// ****执行器
 // 灯
 #define DEV_ACT_LIGHT         0x0100
 // 插座
@@ -24,16 +25,26 @@
 // 窗帘
 #define DEV_ACT_CURTAIN      0x0300
 
-#define IO_MODE_CURTAIN_FORTH 0x10
-#define IO_MODE_CURTAIN_BACK 0x11
-#define IO_MODE_CURTAIN_STOP 0x12
-// 开关  开关
+    // 00
+#define IO_MODE_CURTAIN_STOP 0x10
+    // 01
+#define IO_MODE_CURTAIN_FORTH 0x11
+    // 10
+#define IO_MODE_CURTAIN_BACK 0x12
+    // 11
+#define IO_MODE_CURTAIN_PAUSE 0x13
+
+// 门磁锁
+#define DEV_ACT_LOCKER      0x0400
+
+// ****传感器
+// 开关  开关 IO2
 #define DEV_SENSOR_SW          0x8000
-// 人体红外感应 开关
+// 人体红外感应 开关 IO2
 #define DEV_SENSOR_IR          0x8100
-// 烟雾 开关
+// 烟雾 开关 IO2
 #define DEV_SENSOR_SMOKE       0x8200
-// 燃气 模拟
+// 燃气 模拟 IO1
 #define DEV_SENSOR_GAS       0x8300
 enum devTbCV
 {
