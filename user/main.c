@@ -72,7 +72,7 @@ int main(void)
     /* Infinite loop */
     TIM2_Configuration();
     START_TIME();
-    strategy_init();
+    policy_init();
     //1.获取设备信息 AT+NWS
 
     while (1)

@@ -2,15 +2,27 @@
 #define __POLICY_H
 #include "config.h"
 // 策略表 最大条数
-#define  MAX_DESTABLE_NUM  20
-#define PRIORITY_HIGHEST 0xFF
-#define PRIORITY_DEFAULT 0xFE
-#define PRIORITY_LOWEST 0x0
+#define  MAX_DESTABLE_NUM  0x40
+
+#define PRIORITY_HIGHEST  0xFF
+#define PRIORITY_DEFAULT  0xFE
+#define PRIORITY_LOWEST   0x01
+#define PRIORITY_NOUSE    0x00
+// 策略优先级为0时表示当前策略没有设定
+
+// 触发类型 type
+#define TRIGGER_FLIP  0x00
+// #define TRIGGER_EQUAL 0x01
+#define TRIGGER_BIG_EQUAL   0x02
+#define TRIGGER_SMALL 0x03
+
 // 模式设置
-#define MODE_HOME   0x01
-#define MODE_LEAVE  0x02
-#define MODE_PROTECT  0x03
-#define MODE_DEF  0x04
+
+#define MODE_DEFAULT  0x00
+#define MODE_HOME     0x10
+#define MODE_LEAVE    0x20
+#define MODE_PROTECT  0x30
+
 
 
 struct deviceInfo
@@ -45,10 +57,10 @@ struct actuator
   */
 struct strgytable
 {
-    uint8_t usable; //操作状态
-    uint8_t priority; //优先级 不允许相同
+    uint8_t usable; //操作状态 模式设置 MODE_HOME
+    uint8_t priority; //优先级 不允许相同 优先级为0 表示无此策略
     uint8_t num;
-    uint8_t type;
+    uint8_t type;   //触发类型 TRIGGER_FLIP
     struct sensor sensors[4];
     struct actuator actuators[10];
     // uint8_t name[10];
@@ -76,4 +88,5 @@ extern struct strgytable strategytable[];
 extern void strategy_implementation(void);
 extern void strategy_init(void);
 extern void policy_mode_switch(uint8_t mode);
+extern void policy_init(void);
 #endif
