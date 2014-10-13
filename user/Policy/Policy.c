@@ -85,6 +85,7 @@ void  strategy_implementation(void)
                         flagTrue = 0;
                         break;
                     }
+                    /*
                     //开关型触发 0b01
                     else if (TRIGGER_EQUAL == type)
                     {
@@ -95,17 +96,17 @@ void  strategy_implementation(void)
                             // 只要有一个条件不满足，直接退出
                             break;
                         }
-                    }
-                    //小触发   0b10
-                    else if (TRIGGER_BIG == type)
+                    }*/
+                    //大于等于   0b10
+                    else if (TRIGGER_BIG_EQUAL == type)
                     {
-                        if (pdevTbs->statetables[pdevTbs->ion].curstat > strategy_tables[i].sensors[j].sensorState)
+                        if (pdevTbs->statetables[pdevTbs->ion].curstat >= strategy_tables[i].sensors[j].sensorState)
                         {
                             flagTrue = 0;
                             break;
                         }
                     }
-                    // 大触发 0b11
+                    // 小于 0b11
                     else if (TRIGGER_SMALL == type)
                     {
                         if (pdevTbs->statetables[pdevTbs->ion].curstat < strategy_tables[i].sensors[j].sensorState)
@@ -153,46 +154,64 @@ void strategy_init(void)
     // 0x0~0xF 公共策略
     strategy_tables[0].priority = 1;
     strategy_tables[0].num = 0x11;
-    strategy_tables[0].type = 0x01;
-    strategy_tables[0].usable = 0x01;
-    strategy_tables[0].sensors[0].sensorId = (DEV_SENSOR_IR+2);
-    strategy_tables[0].sensors[0].sensorState = 0x1;
-    strategy_tables[0].actuators[0].actuatorId = (DEV_ACT_LIGHT+2);
+    strategy_tables[0].type = TRIGGER_BIG_EQUAL;
+    strategy_tables[0].usable = MODE_DEF;
+    strategy_tables[0].sensors[0].sensorId = (DEV_SENSOR_IR + 2);
+    strategy_tables[0].sensors[0].sensorState = 0x0001;
+    strategy_tables[0].actuators[0].actuatorId = (DEV_ACT_LIGHT + 2);
     strategy_tables[0].actuators[0].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
+
     strategy_tables[1].priority = 2;
     strategy_tables[1].num = 0x11;
-    strategy_tables[1].type = 0x01;
-    strategy_tables[1].usable = 0x01;
-    strategy_tables[1].sensors[0].sensorId = (DEV_SENSOR_IR+2);
-    strategy_tables[1].sensors[0].sensorState = 0x0;
-    strategy_tables[1].actuators[0].actuatorId = (DEV_ACT_LIGHT+2);
+    strategy_tables[1].type = TRIGGER_BIG_EQUAL;
+    strategy_tables[1].usable = MODE_DEF;
+    strategy_tables[1].sensors[0].sensorId = (DEV_SENSOR_IR + 2);
+    strategy_tables[1].sensors[0].sensorState = 0x0000;
+    strategy_tables[1].actuators[0].actuatorId = (DEV_ACT_LIGHT + 2);
     strategy_tables[1].actuators[0].actuatorIO = IO_MODE_GPIO_OUTPUT_0;
-    // 0x10~0x1F 回家模式策略
+    // 0x10~0x1F 回家、离家模式策略
 
-    // 0x20~0x2F 离家模式策略
-
-    // 0x30~0x3F 布防模式策略
+    // 0x30~0x3F 布防、撤防模式策略
 
     // 0x40
 }
 
+void policy_mode_usable(uint8_t mode)
+{
+    uint8_t i;
+    for ( i = 0x10; i < MAX_DESTABLE_NUM; i++)
+    {
+        strategy_tables[i].usable = 0;
+    }
+    for ( i = 0; i < 0x10; i++)
+    {
+        strategy_tables[mode + i].usable = mode;
+    }
+}
 void policy_mode_switch(uint8_t mode)
 {
-    switch (mode)
-    {
+
     // 1. 使能禁用不同的策略
     // 2. 修改控制器优先级
+    switch (mode)
+    {
+    // 1. 离家 回家模式切换
     case MODE_HOME:
+        policy_mode_usable(mode);
         Zigbee_ClearPriority();
         break;
     case MODE_LEAVE:
+        policy_mode_usable(mode);
         Zigbee_ClearPriority();
         break;
+    // 2. 布防、撤防模式切换
     case MODE_PROTECT:
-
+        policy_mode_usable(mode);
         Zigbee_ClearPriority();
         break;
+
     case MODE_DEF:
+        // MODE_DEF 自定义模式
         break;
 
     }
