@@ -3,6 +3,10 @@
 #define BIGENDIAN 1
 //全局设备表
 struct devTable  devTbs[MAX_DEVTABLE_NUM];
+extern struct devTable *pdevTbs_curtain ;
+
+extern void Zigebee_setIOBynetId(struct devTable *pdevTbs);
+extern uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force, uint8_t immediate);
 /**
   * @brief  获取空设备
   * @param  None
@@ -149,6 +153,7 @@ void print_DEVS()
     SendCMD(0x5B);
 }
 //  TODO:
+/**/
 void curtain_stop()
 {
     if (timer_curtain_stop > 5 * 1000)
@@ -156,9 +161,9 @@ void curtain_stop()
 
         if (pdevTbs_curtain)
         {
-            Zigebee_setIOBynetId(&devTbs[i]);
-            pdevTbs_curtain->statetables[pdevTbs->ion].iomode = IO_MODE_CURTAIN_STOP;
-            zigbee_operate(&devTbs[i], PRIORITY_DEFAULT, ZIGEBE_NOFORCE, ZIGEBE_NONIMMEDIATE);
+            Zigebee_setIOBynetId(pdevTbs_curtain);
+            pdevTbs_curtain->statetables[pdevTbs_curtain->ion].iomode = IO_MODE_CURTAIN_STOP;
+            zigbee_operate(pdevTbs_curtain, PRIORITY_DEFAULT, ZIGEBE_NOFORCE, ZIGEBE_NONIMMEDIATE);
         }
     }
 }
