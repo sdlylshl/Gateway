@@ -17,10 +17,11 @@
 #define TRIGGER_SMALL 0x03
 
 // 模式设置
+
+#define MODE_DEFAULT  0x00
 #define MODE_HOME     0x10
 #define MODE_LEAVE    0x20
 #define MODE_PROTECT  0x30
-#define MODE_DEF      0x40
 
 
 
@@ -87,4 +88,5 @@ extern struct strgytable strategytable[];
 extern void strategy_implementation(void);
 extern void strategy_init(void);
 extern void policy_mode_switch(uint8_t mode);
+extern void policy_init(void);
 #endif

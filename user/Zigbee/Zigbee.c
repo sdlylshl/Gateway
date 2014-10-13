@@ -511,17 +511,7 @@ void Zigbee_ClearRequest(uint32_t timeout)
         timer_Zigbee_ClearRequest = 0;
     }
 }
-void Zigbee_ClearPriority( void)
-{
-    uint8_t i;
-    for (i = 0; i < MAX_DEVTABLE_NUM; i++)
-    {
-        if (devTbs[i].devstate)
-        {
-            devTbs[i].priority = 0;
-        }
-    }
-}
+
 // 定时查询IO状态
 //IO0 电池电量检测
 //IO1 默认模拟IO采集
@@ -676,19 +666,27 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force
                         zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
                         pdevTbs->statetables[pdevTbs->ion].curstat = 0;
                     }
-                    else if (pdevTbs->statetables[pdevTbs->ion].curstat)
+                    else
                     {
-                        pdevTbs->ion  = IO_D2;
-                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
-                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
-                        pdevTbs->statetables[pdevTbs->ion].curstat = 0;
-                        pdevTbs->ion  = IO_D3;
-                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
-                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
-                        pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                        pdevTbs->ion = IO_D2;
+                        if (1 == pdevTbs->statetables[pdevTbs->ion].curstat)
+                        {
+                            pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                            zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
+                            pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                        }
+
+                        pdevTbs->ion = IO_D3;
+                        if (1 == pdevTbs->statetables[pdevTbs->ion].curstat)
+                        {
+                            pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                            zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
+                            pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                        }
+
                     }
                 }
-            break;
+                break;
             case IO_MODE_CURTAIN_FORTH:
                 if ((pdevTbs->netId & 0xFF00) == DEV_ACT_CURTAIN)
                 {
@@ -704,16 +702,24 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force
                         zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
                         pdevTbs->statetables[pdevTbs->ion].curstat = 1;
                     }
-                    else if (pdevTbs->statetables[pdevTbs->ion].curstat)
+                    else
                     {
-                        pdevTbs->ion  = IO_D2;
-                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
-                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
-                        pdevTbs->statetables[pdevTbs->ion].curstat = 0;
-                        pdevTbs->ion  = IO_D3;
-                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
-                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
-                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                        pdevTbs->ion = IO_D2;
+                        if (1 == pdevTbs->statetables[pdevTbs->ion].curstat)
+                        {
+                            pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                            zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
+                            pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                        }
+
+                        pdevTbs->ion = IO_D3;
+                        if (0 == pdevTbs->statetables[pdevTbs->ion].curstat)
+                        {
+                            pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                            zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                            pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                        }
+
                     }
                 }
 
@@ -735,17 +741,24 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force
                         zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
                         pdevTbs->statetables[pdevTbs->ion].curstat = 0;
                     }
-                    else if (pdevTbs->statetables[pdevTbs->ion].curstat)
+                    else
                     {
+                        pdevTbs->ion = IO_D2;
+                        if (0 == pdevTbs->statetables[pdevTbs->ion].curstat)
+                        {
+                            pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                            zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                            pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                        }
 
-                        pdevTbs->ion  = IO_D2;
-                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
-                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
-                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
-                        pdevTbs->ion  = IO_D3;
-                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
-                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
-                        pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                        pdevTbs->ion = IO_D3;
+                        if (1 == pdevTbs->statetables[pdevTbs->ion].curstat)
+                        {
+                            pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                            zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
+                            pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                        }
+
                     }
                 }
                 break;
@@ -764,16 +777,24 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force
                         zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
                         pdevTbs->statetables[pdevTbs->ion].curstat = 1;
                     }
-                    else if (pdevTbs->statetables[pdevTbs->ion].curstat)
+                    else
                     {
-                        pdevTbs->ion  = IO_D3;
-                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
-                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
-                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
-                        pdevTbs->ion  = IO_D2;
-                        pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
-                        zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
-                        pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                        pdevTbs->ion = IO_D2;
+                        if (0 == pdevTbs->statetables[pdevTbs->ion].curstat)
+                        {
+                            pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                            zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                            pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                        }
+
+                        pdevTbs->ion = IO_D3;
+                        if (0 == pdevTbs->statetables[pdevTbs->ion].curstat)
+                        {
+                            pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_1;
+                            zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                            pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                        }
+
                     }
                 }
                 break;

@@ -100,8 +100,8 @@ void Device_operateFlag(struct devTable *pdevTbs)
             case DEV_ACT_CURTAIN :
                 if (pdevTbs->ion)
                 {
-                        pdevTbs->operate = 1;
-                
+                    pdevTbs->operate = 1;
+
                 }
                 break;
             //
@@ -147,6 +147,20 @@ void print_DEVS()
     }
     SendCMD(j);
     SendCMD(0x5B);
+}
+//  TODO:
+void curtain_stop()
+{
+    if (timer_curtain_stop > 5 * 1000)
+    {
+
+        if (pdevTbs_curtain)
+        {
+            Zigebee_setIOBynetId(&devTbs[i]);
+            pdevTbs_curtain->statetables[pdevTbs->ion].iomode = IO_MODE_CURTAIN_STOP;
+            zigbee_operate(&devTbs[i], PRIORITY_DEFAULT, ZIGEBE_NOFORCE, ZIGEBE_NONIMMEDIATE);
+        }
+    }
 }
 void devInit(void)
 {
