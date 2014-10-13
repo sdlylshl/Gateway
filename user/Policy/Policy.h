@@ -2,15 +2,26 @@
 #define __POLICY_H
 #include "config.h"
 // 策略表 最大条数
-#define  MAX_DESTABLE_NUM  20
-#define PRIORITY_HIGHEST 0xFF
-#define PRIORITY_DEFAULT 0xFE
-#define PRIORITY_LOWEST 0x0
+#define  MAX_DESTABLE_NUM  0x40
+
+#define PRIORITY_HIGHEST  0xFF
+#define PRIORITY_DEFAULT  0xFE
+#define PRIORITY_LOWEST   0x01
+#define PRIORITY_NOUSE    0x00
+// 策略优先级为0时表示当前策略没有设定
+
+// 触发类型
+#define TRIGGER_FLIP  0x00
+#define TRIGGER_EQUAL 0x01
+#define TRIGGER_BIG   0x02
+#define TRIGGER_SMALL 0x03
+
 // 模式设置
-#define MODE_HOME   0x01
-#define MODE_LEAVE  0x02
+#define MODE_HOME     0x01
+#define MODE_LEAVE    0x02
 #define MODE_PROTECT  0x03
-#define MODE_DEF  0x04
+#define MODE_DEF      0x04
+
 
 
 struct deviceInfo
