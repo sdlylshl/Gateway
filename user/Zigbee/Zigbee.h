@@ -107,6 +107,15 @@
 #define IO_MODE_GPIO_OUTPUT_0   3   //实际情况和手册相反
 #define IO_MODE_GPIO_OUTPUT_1   4   //实际情况和手册相反
 #define IO_MODE_PULSE_COUNT     5
+    // 00
+#define IO_MODE_CURTAIN_STOP 0x10
+    // 01
+#define IO_MODE_CURTAIN_FORTH 0x11
+    // 10
+#define IO_MODE_CURTAIN_BACK 0x12
+    // 11
+#define IO_MODE_CURTAIN_PAUSE 0x13
+
 //Zigbee 设备类型
 #define ZIGBEE_COORDINATOR  0
 #define ZIGBEE_ROUTER       1
@@ -154,6 +163,7 @@ extern void Zigbee_getBattery(uint32_t timeout);
 extern void Zigbee_send_Timer(uint32_t timeout);
 extern void Zigbee_ClearRequest(uint32_t timeout);
 extern void zigbee_operate_default(uint32_t timeout);
+extern void Zigbee_reset_default(uint32_t timeout);
 extern void Zigbee_ClearPriority( void);
 extern void zigbee_updateAllDevice(void);
 extern void zigbee_updateMacByNetId(uint16_t netid);

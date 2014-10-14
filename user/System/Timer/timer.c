@@ -27,6 +27,7 @@ __IO uint32_t timer_Zigbee_sendBuff;
 __IO uint32_t timer_Zigbee_ClearRequest;
 __IO uint32_t timer_Zigbee_operate_default;
 __IO uint32_t timer_curtain_stop;
+__IO uint32_t timer_Zigbee_reset_default;
 
 void TIM2_test()
 {
@@ -213,6 +214,7 @@ void TIM2_IRQHandle(void)
         timer_Zigbee_sendBuff++;
         timer_Zigbee_ClearRequest++;
         timer_Zigbee_operate_default++;
+        timer_Zigbee_reset_default++;
         if (timer_curtain_stop)
         {
             timer_curtain_stop++;

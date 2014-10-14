@@ -18,24 +18,17 @@
 #define DEV_NAME_SIZE 12
 // 设备类型 netId高字节
 // ****执行器
-// 灯
-#define DEV_ACT_LIGHT         0x0100
+
+#define DEV_ACT_LIGHT         0x0100// 灯
+#define DEV_ACT_LOCKER      0x0400// 门磁锁
 // 插座
 #define DEV_ACT_JACK         0x0200
+
 // 窗帘
 #define DEV_ACT_CURTAIN      0x0300
 
-    // 00
-#define IO_MODE_CURTAIN_STOP 0x10
-    // 01
-#define IO_MODE_CURTAIN_FORTH 0x11
-    // 10
-#define IO_MODE_CURTAIN_BACK 0x12
-    // 11
-#define IO_MODE_CURTAIN_PAUSE 0x13
 
-// 门磁锁
-#define DEV_ACT_LOCKER      0x0400
+
 
 // ****传感器
 // 开关  开关 IO2
@@ -77,9 +70,9 @@ struct  devTable
     uint16_t    netId;
     uint8_t     mac[8];
     uint8_t    ion;
-    uint8_t    operate;//允许操作
-    uint8_t    priority; //当前设备 被哪个优先级的任务执行了
-    uint8_t    request; //查询标准，每个IO一位，接受到反馈清零
+    uint8_t    operate;   //允许操作
+    uint8_t    priority;  //当前设备 被哪个优先级的任务执行了
+    uint8_t    request;   //查询标准，每个IO一位，接受到反馈清零
     struct stateTable  statetables[DEV_IO_NUM];
 };
 //全局设备表

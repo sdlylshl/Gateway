@@ -19,11 +19,12 @@
 // 模式设置
 
 #define MODE_DEFAULT  0x00
-#define MODE_HOME     0x10
-#define MODE_LEAVE    0x20
-#define MODE_PROTECT  0x30
+#define MODE_HOME     0x01
+#define MODE_LEAVE    0x02
+#define MODE_RELAX  0x03
+#define MODE_PROTECT  0x04
 
-
+extern uint8_t MODE;
 
 struct deviceInfo
 {
@@ -87,6 +88,6 @@ extern struct strgytable strategytable[];
 //策略解析
 extern void strategy_implementation(void);
 extern void strategy_init(void);
-extern void policy_mode_switch(uint8_t mode);
+extern void policy_mode_switch(void);
 extern void policy_init(void);
 #endif

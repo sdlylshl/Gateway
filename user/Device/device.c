@@ -96,6 +96,7 @@ void Device_operateFlag(struct devTable *pdevTbs)
             //IO4 指示灯
             // 灯
             case DEV_ACT_LIGHT   :
+            case DEV_ACT_LOCKER  :
             // break;
             // 插座
             case DEV_ACT_JACK    :
@@ -135,6 +136,8 @@ void Device_operateFlag(struct devTable *pdevTbs)
         }
     }
 }
+
+
 void print_DEVS()
 {
     uint8_t i = 0;

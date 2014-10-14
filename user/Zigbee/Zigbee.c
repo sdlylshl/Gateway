@@ -199,26 +199,102 @@ struct Zigbee_msgStu *getZigbeeRecvBuff()
     }
     return NULL;
 }
-void Zigebee_setIOBynetId(struct devTable *pdevTbs)
+void Zigebee_ResetIOBynetId(struct devTable *pdevTbs)
 {
     if (pdevTbs)
     {
         if (pdevTbs->devstate)
         {
-            //pdevTbs->operate = 0;
-            switch (pdevTbs->netId & 0xFF00)
-            {
             //增加传感器检测 网络ID最高位为1
             //IO0 电池电量检测
             //IO1 默认模拟IO采集
             //IO2 默认开关IO采集 /备用开关控制
             //IO3 默认开关控制  /备用开关IO采集
             //IO4 指示灯
+            //pdevTbs->priority = PRIORITY_DEFAULT;
+            switch (pdevTbs->netId & 0xFF00)
+            {
+            //模拟采集IO1
+            case DEV_SENSOR_SMOKE:
+
+            case DEV_SENSOR_GAS  :
+                pdevTbs->ion = IO_D1;
+                pdevTbs->operate = 0;
+                pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_ANALOG_INPUT;
+                break;
+
+            //开关采集IO2
+            case DEV_SENSOR_SW   :
+            // break;
+            case DEV_SENSOR_IR   :
+                pdevTbs->ion = IO_D2;
+                pdevTbs->operate = 0;
+                pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_INPUT;
+                break;
+
+            // 开关输出 IO3
+            // 灯
+            case DEV_ACT_LIGHT   :
+            case DEV_ACT_LOCKER  :
+            // break;
+            // 插座
+            case DEV_ACT_JACK    :
+                pdevTbs->ion = IO_D3;
+                pdevTbs->operate = 1;
+                pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                break;
+            // 窗帘执行器
+            case DEV_ACT_CURTAIN :
+                pdevTbs->ion = IO_D3;
+                pdevTbs->operate = 1;
+                pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_CURTAIN_STOP;
+                break;
+
+            }
+        }
+    }
+}
+void Zigebee_setIOBynetId(struct devTable *pdevTbs)
+{
+    if (pdevTbs)
+    {
+        if (pdevTbs->devstate)
+        {
+            //增加传感器检测 网络ID最高位为1
+            //IO0 电池电量检测
+            //IO1 默认模拟IO采集
+            //IO2 默认开关IO采集 /备用开关控制
+            //IO3 默认开关控制  /备用开关IO采集
+            //IO4 指示灯
+            //pdevTbs->operate = 0;
+            //pdevTbs->priority = PRIORITY_DEFAULT;
+            switch (pdevTbs->netId & 0xFF00)
+            {
+            //模拟采集IO1
+            case DEV_SENSOR_SMOKE:
+
+            case DEV_SENSOR_GAS  :
+                pdevTbs->ion = IO_D1;
+                pdevTbs->operate = 0;
+                // pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_ANALOG_INPUT;
+                break;
+
+            //开关采集IO2
+            case DEV_SENSOR_SW   :
+            // break;
+            case DEV_SENSOR_IR   :
+                pdevTbs->ion = IO_D2;
+                pdevTbs->operate = 0;
+                // pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_INPUT;
+                break;
+
+            // 开关输出 IO3
             // 灯
             case DEV_ACT_LIGHT   :
             // break;
             // 插座
             case DEV_ACT_JACK    :
+            case DEV_ACT_LOCKER  :
             // break;
             // 窗帘执行器
             case DEV_ACT_CURTAIN :
@@ -226,24 +302,7 @@ void Zigebee_setIOBynetId(struct devTable *pdevTbs)
                 // pdevTbs->operate = 1;
                 // pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_OUTPUT_0;
                 break;
-            //
-            case DEV_SENSOR_SW   :
-            // break;
-            //
-            case DEV_SENSOR_IR   :
-            // break;
-            //开关采集 IO2
-            case DEV_SENSOR_SMOKE:
-                pdevTbs->ion = IO_D2;
-                pdevTbs->operate = 0;
-                // pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_GPIO_INPUT;
-                break;
-            //模拟采集IO1
-            case DEV_SENSOR_GAS  :
-                pdevTbs->ion = IO_D1;
-                pdevTbs->operate = 0;
-                // pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_ANALOG_INPUT;
-                break;
+
             }
         }
     }
@@ -527,6 +586,33 @@ void Zigbee_getActstate_timer(uint32_t timeout)
         {
             if (devTbs[i].devstate)
             {
+                switch (devTbs[i].netId & 0xFF00)
+                {
+
+                // 开关输出 IO3
+                // 灯
+                case DEV_ACT_LIGHT   :
+                // break;
+                // 插座
+                case DEV_ACT_JACK    :
+                    devTbs[i].ion = IO_D3;
+                    // devTbs[i].operate = 1;
+                    // devTbs[i].statetables[devTbs[i].ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                    zigbee_inquire(&devTbs[i], ZIGEBE_FORCE, ZIGEBE_NONIMMEDIATE);
+                    break;
+                // 窗帘执行器
+                case DEV_ACT_CURTAIN :
+                    devTbs[i].ion = IO_D3;
+                    // devTbs[i].operate = 1;
+                    // devTbs[i].statetables[devTbs[i].ion].iomode = IO_MODE_GPIO_OUTPUT_0;
+                    zigbee_inquire(&devTbs[i], ZIGEBE_FORCE, ZIGEBE_NONIMMEDIATE);
+                    devTbs[i].ion = IO_D2;
+                    zigbee_inquire(&devTbs[i], ZIGEBE_FORCE, ZIGEBE_NONIMMEDIATE);
+
+                    break;
+
+                }
+                /*
                 //获取控制器的默认IO状态
                 if ((devTbs[i].netId & 0x8000 ) == 0x0000)
                 {
@@ -534,6 +620,7 @@ void Zigbee_getActstate_timer(uint32_t timeout)
                     zigbee_inquire(&devTbs[i], ZIGEBE_FORCE, ZIGEBE_NONIMMEDIATE);
                     //zigbee_remote_req_net_io(devTbs[i].netId, devTbs[i].ion, ZIGEBE_NONIMMEDIATE);
                 }
+                */
             }
         }
         timer_Zigbee_getStatus = 0;
@@ -562,7 +649,31 @@ void Zigbee_getBattery(uint32_t timeout)
         timer_Zigbee_getBattery = 0;
     }
 }
-// 定时更新 默认设备状态
+// 复位所有设备默认状态
+void Zigbee_reset_default(uint32_t timeout)
+{
+    if (timer_Zigbee_reset_default > timeout)
+    {
+        uint8_t i;
+        for (i = 0; i < MAX_DEVTABLE_NUM; i++)
+        {
+            if (devTbs[i].devstate)
+            {
+                // 判断是否是执行器
+                if ((devTbs[i].netId & 0x8000) == 0)
+                {
+
+                    Zigebee_ResetIOBynetId(&devTbs[i]);
+                    zigbee_operate(&devTbs[i], PRIORITY_DEFAULT, ZIGEBE_FORCE, ZIGEBE_IMMEDIATE);
+
+                }
+            }
+        }
+        timer_Zigbee_reset_default = 0;
+    }
+
+}
+// 定时更新 设备状态
 void zigbee_operate_default(uint32_t timeout)
 {
     if (timer_Zigbee_operate_default > timeout)
@@ -628,11 +739,15 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force
                 {
                     zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
                     pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                    zigbee_remote_set_net_io(pdevTbs->netId, IO_D4, IO_MODE_GPIO_OUTPUT_0, 0, immediate);
+                    pdevTbs->statetables[IO_D4].curstat = 0;
                 }
                 else if (pdevTbs->statetables[pdevTbs->ion].curstat)
                 {
                     zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
                     pdevTbs->statetables[pdevTbs->ion].curstat = 0;
+                    zigbee_remote_set_net_io(pdevTbs->netId, IO_D4, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
+                    pdevTbs->statetables[IO_D4].curstat = 0;
                 }
                 break;
             case IO_MODE_GPIO_OUTPUT_1:
@@ -640,11 +755,16 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force
                 {
                     zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
                     pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                    zigbee_remote_set_net_io(pdevTbs->netId, IO_D4, IO_MODE_GPIO_OUTPUT_1, 0, immediate);
+                    pdevTbs->statetables[IO_D4].curstat = 1;
+
                 }
                 else if (!pdevTbs->statetables[pdevTbs->ion].curstat)
                 {
                     zigbee_remote_set_net_io(pdevTbs->netId, pdevTbs->ion, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
                     pdevTbs->statetables[pdevTbs->ion].curstat = 1;
+                    zigbee_remote_set_net_io(pdevTbs->netId, IO_D4, pdevTbs->statetables[pdevTbs->ion].iomode, 0, immediate);
+                    pdevTbs->statetables[IO_D4].curstat = 1;
                 }
                 break;
             case IO_MODE_PULSE_COUNT:
@@ -722,7 +842,6 @@ uint8_t zigbee_operate(struct devTable *pdevTbs, uint8_t priority, uint8_t force
 
                     }
                 }
-
                 break;
 
             case IO_MODE_CURTAIN_BACK:

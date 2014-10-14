@@ -526,7 +526,6 @@ uint8_t NET_parseData(struct msgStu *pNmsgR)
     uint8_t *piomode;
     uint8_t *pname;
     struct devTable *pdevTbs = NULL;
-		uint8_t procymode;
     //uint8_t ctr;
     // uint8_t *msgStu = (uint8_t *) & (pNmsgR->data[0]);
     //释放当前指令
@@ -611,8 +610,8 @@ uint8_t NET_parseData(struct msgStu *pNmsgR)
         break;
 		//模式切换
 		    case NET_CMD_MODE_SWITCH:
-						procymode = pNmsgR->data[1];
-						policy_mode_switch(procymode);
+						MODE = pNmsgR->data[1];
+						policy_mode_switch();
         break;
     }
     return OK;
