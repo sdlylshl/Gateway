@@ -20,13 +20,13 @@
 // ****执行器
 
 #define DEV_ACT_LIGHT         0x0100// 灯
-#define DEV_ACT_LOCKER      0x0400// 门磁锁
+#define DEV_ACT_ALARM      0x0500// 报警灯
 // 插座
 #define DEV_ACT_JACK         0x0200
-
 // 窗帘
 #define DEV_ACT_CURTAIN      0x0300
 
+#define DEV_ACT_LOCKER      0x0400// 门锁
 
 
 

@@ -235,7 +235,7 @@ void strategy_init(void)
     strategy_tables[0x2F].actuators[1].actuatorId = (DEV_ACT_LIGHT + 1);
     strategy_tables[0x2F].actuators[1].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
     // 3.报警灯2
-    strategy_tables[0x2F].actuators[2].actuatorId = (DEV_ACT_LIGHT + 2);
+    strategy_tables[0x2F].actuators[2].actuatorId = (DEV_ACT_ALARM + 1);
     strategy_tables[0x2F].actuators[2].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
 
     strategy_tables[0x2E].num = 0x13;
@@ -252,7 +252,7 @@ void strategy_init(void)
     strategy_tables[0x2E].actuators[1].actuatorId = (DEV_ACT_LIGHT + 1);
     strategy_tables[0x2E].actuators[1].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
     // 3.报警灯2
-    strategy_tables[0x2E].actuators[2].actuatorId = (DEV_ACT_LIGHT + 2);
+    strategy_tables[0x2E].actuators[2].actuatorId = (DEV_ACT_ALARM + 1);
     strategy_tables[0x2E].actuators[2].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
 
     // 0x30~0x3F 休息模式策略 0x30
@@ -271,7 +271,7 @@ void strategy_init(void)
     strategy_tables[0x3F].actuators[1].actuatorId = (DEV_ACT_LIGHT + 1);
     strategy_tables[0x3F].actuators[1].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
     // 3.报警灯2
-    strategy_tables[0x3F].actuators[2].actuatorId = (DEV_ACT_LIGHT + 2);
+    strategy_tables[0x3F].actuators[2].actuatorId = (DEV_ACT_ALARM + 1);
     strategy_tables[0x3F].actuators[2].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
 
     // 2. 检测到 卧室人体感应 -->开灯
@@ -364,6 +364,13 @@ void policy_mode_switch()
         {
             Zigebee_setIOBynetId(pdevTbs);
             pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_CURTAIN_FORTH;
+            zigbee_operate(pdevTbs, PRIORITY_DEFAULT, ZIGEBE_NOFORCE, ZIGEBE_NONIMMEDIATE);
+        }
+        pdevTbs = getDevTbsByNetId(DEV_ACT_CURTAIN + 1);
+        if (pdevTbs)
+        {
+            Zigebee_setIOBynetId(pdevTbs);
+            pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_CURTAIN_BACK;
             zigbee_operate(pdevTbs, PRIORITY_DEFAULT, ZIGEBE_NOFORCE, ZIGEBE_NONIMMEDIATE);
         }
         //

@@ -235,9 +235,8 @@ void Zigebee_ResetIOBynetId(struct devTable *pdevTbs)
             // 开关输出 IO3
             // 灯
             case DEV_ACT_LIGHT   :
+            case DEV_ACT_ALARM   :
             case DEV_ACT_LOCKER  :
-            // break;
-            // 插座
             case DEV_ACT_JACK    :
                 pdevTbs->ion = IO_D3;
                 pdevTbs->operate = 1;
@@ -290,11 +289,11 @@ void Zigebee_setIOBynetId(struct devTable *pdevTbs)
 
             // 开关输出 IO3
             // 灯
+
             case DEV_ACT_LIGHT   :
-            // break;
-            // 插座
-            case DEV_ACT_JACK    :
+            case DEV_ACT_ALARM   :
             case DEV_ACT_LOCKER  :
+            case DEV_ACT_JACK    :
             // break;
             // 窗帘执行器
             case DEV_ACT_CURTAIN :
@@ -592,8 +591,8 @@ void Zigbee_getActstate_timer(uint32_t timeout)
                 // 开关输出 IO3
                 // 灯
                 case DEV_ACT_LIGHT   :
-                // break;
-                // 插座
+                case DEV_ACT_ALARM   :
+                case DEV_ACT_LOCKER  :
                 case DEV_ACT_JACK    :
                     devTbs[i].ion = IO_D3;
                     // devTbs[i].operate = 1;
