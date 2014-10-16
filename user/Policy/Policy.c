@@ -201,7 +201,7 @@ void strategy_init(void)
     strategy_tables[0x0F].actuators[0].actuatorId = (DEV_ACT_LIGHT + 1);
     strategy_tables[0x0F].actuators[0].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
     // 2.报警灯2
-    strategy_tables[0x0F].actuators[1].actuatorId = (DEV_ACT_LIGHT + 2);
+    strategy_tables[0x0F].actuators[1].actuatorId = (DEV_ACT_ALARM + 1);
     strategy_tables[0x0F].actuators[1].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
 
     strategy_tables[0x0E].num = 0x12;
@@ -215,11 +215,13 @@ void strategy_init(void)
     strategy_tables[0x0E].actuators[0].actuatorId = (DEV_ACT_LIGHT + 1);
     strategy_tables[0x0E].actuators[0].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
     // 2.报警灯2
-    strategy_tables[0x0E].actuators[1].actuatorId = (DEV_ACT_LIGHT + 2);
+    strategy_tables[0x0E].actuators[1].actuatorId = (DEV_ACT_ALARM + 1);
     strategy_tables[0x0E].actuators[1].actuatorIO = IO_MODE_GPIO_OUTPUT_1;
 
 
     // 0x10~0x1F 回家模式 0x10
+		
+		
     //0x20~0x2F 布防 、离家模式策略0x20
     strategy_tables[0x2F].num = 0x13;
     strategy_tables[0x2F].priority = 0x2F;

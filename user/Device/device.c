@@ -166,7 +166,7 @@ void curtain_stop()
         if (pdevTbs_curtain)
         {
             Zigebee_setIOBynetId(pdevTbs_curtain);
-            pdevTbs_curtain->statetables[pdevTbs_curtain->ion].iomode = IO_MODE_CURTAIN_STOP;
+            pdevTbs_curtain->statetables[pdevTbs_curtain->ion].iomode = IO_MODE_CURTAIN_PAUSE;
             zigbee_operate(pdevTbs_curtain, PRIORITY_DEFAULT, ZIGEBE_NOFORCE, ZIGEBE_NONIMMEDIATE);
         }
     }

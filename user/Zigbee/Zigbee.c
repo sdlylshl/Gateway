@@ -246,7 +246,7 @@ void Zigebee_ResetIOBynetId(struct devTable *pdevTbs)
             case DEV_ACT_CURTAIN :
                 pdevTbs->ion = IO_D3;
                 pdevTbs->operate = 1;
-                pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_CURTAIN_STOP;
+                pdevTbs->statetables[pdevTbs->ion].iomode = IO_MODE_CURTAIN_PAUSE;
                 break;
 
             }
