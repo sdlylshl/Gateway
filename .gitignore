@@ -1,25 +1,29 @@
-# Object files
+
+### Include
+!*.doc
+!*.txt
+
+### Compress
+*.rar
+*.zip
+
+###
+*.Cache
+*.tags*
+tags
+*~
+~$*
+
+### Common
 *.o
-*.ko
-*.obj
-*.elf
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
 *.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
+*.db
+*.htm
+*.html
+*.bak
+*.tmp
+*.log
+*.obj
 # Executables
 *.exe
 *.out
@@ -27,20 +31,81 @@
 *.i*86
 *.x86_64
 *.hex
+## Build results
+[Dd]ebug		#Debug
+[Rr]elease		#Relese
+[Bb]uild		#Build			
+[Bb]in			#Bin
+[Oo]bj			#Obj
+[Oo]ut[Pp]ut	#Output
 
-# STM32
-/doc
-!*.doc
-/output
-*.txt
+### STM32
+output
 *.lst
 *.orig
-*.htm
-*.html
-*.bak
 *.dep
-*.rar
-*.zip
 *.map
-*.tags*
-*~
+### C#
+
+###Android
+
+### Altium Designer
+
+__Previews
+History
+Project Outputs for *
+CAM for *
+
+*.log
+*.ERC
+*.Cam
+*.Dat
+*.Annotation
+*.schPreview
+*.SchDocPreview
+*.pcblib_viewstate
+*.pcbdoc_viewstate
+##Outputs
+*.DRC 		#Design Rule Check Report
+*.Drr 		#Altium NC Drill Report File
+*.net 		#Altium Netlist File
+*.Nsx 		#Simulation Netlist Document
+*.OutJob 	#Altium Output Job File
+*.rep 		#Report File
+*.Rpt 		#Report File
+##EDIF
+*.edf
+*.edi
+*.edif
+*.ediflib
+*.edn
+##Gerber
+##other
+*.BomDoc
+*.Constraint
+*.DBLib
+*.DBLink
+*.FpgTrg
+##PCB
+*.pcb3d
+*.pcb3dlib
+##Schematic
+*.dot 		#Altium Schematic Template
+*.FSMDoc 	#Altium FSM Document
+*.OpenBus 	#altium OpenBus Document
+*.shcDot 	#Altium Schematic Document
+##Scripts
+*.Bas 		#Altium Script Document
+*.SrcDoc
+*.Tcl
+##Simulation
+*.Ckt 		#Simulation Sub-Circuit
+*.LaxAn 	#Logic Analyser Analog File
+*.LaxDig 	#Logic Analyser Digital File
+*.Mdl 		#Simulation Model
+*.Pld 		#CUPL PLD File
+*.Pwl 		#Simulation Piecewise Linear Description
+*.Sdf  		#Altium Simulation Data File
+*.si 		#CUPL Simulation Input File
+*.so 		#Digital Waveform File
+##VHDL
