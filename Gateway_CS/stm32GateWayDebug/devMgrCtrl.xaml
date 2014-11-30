@@ -1,0 +1,39 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:stm32GateWayDebug" x:Class="stm32GateWayDebug.devMgrCtrl" 
+             mc:Ignorable="d" 
+             d:DesignHeight="400" d:DesignWidth="1100">
+    <Canvas Width="1100" Height="400" Name="cvsMain" Background="LightBlue">
+        <Canvas Height="20" Width="1080" Background="#FFE6DBDB" Canvas.Left="10" Canvas.Top="10" >
+            <!--<Label Name="lbDevName" Height="30" Width="50" FontSize="16"  Foreground="Red" Content="人体" HorizontalContentAlignment="Center" FontWeight="Bold"/>-->
+            <!--<TextBox Name="txtState"Height="20" Width="40" Canvas.Left="50" IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <TextBox Name="txtProtocol"Height="20" Width="40" Canvas.Left="95" IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <TextBox Name="txtNetId"Height="20" Width="80" Canvas.Left="140" IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <TextBox Name="txtMac"Height="20" Width="160" Canvas.Left="225" IsEnabled="True" VerticalContentAlignment="Center"  HorizontalContentAlignment="Center"/>
+            <TextBox Name="txtActSt"Height="20" Width="80" Canvas.Left="390" IsEnabled="False" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <TextBox Name="txtCurSt"Height="20" Width="80" Canvas.Left="475" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <TextBox Name="txtType"Height="20" Width="40" Canvas.Left="560" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <TextBox Name="txtName"Height="20" Width="190" Canvas.Left="605" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Label Name="lbDevName" Height="24" Width="50" Content="10"  Foreground="Red" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Canvas.Top="-2" />-->
+            
+            <TextBox Name="txtState" Text="state"  Height="20" Width="40" Canvas.Left="50" IsEnabled="False" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtProtocol" Text="proto"  Height="20" Width="40" Canvas.Left="95" IsEnabled="False" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtNetId" Text="NetId"  Height="20" Width="80" Canvas.Left="140" IsEnabled="False" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtMac" Text="Mac"  Height="20" Width="160" Canvas.Left="225" IsEnabled="True" VerticalContentAlignment="Center" />
+            <TextBox Name="txtIO" Text="IO"  Height="20" Width="40" Canvas.Left="390" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtIOMode" Text="IOMode" Height="20" Width="40" Canvas.Left="435" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtCurSt" Text="CurSt"  Height="20" Width="80" Canvas.Left="480" IsEnabled="False"  VerticalContentAlignment="Center"/>
+            <TextBox Name="txtType" Text="Type"  Height="20" Width="40" Canvas.Left="565" VerticalContentAlignment="Center"/>
+            <TextBox Name="txtName" Text="Name"  Height="20" Width="210" Canvas.Left="610" VerticalContentAlignment="Center" />
+        </Canvas>
+        <Canvas Height="350" Width="1100" Canvas.Top="40" ClipToBounds="True" Name="cvsBox" MouseUp="cvsBox_MouseUp" MouseMove="cvsBox_MouseMove">
+            <Canvas x:Name="cvsPanel" Width="1100" Height="350" MouseDown="cvsPanel_MouseDown" Canvas.Top="0" Background="#00000000">
+
+            </Canvas>
+        </Canvas>
+
+    </Canvas>
+</UserControl>

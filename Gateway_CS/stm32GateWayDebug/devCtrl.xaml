@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="stm32GateWayDebug.devCtrl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="20" d:DesignWidth="1060">
+    <UserControl.Resources>
+        <Image x:Key="imglight_on" Source="pic/ligh_on.jpg" />
+        <Image x:Key="imglight_try" Source="pic/light_try.png" />
+        <Image x:Key="imglight_off" Source="pic/light_off.png" />
+        <Image x:Key="imgranqi" Source="pic/ranqixielou.jpg" />
+        <Image x:Key="imgrenti" Source="pic/rentiganying.jpg" />
+        <Image x:Key="imgyanwu" Source="pic/yanwuchuanganqi.jpg" />
+        <Image x:Key="imgSwitch_on" Source="pic/switch_on.png" />
+        <Image x:Key="imgSwitch_off" Source="pic/switch_off.png" />
+    </UserControl.Resources>
+    <Canvas Height="20" Width="1060" Background="#FFE6DBDB" ClipToBounds="True">
+        <!--<Image Name="imgDev" Height="30" Width="50" Source="pic/ligh_on.jpg" />-->
+        <Label Name="lbDevName" Height="24" Width="50" Content="10"  Foreground="Red" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Canvas.Top="-2" />
+        <TextBox Name="txtState" Height="20" Width="40" Canvas.Left="50" IsEnabled="False" VerticalContentAlignment="Center"/>
+        <TextBox Name="txtProtocol" Height="20" Width="40" Canvas.Left="95" IsEnabled="False" VerticalContentAlignment="Center"/>
+        <TextBox Name="txtNetId" Height="20" Width="80" Canvas.Left="140" IsEnabled="False" VerticalContentAlignment="Center"/>
+        <TextBox Name="txtMac" Height="20" Width="160" Canvas.Left="225" IsEnabled="False" VerticalContentAlignment="Center" TextChanged="txtMac_TextChanged"/>
+        <TextBox Name="txtIO" Height="20" Width="40" Canvas.Left="390" VerticalContentAlignment="Center" IsEnabled="False"/>
+        <TextBox Name="txtIOMode" Height="20" Width="40" Canvas.Left="435" VerticalContentAlignment="Center" IsEnabled="False"/>
+        <TextBox Name="txtCurSt" Height="20" Width="80" Canvas.Left="480" IsEnabled="False"  VerticalContentAlignment="Center"/>
+        <TextBox Name="txtType" Height="20" Width="40" Canvas.Left="565" VerticalContentAlignment="Center" IsEnabled="False"/>
+        <TextBox Name="txtName" Height="20" Width="210" Canvas.Left="610" VerticalContentAlignment="Center" />
+        <Border Name="bdFocus" Width="604" Height="24" BorderBrush="Red" BorderThickness="2" Canvas.Left="-2" Canvas.Top="-2" Visibility="Hidden"/>
+        <Button Name="btnName" Content="RN" Canvas.Left="825" Width="40" Height="20" Click="btnName_Click" />
+        <Button Name="btnOn" Content="On" Canvas.Left="915" Width="40" Height="20" Click="btnOn_Click" />
+        <Button Name="btnOff" Content="Off" Canvas.Left="960" Width="40" Height="20" Click="btnOff_Click" />
+        <Button Name="btnQuery" Content="Query" Canvas.Left="870" Width="40" Height="20" Click="btnQuery_Click" />
+        <Button Name="btnStop" Content="Stop" Canvas.Left="1005" Width="40" Height="20" Click="btnStop_Click" />
+        <TextBox Height="24" Canvas.Left="23" Width="900"  Visibility="Hidden"/>
+    </Canvas>
+</UserControl>

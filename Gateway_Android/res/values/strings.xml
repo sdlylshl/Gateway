@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Gateway</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="linkSer">Link</string>
+    <string name="strTest">Test</string>
+    <string name="strStop">Stop</string>
+    <string name="strLight">灯</string>
+    <string name="strGas">燃气感应</string>
+    <string name="strFire">烟雾感应</string>
+    <string name="strHumen1">客厅感应</string>
+    <string name="strHumen2">卧室感应</string>
+    <string name="strHumen">人体感应</string>
+    <string name="strWindow">窗帘</string>
+    <string name="strDoor">门锁</string>
+    <string name="strRobot">机械手</string>
+    <string name="strModeHome">回家模式</string>
+    <string name="strModeLeave">离家模式</string>
+    <string name="strModeRest">休息模式</string>
+    <string name="strFWD">前进</string>
+    <string name="strPause">停止</string>
+    <string name="strBWD">后退</string>
+    <string name="strOpen">开</string>
+    <string name="strClose">关</string>
+    <string name="strAlarm">报警器</string>
+    <color name="colorFocus">#00FF00</color>
+    <color name="colorON">#00ff00</color>
+    <color name="colorOFF">#C8C8C8</color>
+
+</resources>

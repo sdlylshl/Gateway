@@ -1,0 +1,25 @@
+﻿<Window x:Class="stm32GateWayDebug.userDevManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:stm32GateWayDebug"
+        Title="userDevManagerWindow" Height="600" Width="300" WindowStartupLocation="CenterScreen" KeyDown="Window_KeyDown" Unloaded="Window_Unloaded">
+    <StackPanel Height="600" Width="300" Background="#00000000"  VerticalAlignment="Center" HorizontalAlignment="Center"  >
+        <WrapPanel Height="250"  Canvas.Top="46" Width="300" Margin="0,30,0,0">
+            <local:performCtrl x:Name="窗帘" Height="100" Width="100" Type="窗帘" Margin="33,15,0,10"/>
+            <local:performCtrl x:Name="警报器" Height="100" Width="100" Type="警报器" Margin="33,15,0,10"/>
+            <local:performCtrl x:Name="灯" Height="100" Width="100" Type="灯" Margin="33,15,0,10"/>
+            <local:performCtrl x:Name="门锁" Height="100" Width="100" Type="门锁" Margin="33,15,0,10"/>
+        </WrapPanel>
+        <WrapPanel Height="250"  Canvas.Top="46" Width="300" Margin="0,0,0,0">
+            <local:inductionCtrl x:Name="客厅感应" Height="100" Width="100" type="客厅感应" Margin="33,15,0,10"/>
+            <local:inductionCtrl x:Name="卧室感应" Height="100" Width="100" type="卧室感应" Margin="33,15,0,10"/>
+            <local:inductionCtrl x:Name="燃气" Height="100" Width="100" type="燃气" Margin="33,15,0,10"/>
+            <local:inductionCtrl x:Name="烟感" Height="100" Width="100" type="烟感" Margin="33,15,0,10"/>
+        </WrapPanel>
+        <StackPanel Width="300" Orientation="Horizontal">
+            <Button Name="btnHomeMode" Height="30" Width="80" Content="回家模式" Margin="10,10,0,0" Click="btnHomeMode_Click" />
+            <Button Name="btnLeaveMode" Height="30" Width="80" Content="离家模式" Margin="20,10,0,0" Click="btnLeaveMode_Click" />
+            <Button Name="btnRestMode" Height="30" Width="80" Content="休息模式" Margin="20,10,0,0" Click="btnRestMode_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

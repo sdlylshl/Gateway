@@ -1,0 +1,254 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#FFFF7111"
+    tools:context="elin.gateway.MainActivity" >
+
+<Button
+    android:id="@+id/btnLink"
+    android:layout_marginRight="30dp"
+    android:layout_width="80dp"
+    android:layout_height="40dp"
+    android:text="@string/linkSer"
+    />
+<Button
+    android:id="@+id/btnStop"
+	android:layout_alignTop="@id/btnLink"
+	android:layout_alignParentRight="true"
+
+    android:layout_width="80dp"
+    android:layout_height="40dp"
+    android:text="@string/strStop"
+    />
+
+<Button
+    android:id="@+id/btnWindowFWD"
+    android:layout_below="@id/btnLink"
+    android:text="@string/strFWD"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    />
+
+<Button
+    android:id="@+id/btnWindowPause"
+    android:layout_below="@id/btnLink"
+    android:layout_toRightOf="@id/btnWindowFWD"
+    android:text="@string/strPause"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    />
+
+<Button
+    android:id="@+id/btnWindowBWD"
+    android:layout_below="@id/btnLink"
+    android:layout_toRightOf="@id/btnWindowPause"
+    android:text="@string/strBWD"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    />
+
+<TextView 
+    android:id="@+id/nmWindow"
+    android:layout_alignBottom="@id/btnWindowFWD"
+    android:layout_toRightOf="@id/btnWindowBWD"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/strWindow"
+    android:textSize="18sp"
+    />
+
+<Button
+    android:id="@+id/btnAlarm"
+    android:layout_marginTop="10sp"
+    android:layout_below="@id/btnWindowFWD"
+    android:layout_alignParentRight="false"
+    android:layout_width="100dp"
+    android:layout_height="40sp"
+    android:text=""
+    />
+<TextView 
+    android:id="@+id/nmlight1"
+    android:layout_marginTop="10sp"
+    android:layout_alignBottom="@id/btnAlarm"
+    android:layout_toRightOf="@id/btnAlarm"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/strAlarm"
+    android:textSize="18sp"
+    />
+    
+
+
+<Button
+    android:id="@+id/btnLightOpen"
+    android:layout_marginTop="10sp"
+    android:layout_below="@id/btnAlarm"
+    android:layout_alignParentRight="false"
+    android:layout_width="100dp"
+    android:layout_height="40sp"
+    android:text="@string/strOpen"
+    />
+<Button
+    android:id="@+id/btnLightClose"
+    android:layout_marginLeft="10sp"
+    android:layout_marginTop="10sp"
+    android:layout_below="@id/btnAlarm"
+    android:layout_toRightOf="@id/btnLightOpen"
+    android:layout_width="100dp"
+    android:layout_height="40sp"
+    android:text="@string/strClose"
+    />
+<TextView 
+    android:id="@+id/nmlight2"
+    android:layout_marginTop="10sp"
+    android:layout_alignBottom="@id/btnLightOpen"
+    android:layout_toRightOf="@id/btnLightClose"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/strLight"
+    android:textSize="18sp"
+    />
+
+<Button
+    android:id="@+id/btnDoorOpen"
+    android:layout_marginTop="10sp"
+    android:layout_below="@id/btnLightOpen"
+    android:layout_alignParentRight="false"
+    android:layout_width="100dp"
+    android:layout_height="40sp"
+    android:text="@string/strOpen"
+    />
+<Button
+    android:id="@+id/btnDoorClose"
+    android:layout_marginTop="10sp"
+    android:layout_marginLeft="10sp"
+    android:layout_below="@id/btnLightOpen"
+    android:layout_toRightOf="@id/btnDoorOpen"
+    android:layout_width="100dp"
+    android:layout_height="40sp"
+    android:text="@string/strClose"
+    />
+<TextView 
+    android:id="@+id/tvDoor"
+    android:layout_marginTop="10sp"
+    android:layout_alignBottom="@id/btnDoorOpen"
+    android:layout_toRightOf="@id/btnDoorClose"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/strDoor"
+    android:textSize="18sp"
+    />
+
+
+<Button
+    android:id="@+id/btnHumen1"
+    android:layout_marginTop="10sp"
+    android:layout_below="@id/btnDoorOpen"
+    android:layout_width="100dp"
+    android:layout_height="40sp"
+    android:text=""
+    />
+<TextView 
+    android:id="@+id/tvHumen1"
+    android:layout_marginTop="10sp"
+    android:layout_alignBottom="@id/btnHumen1"
+    android:layout_toRightOf="@id/btnHumen1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/strHumen1"
+    android:textSize="18sp"
+    />
+
+<Button
+    android:id="@+id/btnHumen2"
+    android:layout_marginTop="10sp"
+    android:layout_below="@id/btnHumen1"
+    android:layout_alignParentRight="false"
+    android:layout_width="100dp"
+    android:layout_height="40sp"
+    android:text=""
+    />
+<TextView 
+    android:id="@+id/tvHumen2"
+    android:layout_marginTop="10sp"
+    android:layout_alignBottom="@id/btnHumen2"
+    android:layout_toRightOf="@id/btnHumen2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/strHumen2"
+    android:textSize="18sp"
+    />
+    
+<Button
+    android:id="@+id/btnGas"
+    android:layout_marginTop="10sp"
+    android:layout_below="@id/btnHumen2"
+    android:layout_alignParentRight="false"
+    android:layout_width="100dp"
+    android:layout_height="40sp"
+    android:text=""
+    />
+<TextView 
+    android:id="@+id/tvGas"
+    android:layout_marginTop="10sp"
+    android:layout_alignBottom="@id/btnGas"
+    android:layout_toRightOf="@id/btnGas"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/strGas"
+    android:textSize="18sp"
+    />
+        
+<Button
+    android:id="@+id/btnFire"
+    android:layout_marginTop="10sp"
+    android:layout_below="@id/btnGas"
+    android:layout_alignParentRight="false"
+    android:layout_width="100dp"
+    android:layout_height="40sp"
+    android:text=""
+    />
+<TextView 
+    android:id="@+id/tvFire"
+    android:layout_marginTop="10sp"
+    android:layout_alignBottom="@id/btnFire"
+    android:layout_toRightOf="@id/btnFire"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/strFire"
+    android:textSize="18sp"
+    />
+
+
+<Button
+    android:id="@+id/btnModeHome"
+    android:layout_marginTop="10sp"
+    android:layout_below="@id/btnFire"
+    android:layout_width="96dp"
+    android:layout_height="wrap_content"
+    android:text="@string/strModeHome"
+    />
+<Button 
+    android:id="@+id/btnModeLeave"
+    android:layout_alignTop="@id/btnModeHome"
+    android:layout_toRightOf="@id/btnModeHome"
+    android:layout_marginLeft="0dp"
+    android:layout_width="96dp"
+    android:layout_height="wrap_content"
+    android:text="@string/strModeLeave"
+    />
+
+<Button
+    android:id="@+id/btnModeRest"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:layout_alignTop="@id/btnModeHome"
+    android:layout_toRightOf="@id/btnModeLeave"
+    android:text="@string/strModeRest" />
+
+</RelativeLayout>
